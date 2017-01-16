@@ -2,12 +2,13 @@
 #define QONVIFDEVICE_HPP
 
 #include <QDateTime>
+#include <QObject>
 
 namespace ONVIF {
     class DeviceManagement;
 }
 
-class QOnvifDevice
+class QOnvifDevice : public QObject
 {
 public:
     struct DeviceInformation{
@@ -74,6 +75,7 @@ public:
     };
 
     QOnvifDevice();
+    QOnvifDevice(QString _userName, QString _password, QObject* _parent);
     ~QOnvifDevice();
 
     QString idescription;

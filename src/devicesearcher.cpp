@@ -78,7 +78,6 @@ DeviceSearcher::~DeviceSearcher() {
 void DeviceSearcher::sendSearchMsg() {
     Message *msg = Message::getOnvifSearchMessage();
     QString msg_str = msg->toXmlStr();
-    qDebug() << msg_str;
     mUdpSocket->writeDatagram(msg_str.toUtf8(), QHostAddress("239.255.255.250"), 3702);
 }
 
@@ -154,9 +153,7 @@ void DeviceSearcher::readPendingDatagrams() {
         device_infos.insert("device_service_address", parser.getValue("//d:ProbeMatches/d:ProbeMatch/d:XAddrs"));
         device_infos.insert("scopes", parser.getValue("//d:ProbeMatches/d:ProbeMatch/wsa:EndpointReference/wsa:Address"));
         device_infos.insert("metadata_version", parser.getValue("//d:ProbeMatches/d:ProbeMatch/d:MetadataVersion"));
-        
-//        qDebug() << "Device =============>\n";// << device_infos;
-//        qDebug () << datagram<< "\n\n";
         emit receiveData(device_infos);
     }    
+    emit deviceSearchingEnded();
 }

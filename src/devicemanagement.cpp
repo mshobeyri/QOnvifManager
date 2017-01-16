@@ -317,7 +317,6 @@ void DeviceManagement::setNetworkInterfaces(NetworkInterfaces *networkInterfaces
 {
     Message *msg = newMessage();
     msg->appendToBody(networkInterfaces->toxml());
-    qDebug() << msg->toXmlStr();
     MessageParser *result = sendMessage(msg);
     if(result != NULL){
         if(result->find("//tds:SetNetworkInterfacesResponse"))

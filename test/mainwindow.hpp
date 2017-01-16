@@ -9,6 +9,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class QOnvifDevice;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -16,6 +18,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private slots:
+    void onNewDeviceFinded(QOnvifDevice* _device);
+
+    void on_btnRefresh_clicked();
+
+    void on_actionAbout_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -3,6 +3,12 @@
 
 QOnvifDevice::QOnvifDevice()
 {
+}
+
+QOnvifDevice::QOnvifDevice(QString _userName, QString _password, QObject *_parent):
+    QObject(_parent), iuserName(_userName), ipassword(_password)
+
+{
     ideviceManagement =
             new ONVIF::DeviceManagement(ideviceProbeData.ideviceServiceAddress, iuserName, ipassword);//todo
 }

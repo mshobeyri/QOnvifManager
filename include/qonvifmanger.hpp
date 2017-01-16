@@ -9,7 +9,6 @@
 namespace ONVIF {
 class DeviceSearcher;
 }
-class QOnvifDevice;
 
 class QOnvifManger: public QObject
 {
@@ -20,21 +19,28 @@ public:
     bool refreshDevicesList();
 
     QDateTime deviceDateAndTime(QString _deviceEndPointAddress);
+
     QOnvifDevice deviceFullData(QString _deviceEndPointAddress);
+    QMap<QString, QOnvifDevice *> devicesMap();
 
     bool setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
 
+
 protected:
     QString iuserName;
     QString ipassword;
-    QMap <QString , QOnvifDevice> idevicesMap;
+    QMap <QString , QOnvifDevice* > idevicesMap;
     QHostAddress ihostAddress;
     ONVIF::DeviceSearcher *ideviceSearcher;
 
-private slots:
-    void onDeviceFinded(QHash<QString, QString> _deviceHash);
+public slots:
+    void onNewDeviceFinded(QHash<QString, QString> _deviceHash);
+
+signals:
+    void newDeviceFinded(QOnvifDevice* _device);
+    void deviceSearchingEnded();
 };
 
 #endif // QONVIFMANGER_HPP
