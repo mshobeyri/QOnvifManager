@@ -38,5 +38,6 @@ QString Capabilities::enumToString(Category category)
     default:
         break;
     }
+    return "";
 }
 

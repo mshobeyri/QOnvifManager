@@ -9,6 +9,7 @@ MediaManagement::MediaManagement(const QString & wsdlUrl, const QString &usernam
 }
 
 QHash<QString, QString> MediaManagement::namespaces(const QString &key) {
+    Q_UNUSED(key);
     QHash<QString, QString> names;
     names.insert("SOAP-ENV", "http://www.w3.org/2003/05/soap-envelope");
     names.insert("SOAP-ENC", "http://www.w3.org/2003/05/soap-encoding");
