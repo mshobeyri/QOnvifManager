@@ -3,9 +3,11 @@
 #include "devicemanagement.h"
 #include "systemdateandtime.h"
 
-QOnvifManger::QOnvifManger(QString _userName, QString _password):
-    iuserName(_userName), ipassword(_password)
+
+QOnvifManger::QOnvifManger(QString _userName, QString _password, QObject *_parent):
+    QObject(_parent),iuserName(_userName), ipassword(_password)
 {
+
 }
 
 bool

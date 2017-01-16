@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class QOnvifManger;
+
 namespace Ui {
 class MainWindow;
 }
@@ -17,6 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QOnvifManger *ionvifManager;
 };
 
 #endif // MAINWINDOW_HPP

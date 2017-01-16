@@ -1,22 +1,21 @@
 #ifndef QONVIFMANGER_HPP
 #define QONVIFMANGER_HPP
 
-//#include "qonvifmanger_global.hpp"
-#include "qonvifdevice.hpp"
-
 #include <QDateTime>
 #include <QMap>
 #include <QHostAddress>
+#include "qonvifdevice.hpp"
 
 namespace ONVIF {
 class DeviceSearcher;
 }
+class QOnvifDevice;
 
 class QOnvifManger: public QObject
 {
     Q_OBJECT
 public:
-    QOnvifManger(QString _userName, QString _password);
+    QOnvifManger(QString _userName, QString _password, QObject *_parent);
 
     bool refreshDevicesList();
 
