@@ -7,22 +7,28 @@ QOnvifDevice::QOnvifDevice()
             new ONVIF::DeviceManagement(ideviceProbeData.ideviceServiceAddress, iuserName, ipassword);//todo
 }
 
-QDateTime QOnvifDevice::deviceDateAndTime()
+QDateTime
+QOnvifDevice::deviceDateAndTime()
 {
-
+    return idateAndTime;
 }
 
-bool QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
+bool
+QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 {
     idateAndTime = _dateAndTime;
+    //todo
+    return true;
 }
 
-bool QOnvifDevice::resetFactoryDevice()
+bool
+QOnvifDevice::resetFactoryDevice()
 {
-
+    return true;
 }
 
-bool QOnvifDevice::rebootDevice()
+bool
+QOnvifDevice::rebootDevice()
 {
-
+    return true;
 }
