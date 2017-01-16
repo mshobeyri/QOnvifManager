@@ -1,0 +1,98 @@
+#ifndef QONVIFDEVICE_HPP
+#define QONVIFDEVICE_HPP
+
+#include <QDateTime>
+
+namespace ONVIF {
+    class DeviceManagement;
+}
+
+class QOnvifDevice
+{
+public:
+    struct DeviceInformation{
+        QString manufacturer;
+        QString model;
+        QString firmwareVersion;
+        QString serialNumber;
+        QString hardwareId;
+    };
+
+    struct DeviceCapabilities{
+        //ptz capabilities
+        QString ptzAddress;
+
+        //imaging capabilities
+        QString imagingXAddress;
+
+        //media capabilities
+        QString mediaXAddress;
+        bool rtpMulticast;
+        bool rtpTcp;
+        bool rtpRtspTcp;
+
+        //public capabilities
+        QString m_deviceXAddr;
+        bool iPFilter;
+        bool zeroConfiguration;
+        bool iPVersion6;
+        bool dynDNS;
+        bool discoveryResolve;
+        bool systemLogging;
+        bool firmwareUpgrade;
+        int major;
+        bool minor;
+        bool httpFirmwareUpgrade;
+        bool httpSystemBackup;
+        bool httpSystemLogging;
+        bool httpSupportInformation;
+        int inputConnectors;
+        int relayOutputs;
+        bool tls11;
+        bool tls22;
+        bool onboardKeyGeneration;
+        bool accessPolicyConfig;
+        bool x509Token;
+        bool samlToken;
+        bool kerberosToken;
+        bool relToken;
+        bool tls10;
+        bool dot1x;
+        bool remoteUserHanding;
+        bool systemBackup;
+        bool discoveryBye;
+        bool remoteDiscovery;
+    };
+
+    struct DeviceProbeData{
+        QString iendPointAddress;
+        QString itypes;
+        QString ideviceIp;
+        QString ideviceServiceAddress;
+        QString iscopes;
+        QString imetadataVersion;
+    };
+
+    QOnvifDevice();
+
+    QString idescription;
+    QString iuserName;
+    QString ipassword;
+    QDateTime idateAndTime;
+    DeviceProbeData ideviceProbeData;
+    DeviceInformation ideviceInformation;
+    DeviceCapabilities ideviceCapabilities;
+
+    QDateTime deviceDateAndTime();
+
+    bool setDeviceDateAndTime(QDateTime _dateAndTime);
+
+    bool resetFactoryDevice();
+    bool rebootDevice();
+
+private:
+    ONVIF::DeviceManagement *ideviceManagement;
+
+};
+
+#endif // QONVIFDEVICE_HPP
