@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ionvifManager = new QOnvifManger("admin","admin",this);
     connect(ionvifManager,&QOnvifManger::newDeviceFinded,
             this,&MainWindow::onNewDeviceFinded);
+    on_btnRefresh_clicked();
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +33,21 @@ void MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
 void MainWindow::on_btnRefresh_clicked()
 {
     ionvifManager->refreshDevicesList();
+}
+
+void MainWindow::on_cmbDevicesComboBox_currentIndexChanged(int index)
+{
+    Q_UNUSED(index)
+    on_btnRefreshData_clicked();
+    QMap<QString, QOnvifDevice*>  deviceMap = ionvifManager->devicesMap();
+
+}
+
+void MainWindow::on_btnRefreshData_clicked()
+{
+    ionvifManager->refreshDeviceCapabilities(ui->cmbDevicesComboBox->currentData().toString());
+    ionvifManager->refreshDeviceInformations(ui->cmbDevicesComboBox->currentData().toString());
+//    ionvifManager->device(ui->cmbDevicesComboBox->currentData());
 }
 
 void MainWindow::on_actionAbout_triggered()

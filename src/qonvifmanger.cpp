@@ -29,10 +29,27 @@ QOnvifManger::refreshDevicesList()
     return true;
 }
 
+bool
+QOnvifManger::refreshDeviceCapabilities(QString _deviceEndPointAddress)
+{
+    return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceCapabilities();
+}
+
+bool
+QOnvifManger::refreshDeviceInformations(QString _deviceEndPointAddress)
+{
+    return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceInformation();
+}
+
 QDateTime
 QOnvifManger::deviceDateAndTime(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->deviceDateAndTime();
+}
+
+QOnvifDevice *QOnvifManger::device(QString _deviceEndPointAddress)
+{
+    return idevicesMap.value(_deviceEndPointAddress);
 }
 
 QMap<QString, QOnvifDevice*> QOnvifManger::devicesMap()

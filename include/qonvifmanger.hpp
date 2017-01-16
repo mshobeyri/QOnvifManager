@@ -17,11 +17,14 @@ public:
     QOnvifManger(QString _userName, QString _password, QObject *_parent);
 
     bool refreshDevicesList();
+    bool refreshDeviceCapabilities(QString _deviceEndPointAddress);
+    bool refreshDeviceInformations(QString _deviceEndPointAddress);
 
     QDateTime deviceDateAndTime(QString _deviceEndPointAddress);
 
-    QOnvifDevice deviceFullData(QString _deviceEndPointAddress);
+    QOnvifDevice* device(QString _deviceEndPointAddress);
     QMap<QString, QOnvifDevice *> devicesMap();
+
 
     bool setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
     bool resetFactoryDevice(QString _deviceEndPointAddress);

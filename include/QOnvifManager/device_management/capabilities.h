@@ -17,7 +17,7 @@ namespace ONVIF {
         Q_PROPERTY(bool zeroConfiguration READ zeroConfiguration WRITE setZeroConfiguration)
         Q_PROPERTY(bool iPVersion6 READ iPVersion6 WRITE setIPVersion6)
         Q_PROPERTY(bool dynDNS READ dynDNS WRITE setDynDNS)
-        Q_PROPERTY(bool discoveryResolve READ disconveryResolve WRITE setDiscoveryResolve)
+        Q_PROPERTY(bool discoveryResolve READ discoveryResolve WRITE setDiscoveryResolve)
         Q_PROPERTY(bool discoveryBye READ discoveryBye WRITE setDiscoveryBye)
         Q_PROPERTY(bool remoteDiscovery READ remoteDiscovery WRITE setRemoteDiscovery)
         Q_PROPERTY(bool systemBackup READ systemBackup WRITE setSystemBackup)
@@ -103,7 +103,7 @@ namespace ONVIF {
             return m_dynDNS;
         }
 
-        bool disconveryResolve() const
+        bool discoveryResolve() const
         {
             return m_discoveryResolve;
         }

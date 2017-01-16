@@ -33,7 +33,7 @@ public:
         bool rtpRtspTcp;
 
         //public capabilities
-        QString m_deviceXAddr;
+        QString deviceXAddr;
         bool iPFilter;
         bool zeroConfiguration;
         bool iPVersion6;
@@ -87,8 +87,12 @@ public:
     DeviceCapabilities ideviceCapabilities;
 
     QDateTime deviceDateAndTime();
-
     bool setDeviceDateAndTime(QDateTime _dateAndTime);
+
+    bool refreshDeviceCapabilities();
+    bool refreshDeviceInformation();
+
+    QOnvifDevice* deviceFullData();
 
     bool resetFactoryDevice();
     bool rebootDevice();

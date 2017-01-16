@@ -21,8 +21,9 @@ public:
 
 private slots:
     void onNewDeviceFinded(QOnvifDevice* _device);
-
     void on_btnRefresh_clicked();
+    void on_cmbDevicesComboBox_currentIndexChanged(int index);
+    void on_btnRefreshData_clicked();
 
     void on_actionAbout_triggered();
 

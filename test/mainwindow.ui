@@ -70,7 +70,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="btsSetDateAndTime">
         <property name="text">
          <string>Set date and time</string>
         </property>
@@ -97,7 +97,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="btnRefreshData">
         <property name="text">
          <string>Refresh Data</string>
         </property>
