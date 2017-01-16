@@ -11,6 +11,7 @@ DeviceManagement::DeviceManagement(const QString & wsdlUrl, const QString &usern
 
 QHash<QString, QString> DeviceManagement::namespaces(const QString &key) {
     QHash<QString, QString> names;
+    Q_UNUSED(key);
     names.insert("SOAP-ENV", "http://www.w3.org/2003/05/soap-envelope");
     names.insert("SOAP-ENC", "http://www.w3.org/2003/05/soap-encoding");
     names.insert("xsi", "http://www.w3.org/2001/XMLSchema-instance");

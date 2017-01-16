@@ -7,6 +7,11 @@ QOnvifDevice::QOnvifDevice()
             new ONVIF::DeviceManagement(ideviceProbeData.ideviceServiceAddress, iuserName, ipassword);//todo
 }
 
+QOnvifDevice::~QOnvifDevice()
+{
+    delete ideviceManagement;
+}
+
 QDateTime
 QOnvifDevice::deviceDateAndTime()
 {
