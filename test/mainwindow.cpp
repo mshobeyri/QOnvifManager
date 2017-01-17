@@ -27,8 +27,8 @@ void
 MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
 {
     ui->cmbDevicesComboBox->addItem(
-                _device->ideviceProbeData.ideviceServiceAddress.replace("http://","").replace("/onvif/device_service",""),
-                _device->ideviceProbeData.iendPointAddress);
+                _device->deviceProbeData().ideviceServiceAddress.replace("http://","").replace("/onvif/device_service",""),
+                _device->deviceProbeData().iendPointAddress);
 }
 
 void
@@ -42,7 +42,7 @@ void
 MainWindow::on_cmbDevicesComboBox_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    on_btnRefreshData_clicked();
+//    on_btnRefreshData_clicked();
 }
 
 void
@@ -73,8 +73,15 @@ MainWindow::on_btnGetDataAndTime_clicked()
     ui->dateTimeEditLocal->setDateTime(dateAndTime.localTime);
     ui->dateTimeEditUtc->setDateTime(dateAndTime.utcTime);
 }
+void
+MainWindow::on_btsSetDateAndTime_clicked()
+{
+    ionvifManager->setDeviceDateAndTime( currentDevice() , ui->dateTimeEditSet->dateTime() );
+}
 
-QString MainWindow::currentDevice()
+QString
+MainWindow::currentDevice()
 {
     return ui->cmbDevicesComboBox->currentData().toString();
 }
+

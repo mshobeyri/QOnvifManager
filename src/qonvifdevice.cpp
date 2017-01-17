@@ -18,6 +18,11 @@ QOnvifDevice::~QOnvifDevice()
     delete ideviceManagement;
 }
 
+QOnvifDevice::DeviceProbeData QOnvifDevice::deviceProbeData()
+{
+    return ideviceProbeData;
+}
+
 void QOnvifDevice::setDeviceProbeData(QOnvifDevice::DeviceProbeData _probeData)
 {
     ideviceProbeData = _probeData;
@@ -35,12 +40,14 @@ QOnvifDevice::deviceDateAndTime()
 bool
 QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 {
-    idateAndTime.localTime = _dateAndTime;
-    //todo
+    ONVIF::SystemDateAndTime systemDateAndTime;
+    systemDateAndTime.setlocalTime(_dateAndTime);
+    ideviceManagement->setSystemDateAndTime(&systemDateAndTime);
     return true;
 }
 
-bool QOnvifDevice::refreshDeviceCapabilities()
+bool
+QOnvifDevice::refreshDeviceCapabilities()
 {
     ONVIF::Capabilities* capabilities;
     capabilities  = ideviceManagement->getCapabilitiesDevice();

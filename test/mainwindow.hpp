@@ -27,6 +27,7 @@ private slots:
     void on_btnRefreshData_clicked();
     void on_actionAbout_triggered();
     void on_btnGetDataAndTime_clicked();
+    void on_btsSetDateAndTime_clicked();
 
 private:
     Ui::MainWindow *ui;

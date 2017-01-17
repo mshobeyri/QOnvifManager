@@ -23,11 +23,9 @@ QString Client::sendData(const QString &data) {
     request.setHeader(QNetworkRequest::ContentTypeHeader,"Content-Type: text/xml");
 
     QNetworkReply *reply = networkManager->post(request, data.toLatin1());
-
     QEventLoop loop;
     connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
 
     return reply->readAll();
 }
-

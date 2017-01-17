@@ -1,5 +1,6 @@
 #include "systemdateandtime.h"
 #include "message.h"
+#include <QString>
 using namespace ONVIF;
 
 SystemDateAndTime::SystemDateAndTime(QObject *parent) : QObject(parent) {
@@ -22,6 +23,8 @@ void SystemDateAndTime::setLocalTime(int year, int month, int day, int hour, int
 }
 
 QDomElement SystemDateAndTime::toxml(){
+
+
     QDomElement setSystemDateAndTime,dateTimeType,daylightSavings,timeZone,tz,utcDateTime,time,hour,minute,second,date,year
             ,month,day;
     setSystemDateAndTime = newElement("wsdl:SetSystemDateAndTime");
@@ -52,4 +55,42 @@ QDomElement SystemDateAndTime::toxml(){
     date.appendChild(month);
     date.appendChild(day);
     return setSystemDateAndTime;
+
+
+//    QDomElement setSystemDateAndTime,dateTimeType,daylightSavings,timeZone,tz,utcDateTime,time,hour,minute,second,
+//            date,year,month,day;
+
+//    setSystemDateAndTime = newElement("wsdl:SetSystemDateAndTime");
+//    dateTimeType = newElement("wsdl:DateTimeType","Manual");
+//    daylightSavings = newElement("wsdl:DaylightSavings",this->daylightSavings() == true?"true":"false");
+//    timeZone = newElement("wsdl:TimeZone");
+//    tz = newElement("sch:TZ",this->tz());
+//    utcDateTime = newElement("wsdl:UTCDateTime");
+//    time = newElement("sch:Time");
+
+//    hour = newElement("sch:Hour",this->localTime().time().toString("HH"));
+//    minute = newElement("sch:Minute",this->localTime().time().toString("mm"));
+//    second = newElement("sch:Second",this->localTime().time().toString("ss"));
+//    date = newElement("sch:Date");
+//    year = newElement("sch:Year", this->localTime().time().toString("yyyy"));
+//    month = newElement("sch:Month", this->localTime().time().toString("MM"));
+//    day = newElement("sch:Day", this->localTime().time().toString("dd"));
+
+//    setSystemDateAndTime.appendChild(dateTimeType);
+//    setSystemDateAndTime.appendChild(daylightSavings);
+//    setSystemDateAndTime.appendChild(timeZone);
+//    setSystemDateAndTime.appendChild(utcDateTime);
+
+//    timeZone.appendChild(tz);
+//    utcDateTime.appendChild(time);
+//    utcDateTime.appendChild(date);
+
+//    time.appendChild(hour);
+//    time.appendChild(minute);
+//    time.appendChild(second);
+//    date.appendChild(year);
+//    date.appendChild(month);
+//    date.appendChild(day);
+
+//    return setSystemDateAndTime;
 }

@@ -132,6 +132,7 @@ void DeviceManagement::setSystemDateAndTime(SystemDateAndTime *systemDateAndTime
             systemDateAndTime->setResult(true);
         else
             systemDateAndTime->setResult(false);
+
         delete result;
         delete msg;
    }

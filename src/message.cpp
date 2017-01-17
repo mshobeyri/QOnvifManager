@@ -101,7 +101,7 @@ static bool CalcWssePassword(const QDateTime &current,  const QString &passwd, Q
     passwdDigest = passwdDigestStr;
 
     delete hash;
-    
+
     return true;
 }
 
@@ -110,7 +110,7 @@ Message* Message::getMessageWithUserInfo(QHash<QString, QString> &namespaces, co
     namespaces.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
     Message *msg = new Message(namespaces);
     QDomElement security = newElement("wsse:Security");
-    
+
     QDomElement usernameToken = newElement("wsse:UsernameToken");
     //usernameToken.setAttribute("wsu:Id", "UsernameToken-1");
     //QDateTime current = QDateTime::currentDateTime();

@@ -83,14 +83,7 @@ public:
     QOnvifDevice(QString _serviceAddress, QString _userName, QString _password, QObject* _parent);
     ~QOnvifDevice();
 
-    QString idescription;
-    QString iuserName;
-    QString ipassword;
-    DateTime idateAndTime;
-    DeviceProbeData ideviceProbeData;
-    DeviceInformation ideviceInformation;
-    DeviceCapabilities ideviceCapabilities;
-
+    DeviceProbeData deviceProbeData();
     void setDeviceProbeData(DeviceProbeData _probeData);
 
     DateTime deviceDateAndTime();
@@ -99,13 +92,20 @@ public:
     bool refreshDeviceCapabilities();
     bool refreshDeviceInformation();
 
-    QOnvifDevice* deviceFullData();
-
     bool resetFactoryDevice();
     bool rebootDevice();
 
 private:
     ONVIF::DeviceManagement *ideviceManagement;
+
+    QString idescription;
+    QString iuserName;
+    QString ipassword;
+    DateTime idateAndTime;
+    DeviceProbeData ideviceProbeData;
+    DeviceInformation ideviceInformation;
+    DeviceCapabilities ideviceCapabilities;
+
 
 };
 

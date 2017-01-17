@@ -31,9 +31,7 @@ namespace ONVIF {
         {
             return m_dateTimeType;
         }
-        
-        
-        
+
         QDateTime utcTime() const
         {
             return m_utcTime;
@@ -87,10 +85,10 @@ namespace ONVIF {
     private:
         bool m_daylightSavings;
         DateTimeType m_dateTimeType;
-        
         QDateTime m_utcTime;
         QDateTime m_localTime;
         QString m_tz;
+        QString m_width;
         bool m_result;
     };
 }

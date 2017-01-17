@@ -16,7 +16,8 @@ QOnvifManger::QOnvifManger(QString _userName, QString _password, QObject *_paren
             this,SLOT(onReciveData(QHash<QString,QString>)),Qt::UniqueConnection);
 
     // when device searching ended
-    connect(ideviceSearcher,&ONVIF::DeviceSearcher::deviceSearchingEnded,[this](){
+    connect(ideviceSearcher,&ONVIF::DeviceSearcher::deviceSearchingEnded,[this]()
+    {
         emit deviceSearchingEnded();
     });
 }
@@ -47,12 +48,14 @@ QOnvifManger::deviceDateAndTime(QString _deviceEndPointAddress)
     return idevicesMap.value(_deviceEndPointAddress)->deviceDateAndTime();
 }
 
-QOnvifDevice *QOnvifManger::device(QString _deviceEndPointAddress)
+QOnvifDevice*
+QOnvifManger::device(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress);
 }
 
-QMap<QString, QOnvifDevice*> QOnvifManger::devicesMap()
+QMap<QString, QOnvifDevice*>
+QOnvifManger::devicesMap()
 {
     return idevicesMap;
 }
@@ -61,6 +64,13 @@ bool
 QOnvifManger::setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime)
 {
     return idevicesMap.value(_deviceEndPointAddress)->setDeviceDateAndTime(_dateTime);
+}
+
+void
+QOnvifManger::setDefaulUsernameAndPassword(QString _username, QString _password)
+{
+    iuserName = _username;
+    ipassword = _password;
 }
 
 bool
