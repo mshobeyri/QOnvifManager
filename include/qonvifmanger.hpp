@@ -25,11 +25,9 @@ public:
     QOnvifDevice* device(QString _deviceEndPointAddress);
     QMap<QString, QOnvifDevice *> devicesMap();
 
-
     bool setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
-
 
 protected:
     QString iuserName;

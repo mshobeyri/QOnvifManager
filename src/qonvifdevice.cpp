@@ -42,18 +42,30 @@ QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 
 bool QOnvifDevice::refreshDeviceCapabilities()
 {
-    ONVIF::Capabilities* capabilities  = ideviceManagement->getCapabilitiesDevice();
+    ONVIF::Capabilities* capabilities;
+    capabilities  = ideviceManagement->getCapabilitiesDevice();
+    capabilities  = ideviceManagement->getCapabilitiesPtz();
+    capabilities  = ideviceManagement->getCapabilitiesImaging();
+    capabilities  = ideviceManagement->getCapabilitiesMedia();
 
     if (!capabilities)
         return false;
 
     ideviceCapabilities.accessPolicyConfig = capabilities->accessPolicyConfig();
+
+    //ptz capabilities
     ideviceCapabilities.ptzAddress = capabilities->ptzXAddr();
+
+    //image capabilities
     ideviceCapabilities.imagingXAddress = capabilities->imagingXAddr();
+
+    //media capabilities
     ideviceCapabilities.mediaXAddress = capabilities->mediaXAddr();
     ideviceCapabilities.rtpMulticast = capabilities->rtpMulticast();
     ideviceCapabilities.rtpTcp = capabilities->rtpTcp();
     ideviceCapabilities.rtpRtspTcp = capabilities->rtpRtspTcp();
+
+    //device capabilities
     ideviceCapabilities.deviceXAddr = capabilities->deviceXAddr();
     ideviceCapabilities.iPFilter = capabilities->iPFilter();
     ideviceCapabilities.zeroConfiguration = capabilities->zeroConfiguration();
@@ -88,8 +100,15 @@ bool QOnvifDevice::refreshDeviceCapabilities()
     return true;
 }
 
-bool QOnvifDevice::refreshDeviceInformation()
+bool
+QOnvifDevice::refreshDeviceInformation()
 {
+    QHash<QString, QString>  deviceInformationHash = ideviceManagement->getDeviceInformation();
+    ideviceInformation.manufacturer = deviceInformationHash.value("mf");
+    ideviceInformation.model = deviceInformationHash.value("model");
+    ideviceInformation.firmwareVersion = deviceInformationHash.value("firmware_version");
+    ideviceInformation.serialNumber = deviceInformationHash.value("serial_number");
+    ideviceInformation.hardwareId = deviceInformationHash.value("hardware_id");
     return true;
 }
 

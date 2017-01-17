@@ -23,44 +23,58 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
+void
+MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
 {
     ui->cmbDevicesComboBox->addItem(
                 _device->ideviceProbeData.ideviceServiceAddress.replace("http://","").replace("/onvif/device_service",""),
                 _device->ideviceProbeData.iendPointAddress);
 }
 
-void MainWindow::on_btnRefresh_clicked()
+void
+MainWindow::on_btnRefresh_clicked()
 {
     ui->cmbDevicesComboBox->clear();
     ionvifManager->refreshDevicesList();
 }
 
-void MainWindow::on_cmbDevicesComboBox_currentIndexChanged(int index)
+void
+MainWindow::on_cmbDevicesComboBox_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-//    on_btnRefreshData_clicked();
-    QMap<QString, QOnvifDevice*>  deviceMap = ionvifManager->devicesMap();
-
+    on_btnRefreshData_clicked();
 }
 
-void MainWindow::on_btnRefreshData_clicked()
+void
+MainWindow::on_btnRefreshData_clicked()
 {
-    ionvifManager->refreshDeviceCapabilities(ui->cmbDevicesComboBox->currentData().toString());
-    ionvifManager->refreshDeviceInformations(ui->cmbDevicesComboBox->currentData().toString());
-//    ionvifManager->device(ui->cmbDevicesComboBox->currentData());
+    ionvifManager->refreshDeviceCapabilities( currentDevice() );
+    ionvifManager->refreshDeviceInformations( currentDevice() );
+    on_btnGetDataAndTime_clicked();
+
+    QOnvifDevice* device = ionvifManager->device(currentDevice() );
+    Q_UNUSED(device)
+
+    // <- add a breake point here to see device informations in debuger.
 }
 
-void MainWindow::on_actionAbout_triggered()
+void
+MainWindow::on_actionAbout_triggered()
 {
     QMessageBox aboutMessageBox(this);
     aboutMessageBox.setText("developed by: Mehrdad Shobeyri \nemail: mehrdad.shobeyri@yahoo.com");
     aboutMessageBox.exec();
 }
 
-void MainWindow::on_btnGetDataAndTime_clicked()
+void
+MainWindow::on_btnGetDataAndTime_clicked()
 {
-    QOnvifDevice::DateTime dateAndTime = ionvifManager->deviceDateAndTime(ui->cmbDevicesComboBox->currentData().toString());
+    QOnvifDevice::DateTime dateAndTime = ionvifManager->deviceDateAndTime( currentDevice() );
     ui->dateTimeEditLocal->setDateTime(dateAndTime.localTime);
     ui->dateTimeEditUtc->setDateTime(dateAndTime.utcTime);
+}
+
+QString MainWindow::currentDevice()
+{
+    return ui->cmbDevicesComboBox->currentData().toString();
 }
