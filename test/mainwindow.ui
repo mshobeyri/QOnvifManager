@@ -70,6 +70,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnGetDataAndTime">
+        <property name="text">
+         <string>Get data and time</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btsSetDateAndTime">
         <property name="text">
          <string>Set date and time</string>

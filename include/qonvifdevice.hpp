@@ -75,7 +75,7 @@ public:
     };
 
     QOnvifDevice();
-    QOnvifDevice(QString _userName, QString _password, QObject* _parent);
+    QOnvifDevice(QString _serviceAddress, QString _userName, QString _password, QObject* _parent);
     ~QOnvifDevice();
 
     QString idescription;
@@ -85,6 +85,8 @@ public:
     DeviceProbeData ideviceProbeData;
     DeviceInformation ideviceInformation;
     DeviceCapabilities ideviceCapabilities;
+
+    void setDeviceProbeData(DeviceProbeData _probeData);
 
     QDateTime deviceDateAndTime();
     bool setDeviceDateAndTime(QDateTime _dateAndTime);

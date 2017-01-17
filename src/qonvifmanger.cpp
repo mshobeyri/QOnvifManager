@@ -13,7 +13,7 @@ QOnvifManger::QOnvifManger(QString _userName, QString _password, QObject *_paren
 
     // when one device finded
     connect(ideviceSearcher,SIGNAL(receiveData(QHash<QString,QString>)),
-            this,SLOT(onNewDeviceFinded(QHash<QString,QString>)),Qt::UniqueConnection);
+            this,SLOT(onReciveData(QHash<QString,QString>)),Qt::UniqueConnection);
 
     // when device searching ended
     connect(ideviceSearcher,&ONVIF::DeviceSearcher::deviceSearchingEnded,[this](){
@@ -76,9 +76,8 @@ QOnvifManger::rebootDevice(QString _deviceEndPointAddress)
 }
 
 void
-QOnvifManger::onNewDeviceFinded(QHash<QString,QString> _deviceHash)
+QOnvifManger::onReciveData(QHash<QString,QString> _deviceHash)
 {
-    QOnvifDevice *device = new QOnvifDevice(iuserName, ipassword,this);
     QOnvifDevice::DeviceProbeData probeData;
 
     probeData.iendPointAddress = _deviceHash.value("ep_address");
@@ -88,7 +87,8 @@ QOnvifManger::onNewDeviceFinded(QHash<QString,QString> _deviceHash)
     probeData.iscopes = _deviceHash.value("scopes");
     probeData.imetadataVersion = _deviceHash.value("metadata_version");
 
-    device->ideviceProbeData = probeData;
+    QOnvifDevice *device = new QOnvifDevice(probeData.ideviceServiceAddress, iuserName, ipassword,this);
+    device->setDeviceProbeData(probeData);
     idevicesMap.insert(probeData.iendPointAddress, device);
     emit newDeviceFinded(device);
 }

@@ -32,13 +32,14 @@ void MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
 
 void MainWindow::on_btnRefresh_clicked()
 {
+    ui->cmbDevicesComboBox->clear();
     ionvifManager->refreshDevicesList();
 }
 
 void MainWindow::on_cmbDevicesComboBox_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    on_btnRefreshData_clicked();
+//    on_btnRefreshData_clicked();
     QMap<QString, QOnvifDevice*>  deviceMap = ionvifManager->devicesMap();
 
 }
@@ -55,4 +56,10 @@ void MainWindow::on_actionAbout_triggered()
     QMessageBox aboutMessageBox(this);
     aboutMessageBox.setText("developed by: Mehrdad Shobeyri \nemail: mehrdad.shobeyri@yahoo.com");
     aboutMessageBox.exec();
+}
+
+void MainWindow::on_btnGetDataAndTime_clicked()
+{
+    QDateTime dateAndTime = ionvifManager->deviceDateAndTime(ui->cmbDevicesComboBox->currentData().toString());
+    ui->dateTimeEdit->setDateTime(dateAndTime);
 }

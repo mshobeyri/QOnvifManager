@@ -5,13 +5,12 @@ QOnvifDevice::QOnvifDevice()
 {
 }
 
-QOnvifDevice::QOnvifDevice(QString _userName, QString _password, QObject *_parent):
+QOnvifDevice::QOnvifDevice(QString _serviceAddress, QString _userName, QString _password, QObject *_parent):
     QObject(_parent), iuserName(_userName), ipassword(_password)
 
 {
     ideviceManagement = new ONVIF::DeviceManagement(
-                ideviceProbeData.ideviceServiceAddress,
-                iuserName, ipassword);//todo
+                _serviceAddress, iuserName, ipassword);
 }
 
 QOnvifDevice::~QOnvifDevice()
@@ -19,9 +18,16 @@ QOnvifDevice::~QOnvifDevice()
     delete ideviceManagement;
 }
 
+void QOnvifDevice::setDeviceProbeData(QOnvifDevice::DeviceProbeData _probeData)
+{
+    ideviceProbeData = _probeData;
+}
+
 QDateTime
 QOnvifDevice::deviceDateAndTime()
 {
+    ONVIF::SystemDateAndTime *systemDateAndTime = ideviceManagement->getSystemDateAndTime();
+    idateAndTime = systemDateAndTime->localTime();
     return idateAndTime;
 }
 
@@ -97,3 +103,4 @@ QOnvifDevice::rebootDevice()
 {
     return true;
 }
+

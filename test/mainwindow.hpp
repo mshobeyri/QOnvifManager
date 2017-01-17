@@ -27,6 +27,8 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_btnGetDataAndTime_clicked();
+
 private:
     Ui::MainWindow *ui;
     QOnvifManger *ionvifManager;

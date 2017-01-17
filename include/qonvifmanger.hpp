@@ -39,7 +39,7 @@ protected:
     ONVIF::DeviceSearcher *ideviceSearcher;
 
 public slots:
-    void onNewDeviceFinded(QHash<QString, QString> _deviceHash);
+    void onReciveData(QHash<QString, QString> _deviceHash);
 
 signals:
     void newDeviceFinded(QOnvifDevice* _device);
