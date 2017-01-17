@@ -41,7 +41,7 @@ QOnvifManger::refreshDeviceInformations(QString _deviceEndPointAddress)
     return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceInformation();
 }
 
-QDateTime
+QOnvifDevice::DateTime
 QOnvifManger::deviceDateAndTime(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->deviceDateAndTime();

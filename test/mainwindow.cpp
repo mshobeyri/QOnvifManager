@@ -60,6 +60,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_btnGetDataAndTime_clicked()
 {
-    QDateTime dateAndTime = ionvifManager->deviceDateAndTime(ui->cmbDevicesComboBox->currentData().toString());
-    ui->dateTimeEdit->setDateTime(dateAndTime);
+    QOnvifDevice::DateTime dateAndTime = ionvifManager->deviceDateAndTime(ui->cmbDevicesComboBox->currentData().toString());
+    ui->dateTimeEditLocal->setDateTime(dateAndTime.localTime);
+    ui->dateTimeEditUtc->setDateTime(dateAndTime.utcTime);
 }

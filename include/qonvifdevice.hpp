@@ -74,6 +74,11 @@ public:
         QString imetadataVersion;
     };
 
+    struct DateTime{
+        QDateTime utcTime;
+        QDateTime localTime;
+    };
+
     QOnvifDevice();
     QOnvifDevice(QString _serviceAddress, QString _userName, QString _password, QObject* _parent);
     ~QOnvifDevice();
@@ -81,14 +86,14 @@ public:
     QString idescription;
     QString iuserName;
     QString ipassword;
-    QDateTime idateAndTime;
+    DateTime idateAndTime;
     DeviceProbeData ideviceProbeData;
     DeviceInformation ideviceInformation;
     DeviceCapabilities ideviceCapabilities;
 
     void setDeviceProbeData(DeviceProbeData _probeData);
 
-    QDateTime deviceDateAndTime();
+    DateTime deviceDateAndTime();
     bool setDeviceDateAndTime(QDateTime _dateAndTime);
 
     bool refreshDeviceCapabilities();

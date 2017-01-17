@@ -23,18 +23,19 @@ void QOnvifDevice::setDeviceProbeData(QOnvifDevice::DeviceProbeData _probeData)
     ideviceProbeData = _probeData;
 }
 
-QDateTime
+QOnvifDevice::DateTime
 QOnvifDevice::deviceDateAndTime()
 {
     ONVIF::SystemDateAndTime *systemDateAndTime = ideviceManagement->getSystemDateAndTime();
-    idateAndTime = systemDateAndTime->localTime();
+    idateAndTime.localTime = systemDateAndTime->localTime();
+    idateAndTime.utcTime = systemDateAndTime->utcTime();
     return idateAndTime;
 }
 
 bool
 QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 {
-    idateAndTime = _dateAndTime;
+    idateAndTime.localTime = _dateAndTime;
     //todo
     return true;
 }
