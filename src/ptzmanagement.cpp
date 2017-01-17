@@ -5,11 +5,13 @@ using namespace ONVIF;
 
 
 PtzManagement::PtzManagement(const QString & wsdlUrl, const QString &username, const QString &password)
-    :Service(wsdlUrl, username, password) {
+    :Service(wsdlUrl, username, password)
+{
 
 }
 
-QHash<QString, QString> PtzManagement::namespaces(const QString &key) {
+QHash<QString, QString> PtzManagement::namespaces(const QString &key)
+{
     QHash<QString, QString> names;
     Q_UNUSED(key)
     names.insert("SOAP-ENV", "http://www.w3.org/2003/05/soap-envelope");
@@ -65,7 +67,8 @@ QHash<QString, QString> PtzManagement::namespaces(const QString &key) {
     return names;
 }
 
-Message *PtzManagement::newMessage() {
+Message *PtzManagement::newMessage()
+{
     QHash<QString, QString> names;
     names.insert("wsdl", "http://www.onvif.org/ver20/ptz/wsdl");
     names.insert("sch", "http://www.onvif.org/ver10/schema");
@@ -80,7 +83,7 @@ Configurations *PtzManagement::getConfigurations()
     Message *msg = newMessage();
     msg->appendToBody(newElement("wsdl:GetConfigurations"));
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         configurations = new Configurations();
         QXmlQuery *query = result->query();
         QString value,xml;
@@ -92,14 +95,13 @@ Configurations *PtzManagement::getConfigurations()
         query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:PTZConfiguration");
         query->evaluateTo(&items);
         item = items.next();
-        while(!item.isNull()){
+        while(!item.isNull()) {
             query->setFocus(item);
             query->setQuery(result->nameSpace()+".");
             query->evaluateTo(&xml);
             doc.setContent(xml);
             itemNodeList = doc.elementsByTagName("tptz:PTZConfiguration");
-            for(int i=0; i<itemNodeList.size(); i++)
-            {
+            for(int i=0; i<itemNodeList.size(); i++) {
                 node = itemNodeList.at(i);
                 value = node.toElement().attribute("token");
                 configurations->setToken(value.trimmed());
@@ -145,8 +147,7 @@ Configurations *PtzManagement::getConfigurations()
             query->evaluateTo(&xml);
             doc.setContent(xml);
             itemNodeList = doc.elementsByTagName("tt:PanTilt");
-            for(int i=0; i<itemNodeList.size();i++)
-            {
+            for(int i=0; i<itemNodeList.size(); i++) {
                 node = itemNodeList.at(i);
                 value = node.toElement().attribute("space");
                 configurations->setPanTiltSpace(value.trimmed());
@@ -162,8 +163,7 @@ Configurations *PtzManagement::getConfigurations()
             query->evaluateTo(&xml);
             doc.setContent(xml);
             itemNodeList = doc.elementsByTagName("tt:Zoom");
-            for(int i=0; i<itemNodeList.size(); i++)
-            {
+            for(int i=0; i<itemNodeList.size(); i++) {
                 node = itemNodeList.at(i);
                 value = node.toElement().attribute("space");
                 configurations->setZoomSpace(value.trimmed());
@@ -225,7 +225,7 @@ Presets *PtzManagement::getPresets()
     getPresets.appendChild(profileToken);
     msg->appendToBody(getPresets);
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         presets = new Presets();
         QXmlQuery *query = result->query();
         QXmlResultItems items;
@@ -237,14 +237,13 @@ Presets *PtzManagement::getPresets()
         query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:Preset");
         query->evaluateTo(&items);
         item = items.next();
-        while(!item.isNull()){
+        while(!item.isNull()) {
             query->setFocus(item);
             query->setQuery(result->nameSpace()+".");
             query->evaluateTo(&xml);
             doc.setContent(xml);
             itemNodeList = doc.elementsByTagName("tptz:Preset");
-            for(int i=0; i<itemNodeList.size(); i++)
-            {
+            for(int i=0; i<itemNodeList.size(); i++) {
                 node = itemNodeList.at(i);
                 value = node.toElement().attribute("token");
                 presets->setToken(value.trimmed());
@@ -265,7 +264,7 @@ void PtzManagement::removePreset(RemovePreset *removePreset)
     Message *msg = newMessage();
     msg->appendToBody(removePreset->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:RemovePresetResponse"))
             removePreset->setResult(true);
         else
@@ -280,7 +279,7 @@ void PtzManagement::setPreset(Preset *preset)
     Message *msg = newMessage();
     msg->appendToBody(preset->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:SetPresetResponse"))
             preset->setResult(true);
         else
@@ -295,7 +294,7 @@ void PtzManagement::continuousMove(ContinuousMove *continuousMove)
     Message *msg = newMessage();
     msg->appendToBody(continuousMove->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:ContinuousMoveResponse"))
             continuousMove->setResult(true);
         else
@@ -310,7 +309,7 @@ void PtzManagement::absoluteMove(AbsoluteMove *absoluteMove)
     Message *msg = newMessage();
     msg->appendToBody(absoluteMove->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:AbsoluteMoveResponse"))
             absoluteMove->setResult(true);
         else
@@ -340,7 +339,7 @@ void PtzManagement::stop(Stop *stop)
     Message *msg = newMessage();
     msg->appendToBody(stop->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:StopResponse"))
             stop->setResult(true);
         else
@@ -357,7 +356,7 @@ Nodes *PtzManagement::getNodes()
     QDomElement getNodes = newElement("wsdl:GetNodes");
     msg->appendToBody(getNodes);
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         nodes = new Nodes();
         QXmlQuery *query = result->query();
         QXmlResultItems items;
@@ -369,14 +368,13 @@ Nodes *PtzManagement::getNodes()
         query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:PTZNode");
         query->evaluateTo(&items);
         item = items.next();
-        while(!item.isNull()){
+        while(!item.isNull()) {
             query->setFocus(item);
             query->setQuery(result->nameSpace()+".");
             query->evaluateTo(&xml);
             doc.setContent(xml);
             itemNodeList = doc.elementsByTagName("tptz:PTZNode");
-            for(int i=0; i<itemNodeList.size();i++)
-            {
+            for(int i=0; i<itemNodeList.size(); i++) {
                 node = itemNodeList.at(i);
                 value = node.toElement().attribute("token");
                 nodes->setPtzNodeToken(value.trimmed());
@@ -526,7 +524,7 @@ void PtzManagement::gotoPreset(GotoPreset *gotoPreset)
     Message *msg = newMessage();
     msg->appendToBody(gotoPreset->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:GotoPresetResponse"))
             gotoPreset->setResult(true);
         else
@@ -541,7 +539,7 @@ void PtzManagement::gotoHomePosition(GotoHomePosition *gotoHomePosition)
     Message *msg = newMessage();
     msg->appendToBody(gotoHomePosition->toxml());
     MessageParser *result =sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         if(result->find("//tptz:GotoHomePositionResponse"))
             gotoHomePosition->setResult(true);
         else
@@ -556,7 +554,7 @@ void PtzManagement::getConfiguration(Configuration *configuration)
     Message *msg = newMessage();
     msg->appendToBody(configuration->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         QXmlQuery *query = result->query();
         QDomNodeList itemNodeList;
         QDomNode node;
@@ -566,8 +564,7 @@ void PtzManagement::getConfiguration(Configuration *configuration)
         query->evaluateTo(&xml);
         doc.setContent(xml);
         itemNodeList = doc.elementsByTagName("tptz:PTZConfiguration");
-        for(int i=0; i<itemNodeList.size();i++)
-        {
+        for(int i=0; i<itemNodeList.size(); i++) {
             node = itemNodeList.at(i);
             value = node.toElement().attribute("token");
             configuration->setPtzConfigurationToken(value.trimmed());
@@ -585,8 +582,7 @@ void PtzManagement::getConfiguration(Configuration *configuration)
         query->evaluateTo(&xml);
         doc.setContent(xml);
         itemNodeList = doc.elementsByTagName("tt:PanTilt");
-        for(int i=0; i<itemNodeList.size();i++)
-        {
+        for(int i=0; i<itemNodeList.size(); i++) {
             node = itemNodeList.at(i);
             value = node.toElement().attribute("space");
             configuration->setPanTiltSpace(value.trimmed());
@@ -600,8 +596,7 @@ void PtzManagement::getConfiguration(Configuration *configuration)
         query->evaluateTo(&xml);
         doc.setContent(xml);
         itemNodeList = doc.elementsByTagName("tt:Zoom");
-        for(int i=0; i<itemNodeList.size();i++)
-        {
+        for(int i=0; i<itemNodeList.size(); i++) {
             node = itemNodeList.at(i);
             value = node.toElement().attribute("space");
             configuration->setZoomSpace(value.trimmed());
@@ -627,7 +622,7 @@ void PtzManagement::getNode(Node *node)
     Message *msg = newMessage();
     msg->appendToBody(node->toxml());
     MessageParser *result = sendMessage(msg);
-    if(result != NULL){
+    if(result != NULL) {
         QXmlQuery *query = result->query();
         QDomNodeList itemNodeList;
         QDomNode node1;
@@ -637,8 +632,7 @@ void PtzManagement::getNode(Node *node)
         query->evaluateTo(&xml);
         doc.setContent(xml);
         itemNodeList = doc.elementsByTagName("tptz:PTZNode");
-        for(int i=0; i<itemNodeList.size();i++)
-        {
+        for(int i=0; i<itemNodeList.size(); i++) {
             node1= itemNodeList.at(i);
             value = node1.toElement().attribute("token");
             node->setPtzNodeToken(value.trimmed());
@@ -681,4 +675,3 @@ void PtzManagement::getNode(Node *node)
     delete msg;
     delete result;
 }
-

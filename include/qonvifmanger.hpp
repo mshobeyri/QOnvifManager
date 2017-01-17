@@ -6,7 +6,8 @@
 #include <QHostAddress>
 #include "qonvifdevice.hpp"
 
-namespace ONVIF {
+namespace ONVIF
+{
 class DeviceSearcher;
 }
 
@@ -26,13 +27,14 @@ public:
     QMap<QString, QOnvifDevice *> devicesMap();
 
     bool setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
+    void setDefaulUsernameAndPassword(QString _username, QString _password);
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
 
 protected:
     QString iuserName;
     QString ipassword;
-    QMap <QString , QOnvifDevice* > idevicesMap;
+    QMap <QString, QOnvifDevice* > idevicesMap;
     QHostAddress ihostAddress;
     ONVIF::DeviceSearcher *ideviceSearcher;
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>719</width>
-    <height>300</height>
+    <width>616</width>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="3" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="label">
@@ -43,21 +43,21 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>Date and Time:</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
+    <item row="12" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
        <string>Control:</string>
       </property>
      </widget>
     </item>
-    <item row="8" column="0">
+    <item row="13" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLabel" name="label_3">
@@ -88,7 +88,7 @@
       </item>
      </layout>
     </item>
-    <item row="3" column="0">
+    <item row="8" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="label_4">
@@ -151,7 +151,7 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="0">
+    <item row="9" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <widget class="QLabel" name="label_7">
@@ -179,6 +179,48 @@
       </item>
      </layout>
     </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Login:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Username:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtUserName">
+        <property name="text">
+         <string>admin</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Password:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtPassword"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="setUsernamePass">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -187,7 +229,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>719</width>
+     <width>616</width>
      <height>19</height>
     </rect>
    </property>

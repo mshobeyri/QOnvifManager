@@ -10,7 +10,7 @@ QOnvifDevice::QOnvifDevice(QString _serviceAddress, QString _userName, QString _
 
 {
     ideviceManagement = new ONVIF::DeviceManagement(
-                _serviceAddress, iuserName, ipassword);
+        _serviceAddress, iuserName, ipassword);
 }
 
 QOnvifDevice::~QOnvifDevice()
@@ -107,8 +107,7 @@ QOnvifDevice::refreshDeviceCapabilities()
     return true;
 }
 
-bool
-QOnvifDevice::refreshDeviceInformation()
+bool QOnvifDevice::refreshDeviceInformation()
 {
     QHash<QString, QString>  deviceInformationHash = ideviceManagement->getDeviceInformation();
     ideviceInformation.manufacturer = deviceInformationHash.value("mf");
@@ -130,4 +129,3 @@ QOnvifDevice::rebootDevice()
 {
     return true;
 }
-

@@ -17,56 +17,55 @@ using namespace ONVIF;
 
 //DeviceSearcher* DeviceSearcher::searcher = NULL;
 
-DeviceSearcher* DeviceSearcher::instance(QHostAddress &addr) {
+DeviceSearcher* DeviceSearcher::instance(QHostAddress &addr)
+{
     //if(searcher == NULL) {
-        DeviceSearcher* searcher = new DeviceSearcher(addr);
+    DeviceSearcher* searcher = new DeviceSearcher(addr);
     //}
     return searcher;
 }
 
 QList<QHostAddress> DeviceSearcher::getHostAddress()
 {
-	QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-	QList<QHostAddress> ipAddressesIPV4;
-	
-	// skip IPV6 address
-	QList<QHostAddress>::iterator i;
-	for(i=ipAddressesList.begin();i!=ipAddressesList.end();i++)
-	{
-		std::string ip = (*i).toString().toStdString();
-		size_t p1 = ip.find("127.");
-		if (p1 != std::string::npos) 
-		{
-			continue;
-		}
-		size_t p2 = ip.find(":");
-		if (p2 != std::string::npos) 
-		{
-			continue;
-		}
-		ipAddressesIPV4.append(*i);
-	}
-	
-	return ipAddressesIPV4;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    QList<QHostAddress> ipAddressesIPV4;
+
+    // skip IPV6 address
+    QList<QHostAddress>::iterator i;
+    for(i=ipAddressesList.begin(); i!=ipAddressesList.end(); i++) {
+        std::string ip = (*i).toString().toStdString();
+        size_t p1 = ip.find("127.");
+        if (p1 != std::string::npos) {
+            continue;
+        }
+        size_t p2 = ip.find(":");
+        if (p2 != std::string::npos) {
+            continue;
+        }
+        ipAddressesIPV4.append(*i);
+    }
+
+    return ipAddressesIPV4;
 }
 
-DeviceSearcher::DeviceSearcher(QHostAddress &addr, QObject *parent) : QObject(parent) {
+DeviceSearcher::DeviceSearcher(QHostAddress &addr, QObject *parent) : QObject(parent)
+{
     mUdpSocket = new QUdpSocket(this);
     //QHostAddress host("192.168.0.1");
     //mUdpSocket->bind(QHostAddress::Any, 0, QUdpSocket::ShareAddress);
     mUdpSocket->bind(addr, 0, QUdpSocket::ShareAddress);
     int opt=4 * 1024 * 1024;
-    if (setsockopt(mUdpSocket->socketDescriptor(), SOL_SOCKET, 
-        SO_RCVBUF, (char *)&opt, sizeof(int)) < 0)
-    {
-	printf("Set ----> SO_RCVBUF error\n");
+    if (setsockopt(mUdpSocket->socketDescriptor(), SOL_SOCKET,
+                   SO_RCVBUF, (char *)&opt, sizeof(int)) < 0) {
+        printf("Set ----> SO_RCVBUF error\n");
     }
-    
+
     connect(mUdpSocket, SIGNAL(readyRead()),
             this, SLOT(readPendingDatagrams()));
 }
 
-DeviceSearcher::~DeviceSearcher() {
+DeviceSearcher::~DeviceSearcher()
+{
     if(this->mUdpSocket != NULL) {
         mUdpSocket->close();
         delete mUdpSocket;
@@ -75,23 +74,25 @@ DeviceSearcher::~DeviceSearcher() {
 }
 
 
-void DeviceSearcher::sendSearchMsg() {
+void DeviceSearcher::sendSearchMsg()
+{
     Message *msg = Message::getOnvifSearchMessage();
     QString msg_str = msg->toXmlStr();
     mUdpSocket->writeDatagram(msg_str.toUtf8(), QHostAddress("239.255.255.250"), 3702);
 }
 
-void DeviceSearcher::readPendingDatagrams() {
+void DeviceSearcher::readPendingDatagrams()
+{
     while (mUdpSocket->hasPendingDatagrams()) {
         QByteArray datagram;
         datagram.resize(mUdpSocket->pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
         mUdpSocket->readDatagram(datagram.data(), datagram.size(),
-                                &sender, &senderPort);
-        
+                                 &sender, &senderPort);
+
 //        qDebug() << "========> \n" << datagram << "\n++++++++++++++++++++++++\n";
-        
+
         QHash<QString, QString> namespaces;
         namespaces.insert("SOAP-ENV", "http://www.w3.org/2003/05/soap-envelope");
         namespaces.insert("SOAP-ENC", "http://www.w3.org/2003/05/soap-encoding");
@@ -143,7 +144,6 @@ void DeviceSearcher::readPendingDatagrams() {
         namespaces.insert("tnsn", "http://www.eventextension.com/2011/event/topics");
         namespaces.insert("tnsavg", "http://www.avigilon.com/onvif/ver10/topics");
 
-        
         MessageParser parser(QString(datagram), namespaces);
 
         QHash<QString, QString> device_infos;
@@ -154,6 +154,6 @@ void DeviceSearcher::readPendingDatagrams() {
         device_infos.insert("scopes", parser.getValue("//d:ProbeMatches/d:ProbeMatch/wsa:EndpointReference/wsa:Address"));
         device_infos.insert("metadata_version", parser.getValue("//d:ProbeMatches/d:ProbeMatch/d:MetadataVersion"));
         emit receiveData(device_infos);
-    }    
+    }
     emit deviceSearchingEnded();
 }

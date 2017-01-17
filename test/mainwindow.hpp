@@ -28,6 +28,7 @@ private slots:
     void on_actionAbout_triggered();
     void on_btnGetDataAndTime_clicked();
     void on_btsSetDateAndTime_clicked();
+    void on_setUsernamePass_clicked();
 
 private:
     Ui::MainWindow *ui;

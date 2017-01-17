@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ionvifManager = new QOnvifManger("admin","admin",this);
+    ionvifManager = new QOnvifManger("admin","",this);
     connect(ionvifManager,&QOnvifManger::newDeviceFinded,
             this,&MainWindow::onNewDeviceFinded);
     on_btnRefresh_clicked();
@@ -27,8 +27,8 @@ void
 MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
 {
     ui->cmbDevicesComboBox->addItem(
-                _device->deviceProbeData().ideviceServiceAddress.replace("http://","").replace("/onvif/device_service",""),
-                _device->deviceProbeData().iendPointAddress);
+        _device->deviceProbeData().ideviceServiceAddress.replace("http://","").replace("/onvif/device_service",""),
+        _device->deviceProbeData().iendPointAddress);
 }
 
 void
@@ -73,10 +73,11 @@ MainWindow::on_btnGetDataAndTime_clicked()
     ui->dateTimeEditLocal->setDateTime(dateAndTime.localTime);
     ui->dateTimeEditUtc->setDateTime(dateAndTime.utcTime);
 }
+
 void
 MainWindow::on_btsSetDateAndTime_clicked()
 {
-    ionvifManager->setDeviceDateAndTime( currentDevice() , ui->dateTimeEditSet->dateTime() );
+    ionvifManager->setDeviceDateAndTime( currentDevice(), ui->dateTimeEditSet->dateTime() );
 }
 
 QString
@@ -85,3 +86,9 @@ MainWindow::currentDevice()
     return ui->cmbDevicesComboBox->currentData().toString();
 }
 
+void
+MainWindow::on_setUsernamePass_clicked()
+{
+    ionvifManager->setDefaulUsernameAndPassword(ui->txtUserName->text(), ui->txtPassword->text());
+    on_btnRefresh_clicked();
+}

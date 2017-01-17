@@ -5,7 +5,8 @@
 
 using namespace ONVIF;
 
-MessageParser::MessageParser(const QString &data, QHash<QString, QString> &namespaces, QObject *parent) : QObject(parent) {
+MessageParser::MessageParser(const QString &data, QHash<QString, QString> &namespaces, QObject *parent) : QObject(parent)
+{
     mBuffer.setData(data.toUtf8());
     mBuffer.open(QIODevice::ReadOnly);
     mQuery.bindVariable("inputDocument", &mBuffer);
@@ -17,11 +18,13 @@ MessageParser::MessageParser(const QString &data, QHash<QString, QString> &names
     }
 }
 
-MessageParser::~MessageParser() {
+MessageParser::~MessageParser()
+{
     mBuffer.close();
 }
 
-QString MessageParser::getValue(const QString &xpath) {
+QString MessageParser::getValue(const QString &xpath)
+{
 
     QString str;
     mQuery.setQuery(mNamespaceQueryStr + "doc($inputDocument)" + xpath + "/string()");
@@ -35,7 +38,7 @@ QString MessageParser::getValue(const QString &xpath) {
 bool MessageParser::find(const QString &xpath)
 {
     mQuery.setQuery(mNamespaceQueryStr + "doc($inputDocument)" + xpath);
-    if(!mQuery.isValid()){
+    if(!mQuery.isValid()) {
         return false;
     }
     QXmlResultItems items;
@@ -56,5 +59,4 @@ QString MessageParser::nameSpace()
 {
     return mNamespaceQueryStr;
 }
-
 
