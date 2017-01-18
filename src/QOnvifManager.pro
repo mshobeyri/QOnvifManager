@@ -114,7 +114,6 @@ HEADERS += \
     ../include/QOnvifManager/message.h \
     ../include/QOnvifManager/messageparser.h \
     ../include/QOnvifManager/ptzmanagement.h \
-    ../include/QOnvifManager/qonvifmanager_global.hpp \
     ../include/QOnvifManager/qringbuffer_p.h \
     ../include/QOnvifManager/service.h
 
