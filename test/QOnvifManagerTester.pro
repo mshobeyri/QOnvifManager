@@ -8,7 +8,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-QMAKE_RPATHDIR += /media/mehrdad/LocalDisk/Projects/QOnvifManager/bin
+QMAKE_RPATHDIR += ../bin
 
 DESTDIR  = ../bin
 TARGET = QOnvifManagerTester
