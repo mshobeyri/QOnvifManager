@@ -3,7 +3,7 @@
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
-#include "qonvifmanger.hpp"
+#include "qonvifmanager.hpp"
 #include "qonvifdevice.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ionvifManager = new QOnvifManger("admin","",this);
-    connect(ionvifManager,&QOnvifManger::newDeviceFinded,
+    ionvifManager = new QOnvifManager("admin","",this);
+    connect(ionvifManager,&QOnvifManager::newDeviceFinded,
             this,&MainWindow::onNewDeviceFinded);
     on_btnRefresh_clicked();
 }

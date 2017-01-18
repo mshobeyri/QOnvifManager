@@ -1,5 +1,5 @@
-#ifndef QONVIFMANGER_HPP
-#define QONVIFMANGER_HPP
+#ifndef QONVIFMANAGER_HPP
+#define QONVIFMANAGER_HPP
 
 #include <QDateTime>
 #include <QMap>
@@ -11,11 +11,11 @@ namespace ONVIF
 class DeviceSearcher;
 }
 
-class QOnvifManger: public QObject
+class QOnvifManager: public QObject
 {
     Q_OBJECT
 public:
-    QOnvifManger(QString _userName, QString _password, QObject *_parent);
+    QOnvifManager(QString _userName, QString _password, QObject *_parent);
 
     bool refreshDevicesList();
     bool refreshDeviceCapabilities(QString _deviceEndPointAddress);
@@ -46,4 +46,4 @@ signals:
     void deviceSearchingEnded();
 };
 
-#endif // QONVIFMANGER_HPP
+#endif // QONVIFMANAGER_HPP

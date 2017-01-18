@@ -10,10 +10,10 @@ CONFIG += c++11
 
 DEFINES += QT_DLL QT_NETWORK_LIB QT_HELP_LIB QT_SCRIPT_LIB QT_WIDGETS_LIB QT_XML_LIB QT_XMLPATTERNS_LIB ONVIFC_LIB
 
-TARGET = QOnvifManger
+TARGET = QOnvifManager
 TEMPLATE = lib
 
-DEFINES += QONVIFMANGER_LIBRARY
+DEFINES += QONVIFMANAGER_LIBRARY
 
 unix {
     target.path = /usr/lib
@@ -34,8 +34,8 @@ HEADERS += \
     include/messageparser.h \
     include/ptzmanagement.h \
     include/qonvifdevice.hpp \
-    include/qonvifmanger.hpp \
-    include/qonvifmanger_global.hpp \
+    include/qonvifmanager.hpp \
+    include/qonvifmanager_global.hpp \
     include/qringbuffer_p.h \
     include/service.h
 
@@ -47,7 +47,7 @@ SOURCES += \
     src/messageparser.cpp \
     src/ptzmanagement.cpp \
     src/qonvifdevice.cpp \
-    src/qonvifmanger.cpp \
+    src/qonvifmanager.cpp \
     src/service.cpp
 
 DISTFILES += \

@@ -19,7 +19,8 @@ namespace ONVIF {
                 return Main;
             if(s == QString("Extended"))
                 return Extended;
-            if(s == QString("High"))
+//            todo : remove this line to solve warning(i have no idea about it!)
+//            if(s == QString("High"))
                 return High;
         }
 

@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-class QOnvifManger;
+class QOnvifManager;
 
 namespace Ui {
 class MainWindow;
@@ -32,7 +32,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QOnvifManger *ionvifManager;
+    QOnvifManager *ionvifManager;
     QString currentDevice();
 };
 

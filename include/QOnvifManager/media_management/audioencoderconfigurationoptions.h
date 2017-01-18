@@ -18,8 +18,10 @@ namespace ONVIF {
                 return G711;
             if(s == QString("G726"))
                 return G726;
-            if(s == QString("AAC"))
+//            todo : remove this line to solve warning(i have no idea about it!)
+//            if(s == QString("AAC"))
                 return AAC;
+
         }
 
         QList<Encoding> getEncoding()

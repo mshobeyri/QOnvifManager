@@ -1,10 +1,10 @@
-#include "qonvifmanger.hpp"
+#include "qonvifmanager.hpp"
 #include "devicesearcher.h"
 #include "devicemanagement.h"
 #include "systemdateandtime.h"
 
 
-QOnvifManger::QOnvifManger(QString _userName, QString _password, QObject *_parent):
+QOnvifManager::QOnvifManager(QString _userName, QString _password, QObject *_parent):
     QObject(_parent),iuserName(_userName), ipassword(_password)
 {
     // device finding
@@ -23,7 +23,7 @@ QOnvifManger::QOnvifManger(QString _userName, QString _password, QObject *_paren
 }
 
 bool
-QOnvifManger::refreshDevicesList()
+QOnvifManager::refreshDevicesList()
 {
     idevicesMap.clear();
     ideviceSearcher->sendSearchMsg();
@@ -31,62 +31,62 @@ QOnvifManger::refreshDevicesList()
 }
 
 bool
-QOnvifManger::refreshDeviceCapabilities(QString _deviceEndPointAddress)
+QOnvifManager::refreshDeviceCapabilities(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceCapabilities();
 }
 
 bool
-QOnvifManger::refreshDeviceInformations(QString _deviceEndPointAddress)
+QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceInformation();
 }
 
 QOnvifDevice::DateTime
-QOnvifManger::deviceDateAndTime(QString _deviceEndPointAddress)
+QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->deviceDateAndTime();
 }
 
 QOnvifDevice*
-QOnvifManger::device(QString _deviceEndPointAddress)
+QOnvifManager::device(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress);
 }
 
 QMap<QString, QOnvifDevice*>
-QOnvifManger::devicesMap()
+QOnvifManager::devicesMap()
 {
     return idevicesMap;
 }
 
 bool
-QOnvifManger::setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime)
+QOnvifManager::setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime)
 {
     return idevicesMap.value(_deviceEndPointAddress)->setDeviceDateAndTime(_dateTime);
 }
 
 void
-QOnvifManger::setDefaulUsernameAndPassword(QString _username, QString _password)
+QOnvifManager::setDefaulUsernameAndPassword(QString _username, QString _password)
 {
     iuserName = _username;
     ipassword = _password;
 }
 
 bool
-QOnvifManger::resetFactoryDevice(QString _deviceEndPointAddress)
+QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->resetFactoryDevice();
 }
 
 bool
-QOnvifManger::rebootDevice(QString _deviceEndPointAddress)
+QOnvifManager::rebootDevice(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->rebootDevice();
 }
 
 void
-QOnvifManger::onReciveData(QHash<QString,QString> _deviceHash)
+QOnvifManager::onReciveData(QHash<QString,QString> _deviceHash)
 {
     QOnvifDevice::DeviceProbeData probeData;
 

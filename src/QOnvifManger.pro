@@ -11,10 +11,10 @@ CONFIG += c++11
 DEFINES += QT_DLL QT_NETWORK_LIB QT_HELP_LIB QT_SCRIPT_LIB QT_WIDGETS_LIB QT_XML_LIB QT_XMLPATTERNS_LIB ONVIFC_LIB
 
 DESTDIR  = ../bin
-TARGET = QOnvifManger
+TARGET = QOnvifManager
 TEMPLATE = lib
 
-DEFINES += QONVIFMANGER_LIBRARY
+DEFINES += QONVIFMANAGER_LIBRARY
 
 unix {
     target.path = /usr/lib
@@ -31,7 +31,7 @@ SOURCES += \
     devicemanagement.cpp \
     devicesearcher.cpp \
     qonvifdevice.cpp \
-    qonvifmanger.cpp \
+    qonvifmanager.cpp \
     device_management/capabilities.cpp \
     device_management/networkinterfaces.cpp \
     device_management/networkprotocols.cpp \
@@ -73,7 +73,7 @@ SOURCES += \
 
 HEADERS += \
     ../include/qonvifdevice.hpp \
-    ../include/qonvifmanger.hpp \
+    ../include/qonvifmanager.hpp \
     ../include/QOnvifManager/devicesearcher.h \
     ../include/QOnvifManager/devicemanagement.h \
     ../include/QOnvifManager/device_management/capabilities.h \
@@ -113,7 +113,7 @@ HEADERS += \
     ../include/QOnvifManager/message.h \
     ../include/QOnvifManager/messageparser.h \
     ../include/QOnvifManager/ptzmanagement.h \
-    ../include/QOnvifManager/qonvifmanger_global.hpp \
+    ../include/QOnvifManager/qonvifmanager_global.hpp \
     ../include/QOnvifManager/qringbuffer_p.h \
     ../include/QOnvifManager/service.h
 
