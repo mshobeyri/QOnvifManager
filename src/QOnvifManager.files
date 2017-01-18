@@ -1,0 +1,11 @@
+client.cpp
+devicemanagement.cpp
+devicesearcher.cpp
+mediamanagement.cpp
+message.cpp
+messageparser.cpp
+ptzmanagement.cpp
+qonvifdevice.cpp
+qonvifmanager.cpp
+QOnvifManger.pro
+service.cpp
