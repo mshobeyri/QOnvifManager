@@ -49,7 +49,6 @@ QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 bool
 QOnvifDevice::refreshDeviceCapabilities()
 {
-
     QScopedPointer <ONVIF::Capabilities> capabilitiesDevice (ideviceManagement->getCapabilitiesDevice());
 
     ideviceCapabilities.accessPolicyConfig = capabilitiesDevice->accessPolicyConfig();
