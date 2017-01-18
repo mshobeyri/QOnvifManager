@@ -49,62 +49,58 @@ QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 bool
 QOnvifDevice::refreshDeviceCapabilities()
 {
-//    ONVIF::Capabilities* capabilities;
-    QScopedPointer <ONVIF::Capabilities> capabilities (ideviceManagement->getCapabilitiesDevice());
-    capabilities(*ideviceManagement->getCapabilitiesPtz());
-//    capabilities  = ideviceManagement->getCapabilitiesDevice();
-//    capabilities  = ideviceManagement->getCapabilitiesPtz();
-//    capabilities  = ideviceManagement->getCapabilitiesImaging();
-//    capabilities  = ideviceManagement->getCapabilitiesMedia();
 
-    if (!capabilities)
-        return false;
+    QScopedPointer <ONVIF::Capabilities> capabilitiesDevice (ideviceManagement->getCapabilitiesDevice());
 
-    ideviceCapabilities.accessPolicyConfig = capabilities->accessPolicyConfig();
+    ideviceCapabilities.accessPolicyConfig = capabilitiesDevice->accessPolicyConfig();
+    ideviceCapabilities.deviceXAddr = capabilitiesDevice->deviceXAddr();
+    ideviceCapabilities.iPFilter = capabilitiesDevice->iPFilter();
+    ideviceCapabilities.zeroConfiguration = capabilitiesDevice->zeroConfiguration();
+    ideviceCapabilities.iPVersion6 = capabilitiesDevice->iPVersion6();
+    ideviceCapabilities.dynDNS = capabilitiesDevice->dynDNS();
+    ideviceCapabilities.discoveryResolve = capabilitiesDevice->discoveryResolve();
+    ideviceCapabilities.systemLogging = capabilitiesDevice->systemLogging();
+    ideviceCapabilities.firmwareUpgrade = capabilitiesDevice->firmwareUpgrade();
+    ideviceCapabilities.major = capabilitiesDevice->major();
+    ideviceCapabilities.minor = capabilitiesDevice->minor();
+    ideviceCapabilities.httpFirmwareUpgrade = capabilitiesDevice->httpFirmwareUpgrade();
+    ideviceCapabilities.httpSystemBackup = capabilitiesDevice->httpSystemBackup();
+    ideviceCapabilities.httpSystemLogging = capabilitiesDevice->httpSystemLogging();
+    ideviceCapabilities.httpSupportInformation = capabilitiesDevice->httpSupportInformation();
+    ideviceCapabilities.inputConnectors = capabilitiesDevice->inputConnectors();
+    ideviceCapabilities.relayOutputs = capabilitiesDevice->relayOutputs();
+    ideviceCapabilities.tls11 = capabilitiesDevice->tls11();
+    ideviceCapabilities.tls22 = capabilitiesDevice->tls22();
+    ideviceCapabilities.onboardKeyGeneration = capabilitiesDevice->onboardKeyGeneration();
+    ideviceCapabilities.accessPolicyConfig = capabilitiesDevice->accessPolicyConfig();
+    ideviceCapabilities.x509Token = capabilitiesDevice->x509Token();
+    ideviceCapabilities.samlToken = capabilitiesDevice->samlToken();
+    ideviceCapabilities.kerberosToken = capabilitiesDevice->kerberosToken();
+    ideviceCapabilities.relToken = capabilitiesDevice->relToken();
+    ideviceCapabilities.tls10 = capabilitiesDevice->tls10();
+    ideviceCapabilities.dot1x = capabilitiesDevice->dot1x();
+    ideviceCapabilities.remoteUserHanding = capabilitiesDevice->remoteUserHanding();
+    ideviceCapabilities.systemBackup = capabilitiesDevice->systemBackup();
+    ideviceCapabilities.discoveryBye = capabilitiesDevice->discoveryBye();
+    ideviceCapabilities.remoteDiscovery = capabilitiesDevice->remoteDiscovery();
 
     //ptz capabilities
-    ideviceCapabilities.ptzAddress = capabilities->ptzXAddr();
+    QScopedPointer <ONVIF::Capabilities> capabilitiesPtz (ideviceManagement->getCapabilitiesDevice());
+
+    ideviceCapabilities.ptzAddress = capabilitiesPtz->ptzXAddr();
 
     //image capabilities
-    ideviceCapabilities.imagingXAddress = capabilities->imagingXAddr();
+    QScopedPointer <ONVIF::Capabilities> capabilitiesImage (ideviceManagement->getCapabilitiesDevice());
+
+    ideviceCapabilities.imagingXAddress = capabilitiesImage->imagingXAddr();
 
     //media capabilities
-    ideviceCapabilities.mediaXAddress = capabilities->mediaXAddr();
-    ideviceCapabilities.rtpMulticast = capabilities->rtpMulticast();
-    ideviceCapabilities.rtpTcp = capabilities->rtpTcp();
-    ideviceCapabilities.rtpRtspTcp = capabilities->rtpRtspTcp();
+    QScopedPointer <ONVIF::Capabilities> capabilitiesMedia (ideviceManagement->getCapabilitiesDevice());
 
-    //device capabilities
-    ideviceCapabilities.deviceXAddr = capabilities->deviceXAddr();
-    ideviceCapabilities.iPFilter = capabilities->iPFilter();
-    ideviceCapabilities.zeroConfiguration = capabilities->zeroConfiguration();
-    ideviceCapabilities.iPVersion6 = capabilities->iPVersion6();
-    ideviceCapabilities.dynDNS = capabilities->dynDNS();
-    ideviceCapabilities.discoveryResolve = capabilities->discoveryResolve();
-    ideviceCapabilities.systemLogging = capabilities->systemLogging();
-    ideviceCapabilities.firmwareUpgrade = capabilities->firmwareUpgrade();
-    ideviceCapabilities.major = capabilities->major();
-    ideviceCapabilities.minor = capabilities->minor();
-    ideviceCapabilities.httpFirmwareUpgrade = capabilities->httpFirmwareUpgrade();
-    ideviceCapabilities.httpSystemBackup = capabilities->httpSystemBackup();
-    ideviceCapabilities.httpSystemLogging = capabilities->httpSystemLogging();
-    ideviceCapabilities.httpSupportInformation = capabilities->httpSupportInformation();
-    ideviceCapabilities.inputConnectors = capabilities->inputConnectors();
-    ideviceCapabilities.relayOutputs = capabilities->relayOutputs();
-    ideviceCapabilities.tls11 = capabilities->tls11();
-    ideviceCapabilities.tls22 = capabilities->tls22();
-    ideviceCapabilities.onboardKeyGeneration = capabilities->onboardKeyGeneration();
-    ideviceCapabilities.accessPolicyConfig = capabilities->accessPolicyConfig();
-    ideviceCapabilities.x509Token = capabilities->x509Token();
-    ideviceCapabilities.samlToken = capabilities->samlToken();
-    ideviceCapabilities.kerberosToken = capabilities->kerberosToken();
-    ideviceCapabilities.relToken = capabilities->relToken();
-    ideviceCapabilities.tls10 = capabilities->tls10();
-    ideviceCapabilities.dot1x = capabilities->dot1x();
-    ideviceCapabilities.remoteUserHanding = capabilities->remoteUserHanding();
-    ideviceCapabilities.systemBackup = capabilities->systemBackup();
-    ideviceCapabilities.discoveryBye = capabilities->discoveryBye();
-    ideviceCapabilities.remoteDiscovery = capabilities->remoteDiscovery();
+    ideviceCapabilities.mediaXAddress = capabilitiesMedia->mediaXAddr();
+    ideviceCapabilities.rtpMulticast = capabilitiesMedia->rtpMulticast();
+    ideviceCapabilities.rtpTcp = capabilitiesMedia->rtpTcp();
+    ideviceCapabilities.rtpRtspTcp = capabilitiesMedia->rtpRtspTcp();
 
     return true;
 }
