@@ -25,6 +25,7 @@ QOnvifManager::QOnvifManager(QString _userName, QString _password, QObject *_par
 bool
 QOnvifManager::refreshDevicesList()
 {
+    qDeleteAll(idevicesMap);
     idevicesMap.clear();
     ideviceSearcher->sendSearchMsg();
     return true;
@@ -91,6 +92,10 @@ QOnvifManager::onReciveData(QHash<QString,QString> _deviceHash)
     QOnvifDevice::DeviceProbeData probeData;
 
     probeData.iendPointAddress = _deviceHash.value("ep_address");
+
+    if(idevicesMap.contains(probeData.iendPointAddress))
+        return;
+
     probeData.itypes = _deviceHash.value("types");
     probeData.ideviceIp = _deviceHash.value("device_ip");
     probeData.ideviceServiceAddress = _deviceHash.value("device_service_address");

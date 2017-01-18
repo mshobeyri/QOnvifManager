@@ -14,7 +14,6 @@ DESTDIR  = ../bin
 TARGET = QOnvifManagerTester
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         mainwindow.cpp
 

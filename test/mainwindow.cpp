@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete ionvifManager;
     delete ui;
 }
 
@@ -34,7 +35,11 @@ MainWindow::onNewDeviceFinded(QOnvifDevice *_device)
 void
 MainWindow::on_btnRefresh_clicked()
 {
+    ui->btnRefresh->setEnabled(false);
     ui->cmbDevicesComboBox->clear();
+    connect(ionvifManager,&QOnvifManager::deviceSearchingEnded,this,[this](){
+        ui->btnRefresh->setEnabled(true);
+    },Qt::UniqueConnection);
     ionvifManager->refreshDevicesList();
 }
 
@@ -51,7 +56,6 @@ MainWindow::on_btnRefreshData_clicked()
     ionvifManager->refreshDeviceCapabilities( currentDevice() );
     ionvifManager->refreshDeviceInformations( currentDevice() );
     on_btnGetDataAndTime_clicked();
-
     QOnvifDevice* device = ionvifManager->device(currentDevice() );
     Q_UNUSED(device)
 

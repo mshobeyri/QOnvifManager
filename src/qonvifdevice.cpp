@@ -31,7 +31,7 @@ void QOnvifDevice::setDeviceProbeData(QOnvifDevice::DeviceProbeData _probeData)
 QOnvifDevice::DateTime
 QOnvifDevice::deviceDateAndTime()
 {
-    ONVIF::SystemDateAndTime *systemDateAndTime = ideviceManagement->getSystemDateAndTime();
+    QScopedPointer <ONVIF::SystemDateAndTime> systemDateAndTime(ideviceManagement->getSystemDateAndTime());
     idateAndTime.localTime = systemDateAndTime->localTime();
     idateAndTime.utcTime = systemDateAndTime->utcTime();
     return idateAndTime;
@@ -49,11 +49,13 @@ QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
 bool
 QOnvifDevice::refreshDeviceCapabilities()
 {
-    ONVIF::Capabilities* capabilities;
-    capabilities  = ideviceManagement->getCapabilitiesDevice();
-    capabilities  = ideviceManagement->getCapabilitiesPtz();
-    capabilities  = ideviceManagement->getCapabilitiesImaging();
-    capabilities  = ideviceManagement->getCapabilitiesMedia();
+//    ONVIF::Capabilities* capabilities;
+    QScopedPointer <ONVIF::Capabilities> capabilities (ideviceManagement->getCapabilitiesDevice());
+    capabilities(*ideviceManagement->getCapabilitiesPtz());
+//    capabilities  = ideviceManagement->getCapabilitiesDevice();
+//    capabilities  = ideviceManagement->getCapabilitiesPtz();
+//    capabilities  = ideviceManagement->getCapabilitiesImaging();
+//    capabilities  = ideviceManagement->getCapabilitiesMedia();
 
     if (!capabilities)
         return false;
