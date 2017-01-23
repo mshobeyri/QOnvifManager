@@ -9,11 +9,13 @@
 
 using namespace ONVIF;
 
-Client::Client(const QString &url) {
+Client::Client(const QString &url)
+{
     mUrl = url;
 }
 
-QString Client::sendData(const QString &data) {
+QString Client::sendData(const QString &data)
+{
 
     QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);
 

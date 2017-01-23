@@ -5,12 +5,15 @@
 #include <QObject>
 
 namespace ONVIF {
-    class DeviceManagement;
+class DeviceManagement;
+class MediaManagement;
 }
 
 class QOnvifDevice : public QObject
 {
 public:
+
+    //device management
     struct DeviceInformation{
         QString manufacturer;
         QString model;
@@ -79,10 +82,100 @@ public:
         QDateTime localTime;
     };
 
+    //media management
+
+    struct MediaConfig
+    {
+        struct Audio
+        {
+            struct EncodingOptions{
+                QList< QList<int> > bitratList;
+                QList< QList<int> > sampleRateList;
+                enum Encoding {G711,G726,AAC};
+                QList<Encoding> encoding;
+            };
+            struct EncoderConfig{
+                QList<QString> token;
+                QList<QString> name;
+                QList<int> useCount;
+                QList<QString> encoding;
+                QList<int> bitrate;
+                QList<int> sampleRate;
+                QList<QString> type;
+                QList<QString> ipv4Address;
+                QList<QString> ipv6Address;
+                QList<int> port;
+                QList<int> ttl;
+                QList<bool> autoStart;
+                QList<QString> sessionTimeout;
+            };
+            struct SourceConfig{
+                QList<QString> token;
+                QList<QString> name;
+                QList<int> useCount;
+                QList<QString> sourceToken;
+            };
+            EncodingOptions encodingOptions;
+            EncoderConfig encodingConfig;
+            SourceConfig sourceConfig;
+        };
+
+        struct Video
+        {
+            struct EncodingOptions{
+                int qualityRangeMin;
+                int qulityRangeMax;
+                QList<int> resAvailableWidth;
+                QList<int> resAvailableHeight;
+                int govLengthRangeMin;
+                int govLengthRangeMax;
+                int frameRateRangeMin;
+                int frameRateRangeMax;
+                int encodingIntervalRangeMin;
+                int encodingIntervalRangeMax;
+                enum H264ProfilesSupported {Baseline,Main,Extended,High};
+                QList<H264ProfilesSupported> h264ProfilesSupported;
+            };
+            struct EncoderConfig{
+                QList<QString> token;
+                QList<QString> name;
+                QList<int> useCount;
+                QList<QString> encoding;
+                QList<int> width;
+                QList<int> height;
+                QList<int> quality;
+                QList<int> frameRateLimit;
+                QList<int> encodingInterval;
+                QList<int> bitrateLimit;
+                QList<int> govLength;
+                QList<QString> h264Profile;
+                QList<QString> type;
+                QList<QString> ipv4Address;
+                QList<QString> ipv6Address;
+                QList<int> port;
+                QList<int> ttl;
+                QList<bool> autoStart;
+                QList<QString>sessionTimeout;
+            };
+            struct SourceConfig{
+                QList<QString> name;
+                QList<int> useCount;
+                QList<QString> sourceToken;
+                QList<QRect> bounds;
+            };
+            EncodingOptions encodingOptions;
+            EncoderConfig encodingConfig;
+            SourceConfig sourceConfig;
+        };
+        Audio audio;
+        Video video;
+    };
+
     QOnvifDevice();
     QOnvifDevice(QString _serviceAddress, QString _userName, QString _password, QObject* _parent);
     ~QOnvifDevice();
 
+    //device management
     DeviceProbeData deviceProbeData();
     void setDeviceProbeData(DeviceProbeData _probeData);
 
@@ -95,16 +188,26 @@ public:
     bool resetFactoryDevice();
     bool rebootDevice();
 
-private:
-    ONVIF::DeviceManagement *ideviceManagement;
+    //media management
+    bool refreshVideoConfigs();
+    bool refreshAudioConfigs();
 
-    QString idescription;
+private:
+
     QString iuserName;
     QString ipassword;
+
+    //device management
+    ONVIF::DeviceManagement *ideviceManagement;
+
     DateTime idateAndTime;
     DeviceProbeData ideviceProbeData;
     DeviceInformation ideviceInformation;
     DeviceCapabilities ideviceCapabilities;
+
+    //media management
+    ONVIF::MediaManagement *imediaManagement;
+    MediaConfig imediaConfig;
 
 
 };

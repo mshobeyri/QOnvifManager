@@ -8,7 +8,6 @@ QOnvifManager::QOnvifManager(QString _userName, QString _password, QObject *_par
     QObject(_parent),iuserName(_userName), ipassword(_password)
 {
     // device finding
-
     ideviceSearcher = ONVIF::DeviceSearcher::instance(ihostAddress);
 
     // when one device finded
@@ -41,6 +40,12 @@ bool
 QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress)
 {
     return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceInformation();
+}
+
+bool
+QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress)
+{
+    return idevicesMap.value(_deviceEndPointAddress)->refreshVideoConfigs();
 }
 
 QOnvifDevice::DateTime

@@ -24,5 +24,4 @@ namespace ONVIF {
     };
 }
 
-
 #endif // ONVIF_MESSAGEPARSER_H

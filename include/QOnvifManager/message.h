@@ -18,8 +18,7 @@ namespace ONVIF {
     public:
         static Message* getOnvifSearchMessage();
         static Message* getMessageWithUserInfo(QHash<QString, QString> &namespaces, const QString &name, const QString &passwd);
-        
-        
+
         explicit Message(const QHash<QString, QString> &namespaces, QObject *parent = NULL);
         
         void appendToBody(const QDomElement &body);
@@ -30,7 +29,6 @@ namespace ONVIF {
         QString uuid();
         
     private:
-        
         QDomDocument mDoc;
         QHash<QString, QString> mNamespaces;
         QDomElement mBody, mHeader, mEnv;
