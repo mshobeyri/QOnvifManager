@@ -5,7 +5,6 @@
 using namespace ONVIF;
 MediaManagement::MediaManagement(const QString & wsdlUrl, const QString &username, const QString &password)
     :Service(wsdlUrl, username, password) {
-
 }
 
 QHash<QString, QString> MediaManagement::namespaces(const QString &key) {

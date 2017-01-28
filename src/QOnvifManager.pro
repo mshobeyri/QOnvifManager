@@ -114,59 +114,58 @@ HEADERS += \
     ../include/QOnvifManager/message.h \
     ../include/QOnvifManager/messageparser.h \
     ../include/QOnvifManager/ptzmanagement.h \
-    ../include/QOnvifManager/qonvifmanager_global.hpp \
     ../include/QOnvifManager/qringbuffer_p.h \
     ../include/QOnvifManager/service.h
 
-unix {
-    TEMPDIR         = $$PRJDIR/tmp/unix/$$TARGET
-    QMAKE_CFLAGS   += -std=gnu99
-    QMAKE_CXXFLAGS *= -Wall -Wextra -Wnon-virtual-dtor -pedantic
-    QMAKE_CXXFLAGS *= -Wcast-align -Wunused -Woverloaded-virtual
-    QMAKE_CXXFLAGS *= -Wno-unused-parameter
-    #QMAKE_CXXFLAGS *= -Wconversion
-    #QMAKE_CXXFLAGS *= -Wold-style-cast
-    macx {
-        QMAKE_CXXFLAGS *= -stdlib=libc++
-        TEMPDIR    = $$PRJDIR/tmp/osx/$$TARGET
-        CONFIG    -= app_bundle
-    }
+#unix {
+#    TEMPDIR         = $$PRJDIR/tmp/unix/$$TARGET
+#    QMAKE_CFLAGS   += -std=gnu99
+#    QMAKE_CXXFLAGS *= -Wall -Wextra -Wnon-virtual-dtor -pedantic
+#    QMAKE_CXXFLAGS *= -Wcast-align -Wunused -Woverloaded-virtual
+#    QMAKE_CXXFLAGS *= -Wno-unused-parameter
+#    #QMAKE_CXXFLAGS *= -Wconversion
+#    #QMAKE_CXXFLAGS *= -Wold-style-cast
+#    macx {
+#        QMAKE_CXXFLAGS *= -stdlib=libc++
+#        TEMPDIR    = $$PRJDIR/tmp/osx/$$TARGET
+#        CONFIG    -= app_bundle
+#    }
 
-    XBINDIR        = xbin64
-    LIBDIR         = lib64
-}
+#    XBINDIR        = xbin64
+#    LIBDIR         = lib64
+#}
 
-win32 {
-    DEFINES        *= UNICODE _WINDOWS
-    DEFINES        *= WIN32_LEAN_AND_MEAN NOMINMAX _CRT_SECURE_NO_WARNINGS
+#win32 {
+#    DEFINES        *= UNICODE _WINDOWS
+#    DEFINES        *= WIN32_LEAN_AND_MEAN NOMINMAX _CRT_SECURE_NO_WARNINGS
 
-    use_xp_sdk {
-        # old windows sdk, required for older targets (2003, xp)
-        # run as: $> qmake CONFIG+=use_xp_sdk
-        DEFINES    *= _WIN32_WINNT=0x0502 WINVER=0x0502
-    } else {
-    }
+#    use_xp_sdk {
+#        # old windows sdk, required for older targets (2003, xp)
+#        # run as: $> qmake CONFIG+=use_xp_sdk
+#        DEFINES    *= _WIN32_WINNT=0x0502 WINVER=0x0502
+#    } else {
+#    }
 
-    win32-msvc*{
-        QMAKE_CXXFLAGS *= /Gy /GF
-        QMAKE_LFLAGS   *= /OPT:REF /OPT:ICF
-    }
-    *-g++*{
-        # mingw or msys
-        CONFIG         -= debug debug_and_release
-        QMAKE_CXXFLAGS *= -Wall -Wextra -Wnon-virtual-dtor -pedantic
-        QMAKE_CXXFLAGS *= -Wcast-align -Wunused -Woverloaded-virtual
-        QMAKE_CXXFLAGS *= -Wno-unused-parameter
-    }
-    contains(QT_ARCH, i386) {
-        TEMPDIR     = $$PRJDIR/tmp/win32/$$TARGET
-        XBINDIR     = xbin32
-        LIBDIR      = lib32
-    }
-    contains(QT_ARCH, x86_64) {
-        DEFINES    *= WIN64
-        TEMPDIR     = $$PRJDIR/tmp/win64/$$TARGET
-        XBINDIR     = xbin64
-        LIBDIR      = lib64
-    }
-}
+#    win32-msvc*{
+#        QMAKE_CXXFLAGS *= /Gy /GF
+#        QMAKE_LFLAGS   *= /OPT:REF /OPT:ICF
+#    }
+#    *-g++*{
+#        # mingw or msys
+#        CONFIG         -= debug debug_and_release
+#        QMAKE_CXXFLAGS *= -Wall -Wextra -Wnon-virtual-dtor -pedantic
+#        QMAKE_CXXFLAGS *= -Wcast-align -Wunused -Woverloaded-virtual
+#        QMAKE_CXXFLAGS *= -Wno-unused-parameter
+#    }
+#    contains(QT_ARCH, i386) {
+#        TEMPDIR     = $$PRJDIR/tmp/win32/$$TARGET
+#        XBINDIR     = xbin32
+#        LIBDIR      = lib32
+#    }
+#    contains(QT_ARCH, x86_64) {
+#        DEFINES    *= WIN64
+#        TEMPDIR     = $$PRJDIR/tmp/win64/$$TARGET
+#        XBINDIR     = xbin64
+#        LIBDIR      = lib64
+#    }
+#}

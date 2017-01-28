@@ -1,5 +1,6 @@
 #include "qonvifdevice.hpp"
 #include "devicemanagement.h"
+#include "mediamanagement.h"
 
 QOnvifDevice::QOnvifDevice()
 {
@@ -10,6 +11,9 @@ QOnvifDevice::QOnvifDevice(QString _serviceAddress, QString _userName, QString _
 
 {
     ideviceManagement = new ONVIF::DeviceManagement(
+        _serviceAddress, iuserName, ipassword);
+
+    imediaManagement = new ONVIF::MediaManagement(
         _serviceAddress, iuserName, ipassword);
 }
 
@@ -104,7 +108,8 @@ QOnvifDevice::refreshDeviceCapabilities()
     return true;
 }
 
-bool QOnvifDevice::refreshDeviceInformation()
+bool
+QOnvifDevice::refreshDeviceInformation()
 {
     QHash<QString, QString>  deviceInformationHash = ideviceManagement->getDeviceInformation();
     ideviceInformation.manufacturer = deviceInformationHash.value("mf");
@@ -118,11 +123,150 @@ bool QOnvifDevice::refreshDeviceInformation()
 bool
 QOnvifDevice::resetFactoryDevice()
 {
+    //todo: reset factory device
     return true;
 }
 
 bool
 QOnvifDevice::rebootDevice()
 {
+    //todo: reboot device
+    return true;
+}
+
+bool
+QOnvifDevice::refreshVideoConfigs()
+{
+    // get video encoder options
+    QScopedPointer<ONVIF::VideoEncoderConfigurationOptions> videoEncoderConfigurationOptions
+            (imediaManagement->getVideoEncoderConfigurationOptions());
+
+    imediaConfig.video.encodingOptions.encodingIntervalRangeMax =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMax();
+
+    imediaConfig.video.encodingOptions.encodingIntervalRangeMin =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMin();
+
+    imediaConfig.video.encodingOptions.frameRateRangeMax =
+            videoEncoderConfigurationOptions->frameRateRangeMax();
+
+    imediaConfig.video.encodingOptions.frameRateRangeMin =
+            videoEncoderConfigurationOptions->frameRateRangeMin();
+
+    imediaConfig.video.encodingOptions.govLengthRangeMax =
+            videoEncoderConfigurationOptions->govLengthRangeMax();
+
+    imediaConfig.video.encodingOptions.govLengthRangeMin =
+            videoEncoderConfigurationOptions->govLengthRangeMin();
+
+    imediaConfig.video.encodingOptions.qualityRangeMin =
+            videoEncoderConfigurationOptions->qualityRangeMin();
+
+    imediaConfig.video.encodingOptions.qulityRangeMax =
+            videoEncoderConfigurationOptions->qulityRangeMax();
+
+    imediaConfig.video.encodingOptions.resAvailableHeight =
+            videoEncoderConfigurationOptions->getResAvailableHeight();
+
+    imediaConfig.video.encodingOptions.resAvailableWidth =
+            videoEncoderConfigurationOptions->getResAvailableWidth();
+
+    foreach (ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported h264ProfilesSupporte,
+             videoEncoderConfigurationOptions->getH264ProfilesSupported())
+    {
+        int intCastTemp = static_cast<int>(h264ProfilesSupporte);
+
+        MediaConfig::Video::EncodingOptions::H264ProfilesSupported enumCastTemp =
+                static_cast<MediaConfig::Video::EncodingOptions::H264ProfilesSupported>(intCastTemp);
+
+        imediaConfig.video.encodingOptions.h264ProfilesSupported.append(enumCastTemp);
+    }
+
+    // get video encoder config
+    QScopedPointer<ONVIF::VideoEncoderConfigurations> videoEncoderConfigurations
+            (imediaManagement->getVideoEncoderConfigurations());
+
+    imediaConfig.video.encodingConfig.autoStart =
+            videoEncoderConfigurations->getAutoStart();
+
+    imediaConfig.video.encodingConfig.bitrateLimit =
+            videoEncoderConfigurations->getBitrateLimit();
+
+    imediaConfig.video.encodingConfig.encoding =
+            videoEncoderConfigurations->getEncoding();
+
+    imediaConfig.video.encodingConfig.encodingInterval =
+            videoEncoderConfigurations->getEncodingInterval();
+
+    imediaConfig.video.encodingConfig.frameRateLimit =
+            videoEncoderConfigurations->getFrameRateLimit();
+
+    imediaConfig.video.encodingConfig.govLength =
+            videoEncoderConfigurations->getGovLength();
+
+    imediaConfig.video.encodingConfig.h264Profile =
+            videoEncoderConfigurations->getH264Profile();
+
+    imediaConfig.video.encodingConfig.height =
+            videoEncoderConfigurations->getHeight();
+
+    imediaConfig.video.encodingConfig.ipv4Address =
+            videoEncoderConfigurations->getIpv4Address();
+
+    imediaConfig.video.encodingConfig.ipv6Address =
+            videoEncoderConfigurations->getIpv6Address();
+
+    imediaConfig.video.encodingConfig.name =
+            videoEncoderConfigurations->getName();
+
+    imediaConfig.video.encodingConfig.port =
+            videoEncoderConfigurations->getPort();
+
+    imediaConfig.video.encodingConfig.quality =
+            videoEncoderConfigurations->getQuality();
+
+    imediaConfig.video.encodingConfig.sessionTimeout =
+            videoEncoderConfigurations->getSessionTimeout();
+
+    imediaConfig.video.encodingConfig.token =
+            videoEncoderConfigurations->getToken();
+
+    imediaConfig.video.encodingConfig.ttl =
+            videoEncoderConfigurations->getTtl();
+
+    imediaConfig.video.encodingConfig.type =
+            videoEncoderConfigurations->getType();
+
+    imediaConfig.video.encodingConfig.useCount =
+            videoEncoderConfigurations->getUseCount();
+
+    // get video source config
+    QScopedPointer<ONVIF::VideoSourceConfigurations> videoSourceConfigurations
+            (imediaManagement->getVideoSourceConfigurations());
+
+
+    imediaConfig.video.sourceConfig.name =
+            videoSourceConfigurations->getName();
+
+    imediaConfig.video.sourceConfig.useCount =
+            videoSourceConfigurations->getUseCount();
+
+    imediaConfig.video.sourceConfig.sourceToken =
+            videoSourceConfigurations->getSourceToken();
+
+    imediaConfig.video.sourceConfig.bounds =
+            videoSourceConfigurations->getBounds();
+
+    return true;
+
+}
+
+bool
+QOnvifDevice::refreshAudioConfigs()
+{
+    //todo: add giving audio options of cameras
+    imediaManagement->getAudioEncoderConfigurationOptions();
+    imediaManagement->getAudioEncoderConfigurations();
+    imediaManagement->getAudioSourceConfigurations();
     return true;
 }
