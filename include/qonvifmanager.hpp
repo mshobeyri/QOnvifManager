@@ -25,6 +25,8 @@ namespace ONVIF
 class DeviceSearcher;
 }
 
+using namespace device;
+
 class QONVIFMANAGERSHARED_EXPORT QOnvifManager: public QObject
 {
     Q_OBJECT

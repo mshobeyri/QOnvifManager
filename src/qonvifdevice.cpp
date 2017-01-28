@@ -2,6 +2,8 @@
 #include "devicemanagement.h"
 #include "mediamanagement.h"
 
+using namespace device;
+
 QOnvifDevice::QOnvifDevice()
 {
 }
@@ -22,12 +24,12 @@ QOnvifDevice::~QOnvifDevice()
     delete ideviceManagement;
 }
 
-QOnvifDevice::DeviceProbeData QOnvifDevice::deviceProbeData()
+QOnvifDevice::ProbeData QOnvifDevice::deviceProbeData()
 {
     return ideviceProbeData;
 }
 
-void QOnvifDevice::setDeviceProbeData(QOnvifDevice::DeviceProbeData _probeData)
+void QOnvifDevice::setDeviceProbeData(ProbeData _probeData)
 {
     ideviceProbeData = _probeData;
 }

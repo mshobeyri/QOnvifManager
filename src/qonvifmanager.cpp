@@ -94,7 +94,7 @@ QOnvifManager::rebootDevice(QString _deviceEndPointAddress)
 void
 QOnvifManager::onReciveData(QHash<QString,QString> _deviceHash)
 {
-    QOnvifDevice::DeviceProbeData probeData;
+    QOnvifDevice::ProbeData probeData;
 
     probeData.iendPointAddress = _deviceHash.value("ep_address");
 

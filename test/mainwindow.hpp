@@ -8,8 +8,11 @@ class QOnvifManager;
 namespace Ui {
 class MainWindow;
 }
-
+namespace device {
 class QOnvifDevice;
+}
+
+using namespace device;
 
 class MainWindow : public QMainWindow
 {
