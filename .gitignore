@@ -39,7 +39,6 @@ Thumbs.db
 bin/
 xbin/
 3rdparty/
-test/Argus/3rdparty/
 
 # qtcreator generated files
 *.pro.user*
