@@ -24,7 +24,7 @@ public:
         QString  _password,
         QObject* _parent);
     ~QOnvifDevice();
-    Data &data();
+    Data& data();
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 
@@ -39,6 +39,12 @@ public:
     // media management
     bool refreshVideoConfigs();
     bool refreshAudioConfigs();
+
+
+    bool refreshProfiles();
+    bool refreshInterfaces();
+
+    bool refreshUsers();
 
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)

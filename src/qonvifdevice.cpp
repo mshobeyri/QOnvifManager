@@ -278,6 +278,18 @@ public:
         idata.mediaConfig.video.sourceConfig.bounds =
             videoSourceConfigurations->getBounds();
 
+        // get video stream uri
+        QScopedPointer<ONVIF::StreamUri> streamUri(
+            imediaManagement->getStreamUri("10")); // todo: whats this input
+                                                   // exactly? meld retrun value
+                                                   // and value of odm
+
+        idata.mediaConfig.video.streamUri.uri = streamUri->uri();
+        idata.mediaConfig.video.streamUri.invalidAfterConnect =
+            streamUri->invalidAfterConnect();
+        idata.mediaConfig.video.streamUri.invalidAfterReboot =
+            streamUri->invalidAfterReboot();
+        idata.mediaConfig.video.streamUri.timeout = streamUri->timeout();
         return true;
     }
 
@@ -286,6 +298,278 @@ public:
         imediaManagement->getAudioEncoderConfigurationOptions();
         imediaManagement->getAudioEncoderConfigurations();
         imediaManagement->getAudioSourceConfigurations();
+        return true;
+    }
+
+    bool refreshProfiles() {
+        QScopedPointer<ONVIF::Profiles> profiles(
+            imediaManagement->getProfiles());
+        idata.profiles.analytics           = profiles->m_analytics;
+        idata.profiles.toKenPro            = profiles->m_toKenPro;
+        idata.profiles.fixed               = profiles->m_fixed;
+        idata.profiles.namePro             = profiles->m_namePro;
+        idata.profiles.nameVsc             = profiles->m_nameVsc;
+        idata.profiles.useCountVsc         = profiles->m_useCountVsc;
+        idata.profiles.sourceTokenVsc      = profiles->m_sourceTokenVsc;
+        idata.profiles.boundsVsc           = profiles->m_boundsVsc;
+        idata.profiles.nameVec             = profiles->m_nameVec;
+        idata.profiles.useCountVec         = profiles->m_useCountVec;
+        idata.profiles.encodingVec         = profiles->m_encodingVec;
+        idata.profiles.widthVec            = profiles->m_widthVec;
+        idata.profiles.heightVec           = profiles->m_heightVec;
+        idata.profiles.qualityVec          = profiles->m_qualityVec;
+        idata.profiles.frameRateLimitVec   = profiles->m_frameRateLimitVec;
+        idata.profiles.encodingIntervalVec = profiles->m_encodingIntervalVec;
+        idata.profiles.bitrateLimitVec     = profiles->m_bitrateLimitVec;
+        idata.profiles.govLengthVec        = profiles->m_govLengthVec;
+        idata.profiles.h264ProfileVec      = profiles->m_h264ProfileVec;
+        idata.profiles.typeVec             = profiles->m_typeVec;
+        idata.profiles.ipv4AddressVec      = profiles->m_ipv4AddressVec;
+        idata.profiles.ipv6AddressVec      = profiles->m_ipv6AddressVec;
+        idata.profiles.portVec             = profiles->m_portVec;
+        idata.profiles.ttlVec              = profiles->m_ttlVec;
+        idata.profiles.autoStartVec        = profiles->m_autoStartVec;
+        idata.profiles.sessionTimeoutVec   = profiles->m_sessionTimeoutVec;
+        idata.profiles.namePtz             = profiles->m_namePtz;
+        idata.profiles.useCountPtz         = profiles->m_useCountPtz;
+        idata.profiles.nodeToken           = profiles->m_nodeToken;
+        idata.profiles.defaultAbsolutePantTiltPositionSpace =
+            profiles->m_defaultAbsolutePantTiltPositionSpace;
+        idata.profiles.defaultAbsoluteZoomPositionSpace =
+            profiles->m_defaultAbsoluteZoomPositionSpace;
+        idata.profiles.defaultRelativePantTiltTranslationSpace =
+            profiles->m_defaultRelativePantTiltTranslationSpace;
+        idata.profiles.defaultRelativeZoomTranslationSpace =
+            profiles->m_defaultRelativeZoomTranslationSpace;
+        idata.profiles.defaultContinuousPantTiltVelocitySpace =
+            profiles->m_defaultContinuousPantTiltVelocitySpace;
+        idata.profiles.defaultContinuousZoomVelocitySpace =
+            profiles->m_defaultContinuousZoomVelocitySpace;
+        idata.profiles.panTiltSpace       = profiles->m_panTiltSpace;
+        idata.profiles.panTiltX           = profiles->m_panTiltX;
+        idata.profiles.panTiltY           = profiles->m_panTiltY;
+        idata.profiles.zoomSpace          = profiles->m_zoomSpace;
+        idata.profiles.zoomX              = profiles->m_zoomX;
+        idata.profiles.defaultPTZTimeout  = profiles->m_defaultPTZTimeout;
+        idata.profiles.panTiltUri         = profiles->m_panTiltUri;
+        idata.profiles.xRangeMinPt        = profiles->m_xRangeMinPt;
+        idata.profiles.xRangeMaxPt        = profiles->m_xRangeMaxPt;
+        idata.profiles.yRangeMinPt        = profiles->m_yRangeMinPt;
+        idata.profiles.yRangeMaxPt        = profiles->m_yRangeMaxPt;
+        idata.profiles.zoomUri            = profiles->m_zoomUri;
+        idata.profiles.xRangeMinZm        = profiles->m_xRangeMinZm;
+        idata.profiles.xRangeMaxZm        = profiles->m_xRangeMaxZm;
+        idata.profiles.nameMc             = profiles->m_nameMc;
+        idata.profiles.useCountMc         = profiles->m_useCountMc;
+        idata.profiles.status             = profiles->m_status;
+        idata.profiles.position           = profiles->m_position;
+        idata.profiles.filter             = profiles->m_filter;
+        idata.profiles.subscriptionPolicy = profiles->m_subscriptionPolicy;
+        idata.profiles.analytics          = profiles->m_analytics;
+        idata.profiles.typeMc             = profiles->m_typeMc;
+        idata.profiles.ipv4AddressMc      = profiles->m_ipv4AddressMc;
+        idata.profiles.ipv6AddressMc      = profiles->m_ipv6AddressMc;
+        idata.profiles.portMc             = profiles->m_portMc;
+        idata.profiles.ttlMc              = profiles->m_ttlMc;
+        idata.profiles.autoStartMc        = profiles->m_autoStartMc;
+        idata.profiles.sessionTimeoutMc   = profiles->m_sessionTimeoutMc;
+
+
+        QScopedPointer<ONVIF::Profile> profile720p(
+            imediaManagement->getProfile720P());
+        idata.profile720p.analytics         = profile720p->m_analytics;
+        idata.profile720p.toKenPro          = profile720p->m_toKenPro;
+        idata.profile720p.fixed             = profile720p->m_fixed;
+        idata.profile720p.namePro           = profile720p->m_namePro;
+        idata.profile720p.nameVsc           = profile720p->m_nameVsc;
+        idata.profile720p.useCountVsc       = profile720p->m_useCountVsc;
+        idata.profile720p.sourceTokenVsc    = profile720p->m_sourceTokenVsc;
+        idata.profile720p.boundsVsc         = profile720p->m_boundsVsc;
+        idata.profile720p.nameVec           = profile720p->m_nameVec;
+        idata.profile720p.useCountVec       = profile720p->m_useCountVec;
+        idata.profile720p.encodingVec       = profile720p->m_encodingVec;
+        idata.profile720p.widthVec          = profile720p->m_widthVec;
+        idata.profile720p.heightVec         = profile720p->m_heightVec;
+        idata.profile720p.qualityVec        = profile720p->m_qualityVec;
+        idata.profile720p.frameRateLimitVec = profile720p->m_frameRateLimitVec;
+        idata.profile720p.encodingIntervalVec =
+            profile720p->m_encodingIntervalVec;
+        idata.profile720p.bitrateLimitVec   = profile720p->m_bitrateLimitVec;
+        idata.profile720p.govLengthVec      = profile720p->m_govLengthVec;
+        idata.profile720p.h264ProfileVec    = profile720p->m_h264ProfileVec;
+        idata.profile720p.typeVec           = profile720p->m_typeVec;
+        idata.profile720p.ipv4AddressVec    = profile720p->m_ipv4AddressVec;
+        idata.profile720p.ipv6AddressVec    = profile720p->m_ipv6AddressVec;
+        idata.profile720p.portVec           = profile720p->m_portVec;
+        idata.profile720p.ttlVec            = profile720p->m_ttlVec;
+        idata.profile720p.autoStartVec      = profile720p->m_autoStartVec;
+        idata.profile720p.sessionTimeoutVec = profile720p->m_sessionTimeoutVec;
+        idata.profile720p.namePtz           = profile720p->m_namePtz;
+        idata.profile720p.useCountPtz       = profile720p->m_useCountPtz;
+        idata.profile720p.nodeToken         = profile720p->m_nodeToken;
+        idata.profile720p.defaultAbsolutePantTiltPositionSpace =
+            profile720p->m_defaultAbsolutePantTiltPositionSpace;
+        idata.profile720p.defaultAbsoluteZoomPositionSpace =
+            profile720p->m_defaultAbsoluteZoomPositionSpace;
+        idata.profile720p.defaultRelativePantTiltTranslationSpace =
+            profile720p->m_defaultRelativePantTiltTranslationSpace;
+        idata.profile720p.defaultRelativeZoomTranslationSpace =
+            profile720p->m_defaultRelativeZoomTranslationSpace;
+        idata.profile720p.defaultContinuousPantTiltVelocitySpace =
+            profile720p->m_defaultContinuousPantTiltVelocitySpace;
+        idata.profile720p.defaultContinuousZoomVelocitySpace =
+            profile720p->m_defaultContinuousZoomVelocitySpace;
+        idata.profile720p.panTiltSpace      = profile720p->m_panTiltSpace;
+        idata.profile720p.panTiltX          = profile720p->m_panTiltX;
+        idata.profile720p.panTiltY          = profile720p->m_panTiltY;
+        idata.profile720p.zoomSpace         = profile720p->m_zoomSpace;
+        idata.profile720p.zoomX             = profile720p->m_zoomX;
+        idata.profile720p.defaultPTZTimeout = profile720p->m_defaultPTZTimeout;
+        idata.profile720p.panTiltUri        = profile720p->m_panTiltUri;
+        idata.profile720p.xRangeMinPt       = profile720p->m_xRangeMinPt;
+        idata.profile720p.xRangeMaxPt       = profile720p->m_xRangeMaxPt;
+        idata.profile720p.yRangeMinPt       = profile720p->m_yRangeMinPt;
+        idata.profile720p.yRangeMaxPt       = profile720p->m_yRangeMaxPt;
+        idata.profile720p.zoomUri           = profile720p->m_zoomUri;
+        idata.profile720p.xRangeMinZm       = profile720p->m_xRangeMinZm;
+        idata.profile720p.xRangeMaxZm       = profile720p->m_xRangeMaxZm;
+        idata.profile720p.nameMc            = profile720p->m_nameMc;
+        idata.profile720p.useCountMc        = profile720p->m_useCountMc;
+        idata.profile720p.status            = profile720p->m_status;
+        idata.profile720p.position          = profile720p->m_position;
+        idata.profile720p.filter            = profile720p->m_filter;
+        idata.profile720p.subscriptionPolicy =
+            profile720p->m_subscriptionPolicy;
+        idata.profile720p.analytics        = profile720p->m_analytics;
+        idata.profile720p.typeMc           = profile720p->m_typeMc;
+        idata.profile720p.ipv4AddressMc    = profile720p->m_ipv4AddressMc;
+        idata.profile720p.ipv6AddressMc    = profile720p->m_ipv6AddressMc;
+        idata.profile720p.portMc           = profile720p->m_portMc;
+        idata.profile720p.ttlMc            = profile720p->m_ttlMc;
+        idata.profile720p.autoStartMc      = profile720p->m_autoStartMc;
+        idata.profile720p.sessionTimeoutMc = profile720p->m_sessionTimeoutMc;
+
+
+        QScopedPointer<ONVIF::Profile> profileD1(
+            imediaManagement->getProfileD1());
+        idata.profileD1.analytics           = profileD1->m_analytics;
+        idata.profileD1.toKenPro            = profileD1->m_toKenPro;
+        idata.profileD1.fixed               = profileD1->m_fixed;
+        idata.profileD1.namePro             = profileD1->m_namePro;
+        idata.profileD1.nameVsc             = profileD1->m_nameVsc;
+        idata.profileD1.useCountVsc         = profileD1->m_useCountVsc;
+        idata.profileD1.sourceTokenVsc      = profileD1->m_sourceTokenVsc;
+        idata.profileD1.boundsVsc           = profileD1->m_boundsVsc;
+        idata.profileD1.nameVec             = profileD1->m_nameVec;
+        idata.profileD1.useCountVec         = profileD1->m_useCountVec;
+        idata.profileD1.encodingVec         = profileD1->m_encodingVec;
+        idata.profileD1.widthVec            = profileD1->m_widthVec;
+        idata.profileD1.heightVec           = profileD1->m_heightVec;
+        idata.profileD1.qualityVec          = profileD1->m_qualityVec;
+        idata.profileD1.frameRateLimitVec   = profileD1->m_frameRateLimitVec;
+        idata.profileD1.encodingIntervalVec = profileD1->m_encodingIntervalVec;
+        idata.profileD1.bitrateLimitVec     = profileD1->m_bitrateLimitVec;
+        idata.profileD1.govLengthVec        = profileD1->m_govLengthVec;
+        idata.profileD1.h264ProfileVec      = profileD1->m_h264ProfileVec;
+        idata.profileD1.typeVec             = profileD1->m_typeVec;
+        idata.profileD1.ipv4AddressVec      = profileD1->m_ipv4AddressVec;
+        idata.profileD1.ipv6AddressVec      = profileD1->m_ipv6AddressVec;
+        idata.profileD1.portVec             = profileD1->m_portVec;
+        idata.profileD1.ttlVec              = profileD1->m_ttlVec;
+        idata.profileD1.autoStartVec        = profileD1->m_autoStartVec;
+        idata.profileD1.sessionTimeoutVec   = profileD1->m_sessionTimeoutVec;
+        idata.profileD1.namePtz             = profileD1->m_namePtz;
+        idata.profileD1.useCountPtz         = profileD1->m_useCountPtz;
+        idata.profileD1.nodeToken           = profileD1->m_nodeToken;
+        idata.profileD1.defaultAbsolutePantTiltPositionSpace =
+            profileD1->m_defaultAbsolutePantTiltPositionSpace;
+        idata.profileD1.defaultAbsoluteZoomPositionSpace =
+            profileD1->m_defaultAbsoluteZoomPositionSpace;
+        idata.profileD1.defaultRelativePantTiltTranslationSpace =
+            profileD1->m_defaultRelativePantTiltTranslationSpace;
+        idata.profileD1.defaultRelativeZoomTranslationSpace =
+            profileD1->m_defaultRelativeZoomTranslationSpace;
+        idata.profileD1.defaultContinuousPantTiltVelocitySpace =
+            profileD1->m_defaultContinuousPantTiltVelocitySpace;
+        idata.profileD1.defaultContinuousZoomVelocitySpace =
+            profileD1->m_defaultContinuousZoomVelocitySpace;
+        idata.profileD1.panTiltSpace       = profileD1->m_panTiltSpace;
+        idata.profileD1.panTiltX           = profileD1->m_panTiltX;
+        idata.profileD1.panTiltY           = profileD1->m_panTiltY;
+        idata.profileD1.zoomSpace          = profileD1->m_zoomSpace;
+        idata.profileD1.zoomX              = profileD1->m_zoomX;
+        idata.profileD1.defaultPTZTimeout  = profileD1->m_defaultPTZTimeout;
+        idata.profileD1.panTiltUri         = profileD1->m_panTiltUri;
+        idata.profileD1.xRangeMinPt        = profileD1->m_xRangeMinPt;
+        idata.profileD1.xRangeMaxPt        = profileD1->m_xRangeMaxPt;
+        idata.profileD1.yRangeMinPt        = profileD1->m_yRangeMinPt;
+        idata.profileD1.yRangeMaxPt        = profileD1->m_yRangeMaxPt;
+        idata.profileD1.zoomUri            = profileD1->m_zoomUri;
+        idata.profileD1.xRangeMinZm        = profileD1->m_xRangeMinZm;
+        idata.profileD1.xRangeMaxZm        = profileD1->m_xRangeMaxZm;
+        idata.profileD1.nameMc             = profileD1->m_nameMc;
+        idata.profileD1.useCountMc         = profileD1->m_useCountMc;
+        idata.profileD1.status             = profileD1->m_status;
+        idata.profileD1.position           = profileD1->m_position;
+        idata.profileD1.filter             = profileD1->m_filter;
+        idata.profileD1.subscriptionPolicy = profileD1->m_subscriptionPolicy;
+        idata.profileD1.analytics          = profileD1->m_analytics;
+        idata.profileD1.typeMc             = profileD1->m_typeMc;
+        idata.profileD1.ipv4AddressMc      = profileD1->m_ipv4AddressMc;
+        idata.profileD1.ipv6AddressMc      = profileD1->m_ipv6AddressMc;
+        idata.profileD1.portMc             = profileD1->m_portMc;
+        idata.profileD1.ttlMc              = profileD1->m_ttlMc;
+        idata.profileD1.autoStartMc        = profileD1->m_autoStartMc;
+        idata.profileD1.sessionTimeoutMc   = profileD1->m_sessionTimeoutMc;
+
+        return true;
+    }
+
+    bool refreshInterfaces() {
+        QScopedPointer<ONVIF::NetworkInterfaces> networkInterfaces(
+            ideviceManagement->getNetworkInterfaces());
+
+        idata.network.interfaces.networkInfacesEnabled =
+            networkInterfaces->networkInfacesEnabled();
+        idata.network.interfaces.autoNegotiation =
+            networkInterfaces->autoNegotiation();
+        idata.network.interfaces.speed = networkInterfaces->speed();
+        idata.network.interfaces.duplex =
+            static_cast<Data::Network::Interfaces::Duplex>(
+                static_cast<int>(networkInterfaces->duplex()));
+
+        idata.network.interfaces.mtu         = networkInterfaces->mtu();
+        idata.network.interfaces.ipv4Enabled = networkInterfaces->ipv4Enabled();
+        idata.network.interfaces.ipv4ManualAddress =
+            networkInterfaces->ipv4ManualAddress();
+        idata.network.interfaces.ipv4ManualPrefixLength =
+            networkInterfaces->ipv4ManualPrefixLength();
+        idata.network.interfaces.ipv4DHCP = networkInterfaces->getIpv4DHCP();
+        idata.network.interfaces.networkInfacesName =
+            networkInterfaces->networkInfacesName();
+        idata.network.interfaces.hwAaddress = networkInterfaces->hwAaddress();
+        idata.network.interfaces.ipv4LinkLocalAddress =
+            networkInterfaces->ipv4LinkLocalAddress();
+        idata.network.interfaces.ipvLinkLocalPrefixLength =
+            networkInterfaces->ipvLinkLocalPrefixLength();
+        idata.network.interfaces.ipv4FromDHCPAddress =
+            networkInterfaces->ipv4FromDHCPAddress();
+        idata.network.interfaces.ipv4FromDHCPPrefixLength =
+            networkInterfaces->ipv4FromDHCPPrefixLength();
+        idata.network.interfaces.result = networkInterfaces->result();
+
+        return true;
+    }
+
+    bool refreshUsers() {
+        QScopedPointer<ONVIF::Users> users(ideviceManagement->getUsers());
+
+        idata.users.username = users->userName();
+        idata.users.password = users->passWord();
+        idata.users.userLevel =
+            static_cast<Data::Users::UserLevelType>(
+                static_cast<int>(users->userLevel()));
+
         return true;
     }
 };
@@ -345,6 +629,21 @@ QOnvifDevice::refreshVideoConfigs() {
 bool
 QOnvifDevice::refreshAudioConfigs() {
     return d_ptr->refreshAudioConfigs();
+}
+
+bool
+QOnvifDevice::refreshProfiles() {
+    return d_ptr->refreshProfiles();
+}
+
+bool
+QOnvifDevice::refreshInterfaces() {
+    return d_ptr->refreshInterfaces();
+}
+
+bool
+QOnvifDevice::refreshUsers() {
+    return d_ptr->refreshUsers();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

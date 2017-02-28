@@ -44,6 +44,11 @@ public:
 
     bool refreshDeviceVideoConfigs(QString _deviceEndPointAddress);
 
+
+    bool refreshDeviceProfiles(QString _deviceEndPointAddress);
+    bool refreshDeviceInterfaces(QString _deviceEndPointAddress);
+    bool refreshDeviceUsers(QString _deviceEndPointAddress);
+
     Data::DateTime deviceDateAndTime(QString _deviceEndPointAddress);
 
     QOnvifDevice* device(QString _deviceEndPointAddress);

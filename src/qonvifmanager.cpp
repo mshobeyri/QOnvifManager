@@ -19,7 +19,8 @@ public:
 };
 
 
-QOnvifManager::QOnvifManager(const QString _username, const QString _password, QObject* _parent)
+QOnvifManager::QOnvifManager(
+    const QString _username, const QString _password, QObject* _parent)
     : QObject(_parent), d_ptr(new QOnvifManagerPrivate(_username, _password)) {
     Q_D(QOnvifManager);
     // device finding
@@ -68,6 +69,21 @@ bool
 QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshVideoConfigs();
+}
+
+bool
+QOnvifManager::refreshDeviceProfiles(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProfiles();
+}
+
+bool QOnvifManager::refreshDeviceInterfaces(QString _deviceEndPointAddress)
+{
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshInterfaces();
+}
+
+bool QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress)
+{
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshUsers();
 }
 
 Data::DateTime
