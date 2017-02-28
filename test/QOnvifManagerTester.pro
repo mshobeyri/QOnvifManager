@@ -25,7 +25,7 @@ FORMS    += mainwindow.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../bin/release/ -lQOnvifManager
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../bin/debug/ -lQOnvifManager
-else:unix: LIBS += -L$$PWD/../bin/ -lQOnvifManager
+else:unix: LIBS += -L$$PWD/../../../bin/ -lQOnvifManager
 
 INCLUDEPATH += $$PWD/../include
 DEPENDPATH += $$PWD/../include

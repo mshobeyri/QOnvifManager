@@ -1,114 +1,134 @@
 #include "qonvifmanager.hpp"
-#include "devicesearcher.h"
 #include "devicemanagement.h"
+#include "devicesearcher.h"
 #include "systemdateandtime.h"
 
-
-QOnvifManager::QOnvifManager(QString _userName, QString _password, QObject *_parent):
-    QObject(_parent),iuserName(_userName), ipassword(_password)
+class QOnvifManagerPrivate
 {
+public:
+    QOnvifManagerPrivate() {}
+    ~QOnvifManagerPrivate() {}
+
+    QScopedPointer<QOnvifManagerPrivate> d_ptr;
+    QString                              iuserName;
+    QString                              ipassword;
+    QMap<QString, QOnvifDevice*> idevicesMap;
+    QHostAddress           ihostAddress;
+    ONVIF::DeviceSearcher* ideviceSearcher;
+};
+
+
+QOnvifManager::QOnvifManager(QObject* _parent)
+    : QObject(_parent), d_ptr(new QOnvifManagerPrivate) {
+    Q_D(QOnvifManager);
     // device finding
-    ideviceSearcher = ONVIF::DeviceSearcher::instance(ihostAddress);
+    d->ideviceSearcher = ONVIF::DeviceSearcher::instance(d->ihostAddress);
 
     // when one device finded
-    connect(ideviceSearcher,SIGNAL(receiveData(QHash<QString,QString>)),
-            this,SLOT(onReciveData(QHash<QString,QString>)),Qt::UniqueConnection);
+    connect(
+        d->ideviceSearcher,
+        SIGNAL(receiveData(QHash<QString, QString>)),
+        this,
+        SLOT(onReciveData(QHash<QString, QString>)),
+        Qt::UniqueConnection);
 
     // when device searching ended
-    connect(ideviceSearcher,&ONVIF::DeviceSearcher::deviceSearchingEnded,[this]()
-    {
-        emit deviceSearchingEnded();
-    });
+    connect(
+        d->ideviceSearcher,
+        &ONVIF::DeviceSearcher::deviceSearchingEnded,
+        [this]() { emit deviceSearchingEnded(); });
+    refreshDevicesList();
 }
 
+QOnvifManager::~QOnvifManager() {}
+
 bool
-QOnvifManager::refreshDevicesList()
-{
-    qDeleteAll(idevicesMap);
-    idevicesMap.clear();
-    ideviceSearcher->sendSearchMsg();
+QOnvifManager::refreshDevicesList() {
+    Q_D(QOnvifManager);
+    qDeleteAll(d->idevicesMap);
+    d->idevicesMap.clear();
+    d->ideviceSearcher->sendSearchMsg();
     return true;
 }
 
 bool
-QOnvifManager::refreshDeviceCapabilities(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceCapabilities();
+QOnvifManager::refreshDeviceCapabilities(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshDeviceCapabilities();
 }
 
 bool
-QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->refreshDeviceInformation();
+QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshDeviceInformation();
 }
 
 bool
-QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->refreshVideoConfigs();
+QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshVideoConfigs();
 }
 
-QOnvifDevice::DateTime
-QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->deviceDateAndTime();
+Data::DateTime
+QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->data().dateTime;
 }
 
 QOnvifDevice*
-QOnvifManager::device(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress);
+QOnvifManager::device(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress);
 }
 
-QMap<QString, QOnvifDevice*>
-QOnvifManager::devicesMap()
-{
-    return idevicesMap;
+QMap<QString, QOnvifDevice*>&
+QOnvifManager::devicesMap() {
+    return d_ptr->idevicesMap;
 }
 
 bool
-QOnvifManager::setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->setDeviceDateAndTime(_dateTime);
+QOnvifManager::setDeviceDateAndTime(
+    QString _deviceEndPointAddress, QDateTime _dateTime) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setDeviceDateAndTime(_dateTime);
 }
 
 void
-QOnvifManager::setDefaulUsernameAndPassword(QString _username, QString _password)
-{
-    iuserName = _username;
-    ipassword = _password;
+QOnvifManager::setDefaulUsernameAndPassword(
+    QString _username, QString _password) {
+    d_ptr->iuserName = _username;
+    d_ptr->ipassword = _password;
 }
 
 bool
-QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->resetFactoryDevice();
+QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->resetFactoryDevice();
 }
 
 bool
-QOnvifManager::rebootDevice(QString _deviceEndPointAddress)
-{
-    return idevicesMap.value(_deviceEndPointAddress)->rebootDevice();
+QOnvifManager::rebootDevice(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->rebootDevice();
 }
 
 void
-QOnvifManager::onReciveData(QHash<QString,QString> _deviceHash)
-{
-    QOnvifDevice::ProbeData probeData;
+QOnvifManager::onReciveData(QHash<QString, QString> _deviceHash) {
+    Q_D(QOnvifManager);
 
-    probeData.iendPointAddress = _deviceHash.value("ep_address");
+    Data::ProbeData probeData;
+    probeData.endPointAddress = _deviceHash.value("ep_address");
 
-    if(idevicesMap.contains(probeData.iendPointAddress))
+    if (d->idevicesMap.contains(probeData.endPointAddress))
         return;
 
-    probeData.itypes = _deviceHash.value("types");
-    probeData.ideviceIp = _deviceHash.value("device_ip");
-    probeData.ideviceServiceAddress = _deviceHash.value("device_service_address");
-    probeData.iscopes = _deviceHash.value("scopes");
-    probeData.imetadataVersion = _deviceHash.value("metadata_version");
+    probeData.types    = _deviceHash.value("types");
+    probeData.deviceIp = _deviceHash.value("device_ip");
+    probeData.deviceServiceAddress =
+        _deviceHash.value("device_service_address");
+    probeData.scopes          = _deviceHash.value("scopes");
+    probeData.metadataVersion = _deviceHash.value("metadata_version");
 
-    QOnvifDevice *device = new QOnvifDevice(probeData.ideviceServiceAddress, iuserName, ipassword,this);
+    QOnvifDevice* device = new QOnvifDevice(
+        probeData.deviceServiceAddress, d->iuserName, d->ipassword, this);
     device->setDeviceProbeData(probeData);
-    idevicesMap.insert(probeData.iendPointAddress, device);
+    d->idevicesMap.insert(probeData.endPointAddress, device);
     emit newDeviceFinded(device);
 }
