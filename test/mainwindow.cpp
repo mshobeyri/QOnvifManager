@@ -11,9 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    ionvifManager = new QOnvifManager(this);
-    ionvifManager->setDefaulUsernameAndPassword("admin","");
+    ionvifManager = new QOnvifManager("admin","",this);
     connect(ionvifManager,&QOnvifManager::newDeviceFinded,
             this,&MainWindow::onNewDeviceFinded);
     on_btnRefresh_clicked();

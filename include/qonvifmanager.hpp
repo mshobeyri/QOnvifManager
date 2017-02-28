@@ -32,7 +32,10 @@ class QONVIFMANAGERSHARED_EXPORT QOnvifManager : public QObject
 {
     Q_OBJECT
 public:
-    QOnvifManager(QObject* _parent = 0);
+    QOnvifManager(
+        const QString _username,
+        const QString _password,
+        QObject*        _parent = 0);
     ~QOnvifManager();
 
     bool refreshDevicesList();

@@ -18,7 +18,6 @@ class QOnvifDevicePrivate;
 class QOnvifDevice : public QObject
 {
 public:
-    QOnvifDevice();
     QOnvifDevice(
         QString  _serviceAddress,
         QString  _userName,

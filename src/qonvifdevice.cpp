@@ -8,18 +8,18 @@ namespace device {
 class QOnvifDevicePrivate
 {
 public:
-    QOnvifDevicePrivate(const QString& _username, const QString& _password)
-        : iuserName(_username), ipassword(_password) {}
-    ~QOnvifDevicePrivate() {
+    QOnvifDevicePrivate(
+        const QString _serviceAddress,
+        const QString _username,
+        const QString _password)
+        : iuserName(_username), ipassword(_password) {
+        ideviceManagement =
+            new ONVIF::DeviceManagement{_serviceAddress, iuserName, ipassword};
 
-        //        ideviceManagement =
-        //            new ONVIF::DeviceManagement(_serviceAddress, iuserName,
-        //            ipassword);
-
-        //        imediaManagement =
-        //            new ONVIF::MediaManagement(_serviceAddress, iuserName,
-        //            ipassword);
+        imediaManagement =
+            new ONVIF::MediaManagement{_serviceAddress, iuserName, ipassword};
     }
+    ~QOnvifDevicePrivate() {}
 
     QString iuserName;
     QString ipassword;
@@ -27,8 +27,6 @@ public:
 
     // device management
     ONVIF::DeviceManagement* ideviceManagement;
-
-
     // media management
     ONVIF::MediaManagement* imediaManagement;
 
@@ -292,14 +290,15 @@ public:
     }
 };
 
-QOnvifDevice::QOnvifDevice() {}
+// QOnvifDevice::QOnvifDevice() {}
 
 QOnvifDevice::QOnvifDevice(
     QString  _serviceAddress,
     QString  _userName,
     QString  _password,
     QObject* _parent)
-    : d_ptr{new QOnvifDevicePrivate{_userName, _password}}, QObject(_parent) {}
+    : d_ptr{new QOnvifDevicePrivate{_serviceAddress, _userName, _password}},
+      QObject(_parent) {}
 
 QOnvifDevice::~QOnvifDevice() {}
 
@@ -308,43 +307,43 @@ QOnvifDevice::data() {
     return d_ptr->idata;
 }
 
-void QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData)
-{
+void
+QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData) {
     d_ptr->setDeviceProbeData(_probeData);
 }
 
-bool QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime)
-{
+bool
+QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime) {
     return d_ptr->setDeviceDateAndTime(_dateAndTime);
 }
 
-bool QOnvifDevice::refreshDeviceCapabilities()
-{
+bool
+QOnvifDevice::refreshDeviceCapabilities() {
     return d_ptr->refreshDeviceCapabilities();
 }
 
-bool QOnvifDevice::refreshDeviceInformation()
-{
+bool
+QOnvifDevice::refreshDeviceInformation() {
     return d_ptr->refreshDeviceInformation();
 }
 
-bool QOnvifDevice::resetFactoryDevice()
-{
+bool
+QOnvifDevice::resetFactoryDevice() {
     return d_ptr->resetFactoryDevice();
 }
 
-bool QOnvifDevice::rebootDevice()
-{
+bool
+QOnvifDevice::rebootDevice() {
     return d_ptr->rebootDevice();
 }
 
-bool QOnvifDevice::refreshVideoConfigs()
-{
+bool
+QOnvifDevice::refreshVideoConfigs() {
     return d_ptr->refreshVideoConfigs();
 }
 
-bool QOnvifDevice::refreshAudioConfigs()
-{
+bool
+QOnvifDevice::refreshAudioConfigs() {
     return d_ptr->refreshAudioConfigs();
 }
 

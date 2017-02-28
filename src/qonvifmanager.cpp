@@ -6,7 +6,8 @@
 class QOnvifManagerPrivate
 {
 public:
-    QOnvifManagerPrivate() {}
+    QOnvifManagerPrivate(const QString _username, const QString _password)
+        : iuserName(_username), ipassword(_password) {}
     ~QOnvifManagerPrivate() {}
 
     QScopedPointer<QOnvifManagerPrivate> d_ptr;
@@ -18,8 +19,8 @@ public:
 };
 
 
-QOnvifManager::QOnvifManager(QObject* _parent)
-    : QObject(_parent), d_ptr(new QOnvifManagerPrivate) {
+QOnvifManager::QOnvifManager(const QString _username, const QString _password, QObject* _parent)
+    : QObject(_parent), d_ptr(new QOnvifManagerPrivate(_username, _password)) {
     Q_D(QOnvifManager);
     // device finding
     d->ideviceSearcher = ONVIF::DeviceSearcher::instance(d->ihostAddress);
