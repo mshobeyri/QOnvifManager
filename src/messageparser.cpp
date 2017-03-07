@@ -1,12 +1,15 @@
 #include "messageparser.h"
-#include <QHashIterator>
 #include <QDebug>
+#include <QHashIterator>
+
 #include <QXmlResultItems>
 
 using namespace ONVIF;
 
-MessageParser::MessageParser(const QString &data, QHash<QString, QString> &namespaces, QObject *parent) : QObject(parent)
-{
+MessageParser::MessageParser(
+    const QString& data, QHash<QString, QString>& namespaces, QObject* parent)
+    : QObject(parent) {
+    mData = data.toStdString();
     mBuffer.setData(data.toUtf8());
     mBuffer.open(QIODevice::ReadOnly);
     mQuery.bindVariable("inputDocument", &mBuffer);
@@ -14,49 +17,61 @@ MessageParser::MessageParser(const QString &data, QHash<QString, QString> &names
     mNamespaceQueryStr = "";
     while (i.hasNext()) {
         i.next();
-        mNamespaceQueryStr.append("declare namespace " + i.key() + " = \"" + i.value() + "\";\n");
+        mNamespaceQueryStr.append(
+            "declare namespace " + i.key() + " = \"" + i.value() + "\";\n");
     }
 }
 
-MessageParser::~MessageParser()
-{
+MessageParser::~MessageParser() {
     mBuffer.close();
 }
 
-QString MessageParser::getValue(const QString &xpath)
-{
+QString
+MessageParser::getValue(const QString& xpath) {
 
     QString str;
-    mQuery.setQuery(mNamespaceQueryStr + "doc($inputDocument)" + xpath + "/string()");
-    if(!mQuery.isValid()) {
+    mQuery.setQuery(
+        mNamespaceQueryStr + "doc($inputDocument)" + xpath + "/string()");
+    if (!mQuery.isValid()) {
         return "";
     }
     mQuery.evaluateTo(&str);
     return str.trimmed();
 }
 
-bool MessageParser::find(const QString &xpath)
-{
+QString
+MessageParser::getBetween(const QString& start, const QString& end) {
+    if(!QString::fromStdString(mData).contains(start))return "";
+    if(!QString::fromStdString(mData).contains(end))return "";
+
+    std::string str = mData.substr(
+        mData.find(start.toStdString()) + static_cast<unsigned>(start.length()),
+        mData.length());
+    str = str.substr(0, str.find(end.toStdString()));
+    return QString::fromStdString(str).trimmed();
+}
+
+bool
+MessageParser::find(const QString& xpath) {
     mQuery.setQuery(mNamespaceQueryStr + "doc($inputDocument)" + xpath);
-    if(!mQuery.isValid()) {
+    if (!mQuery.isValid()) {
         return false;
     }
     QXmlResultItems items;
     mQuery.evaluateTo(&items);
     QXmlItem item = items.next();
-    if(item.isNull())
+    if (item.isNull())
         return false;
     else
         return true;
 }
 
-QXmlQuery *MessageParser::query()
-{
+QXmlQuery*
+MessageParser::query() {
     return &mQuery;
 }
 
-QString MessageParser::nameSpace()
-{
+QString
+MessageParser::nameSpace() {
     return mNamespaceQueryStr;
 }
-

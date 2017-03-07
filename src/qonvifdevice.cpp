@@ -19,7 +19,10 @@ public:
         imediaManagement =
             new ONVIF::MediaManagement{_serviceAddress, iuserName, ipassword};
     }
-    ~QOnvifDevicePrivate() {}
+    ~QOnvifDevicePrivate() {
+        delete ideviceManagement;
+        delete imediaManagement;
+    }
 
     QString iuserName;
     QString ipassword;
@@ -126,7 +129,7 @@ public:
         return true;
     }
 
-    bool refreshDeviceInformation() {
+    bool refreshDeviceInformation() { // todo
         QHash<QString, QString> deviceInformationHash =
             ideviceManagement->getDeviceInformation();
         idata.information.manufacturer = deviceInformationHash.value("mf");
@@ -137,6 +140,15 @@ public:
             deviceInformationHash.value("serial_number");
         idata.information.hardwareId =
             deviceInformationHash.value("hardware_id");
+        return true;
+    }
+
+    bool refreshDeviceScopes() {
+        QHash<QString, QString> deviceScopesHash =
+            ideviceManagement->getDeviceScopes();
+        idata.scopes.name     = deviceScopesHash.value("name");
+        idata.scopes.location = deviceScopesHash.value("location");
+        idata.scopes.hardware = deviceScopesHash.value("hardware");
         return true;
     }
 
@@ -155,7 +167,8 @@ public:
         QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
             videoEncoderConfigurationOptions(
                 imediaManagement->getVideoEncoderConfigurationOptions());
-
+        if(!videoEncoderConfigurationOptions)
+            return false;
         idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMax =
             videoEncoderConfigurationOptions->encodingIntervalRangeMax();
 
@@ -564,11 +577,10 @@ public:
     bool refreshUsers() {
         QScopedPointer<ONVIF::Users> users(ideviceManagement->getUsers());
 
-        idata.users.username = users->userName();
-        idata.users.password = users->passWord();
-        idata.users.userLevel =
-            static_cast<Data::Users::UserLevelType>(
-                static_cast<int>(users->userLevel()));
+        idata.users.username  = users->userName();
+        idata.users.password  = users->passWord();
+        idata.users.userLevel = static_cast<Data::Users::UserLevelType>(
+            static_cast<int>(users->userLevel()));
 
         return true;
     }
@@ -591,6 +603,11 @@ QOnvifDevice::data() {
     return d_ptr->idata;
 }
 
+Data::DateTime
+QOnvifDevice::deviceDateAndTime() {
+    return d_ptr->deviceDateAndTime();
+}
+
 void
 QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData) {
     d_ptr->setDeviceProbeData(_probeData);
@@ -609,6 +626,11 @@ QOnvifDevice::refreshDeviceCapabilities() {
 bool
 QOnvifDevice::refreshDeviceInformation() {
     return d_ptr->refreshDeviceInformation();
+}
+
+bool
+QOnvifDevice::refreshDeviceScopes() {
+    return d_ptr->refreshDeviceScopes();
 }
 
 bool

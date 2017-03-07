@@ -9,7 +9,7 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    ionvifManager = new QOnvifManager("admin", "", this);
+    ionvifManager = new QOnvifManager("admin", "admin", this);
     connect(
         ionvifManager,
         &QOnvifManager::newDeviceFinded,
@@ -59,6 +59,7 @@ MainWindow::on_btnRefreshData_clicked() {
     ionvifManager->refreshDeviceProfiles(currentDevice());
     ionvifManager->refreshDeviceInterfaces(currentDevice());
     ionvifManager->refreshDeviceUsers(currentDevice());
+    ionvifManager->refreshDeviceScopes(currentDevice());
 
     on_btnGetDataAndTime_clicked();
     QOnvifDevice* device = ionvifManager->device(currentDevice());

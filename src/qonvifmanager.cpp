@@ -64,6 +64,11 @@ QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshDeviceInformation();
 }
+bool
+QOnvifManager::refreshDeviceScopes(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshDeviceScopes();
+}
 
 bool
 QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
@@ -76,19 +81,21 @@ QOnvifManager::refreshDeviceProfiles(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProfiles();
 }
 
-bool QOnvifManager::refreshDeviceInterfaces(QString _deviceEndPointAddress)
-{
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshInterfaces();
+bool
+QOnvifManager::refreshDeviceInterfaces(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshInterfaces();
 }
 
-bool QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshUsers();
 }
 
 Data::DateTime
 QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress) {
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->data().dateTime;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->deviceDateAndTime();
 }
 
 QOnvifDevice*
@@ -113,6 +120,7 @@ QOnvifManager::setDefaulUsernameAndPassword(
     QString _username, QString _password) {
     d_ptr->iuserName = _username;
     d_ptr->ipassword = _password;
+    refreshDevicesList();
 }
 
 bool

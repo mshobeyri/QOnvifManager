@@ -24,6 +24,12 @@ struct Data {
         QString hardwareId;
     } information;
 
+    struct Scopes {
+        QString name;
+        QString location;
+        QString hardware;
+    } scopes;
+
     struct Capabilities {
         // ptz capabilities
         QString ptzAddress;

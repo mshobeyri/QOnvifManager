@@ -14,9 +14,12 @@ namespace ONVIF {
         explicit MessageParser(const QString &data, QHash<QString, QString> &namespaces, QObject *parent = 0);
         ~MessageParser();
         QString getValue(const QString &xpath);
+        QString getBetween(const QString &start,const QString &end);
         bool find(const QString &xpath);
         QXmlQuery *query();
         QString nameSpace();
+
+        std::string mData;
     private:
         QXmlQuery mQuery;
         QString mNamespaceQueryStr;

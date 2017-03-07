@@ -17,6 +17,7 @@ namespace ONVIF {
     public:
         explicit DeviceManagement(const QString & wsdlUrl, const QString &username, const QString &password);
         QHash<QString, QString> getDeviceInformation();
+        QHash<QString, QString> getDeviceScopes();
         SystemDateAndTime *getSystemDateAndTime();
         void setSystemDateAndTime(SystemDateAndTime *systemDateAndTime);
         void setSystemFactoryDefault(SystemFactoryDefault *systemFactoryDefault);

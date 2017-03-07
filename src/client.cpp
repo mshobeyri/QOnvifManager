@@ -18,7 +18,6 @@ QString Client::sendData(const QString &data)
 {
 
     QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);
-
     QUrl url(mUrl);
 
     QNetworkRequest request(url);

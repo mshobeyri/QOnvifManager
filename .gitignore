@@ -37,6 +37,7 @@ Thumbs.db
 
 *.user
 bin/
+build*/
 xbin/
 3rdparty/
 

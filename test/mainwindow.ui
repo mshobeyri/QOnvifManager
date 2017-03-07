@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
+    <width>683</width>
     <height>547</height>
    </rect>
   </property>
@@ -210,7 +210,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="txtPassword"/>
+       <widget class="QLineEdit" name="txtPassword">
+        <property name="text">
+         <string>admin</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="setUsernamePass">
@@ -229,8 +233,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>616</width>
-     <height>19</height>
+     <width>683</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -25,6 +25,8 @@ public:
         QObject* _parent);
     ~QOnvifDevice();
     Data& data();
+    //date time
+    Data::DateTime deviceDateAndTime();
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 
@@ -32,6 +34,7 @@ public:
 
     bool refreshDeviceCapabilities();
     bool refreshDeviceInformation();
+    bool refreshDeviceScopes();
 
     bool resetFactoryDevice();
     bool rebootDevice();
