@@ -112,7 +112,7 @@ bool
 QOnvifManager::setDeviceDateAndTime(
     QString _deviceEndPointAddress, QDateTime _dateTime) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setDeviceDateAndTime(_dateTime);
+        ->setDateAndTime(_dateTime);
 }
 
 void
@@ -121,6 +121,12 @@ QOnvifManager::setDefaulUsernameAndPassword(
     d_ptr->iuserName = _username;
     d_ptr->ipassword = _password;
     refreshDevicesList();
+}
+
+bool QOnvifManager::setDeviceScopes(QString _deviceEndPointAddress, QString _name, QString _location)
+{
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setScopes(_name,_location);
 }
 
 bool

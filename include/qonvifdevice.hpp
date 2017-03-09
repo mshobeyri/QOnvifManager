@@ -30,7 +30,8 @@ public:
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 
-    bool setDeviceDateAndTime(QDateTime _dateAndTime);
+    bool setDateAndTime(QDateTime _dateAndTime);
+    bool setScopes(QString _name, QString _location);
 
     bool refreshDeviceCapabilities();
     bool refreshDeviceInformation();

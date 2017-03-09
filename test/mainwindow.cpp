@@ -53,15 +53,24 @@ MainWindow::on_cmbDevicesComboBox_currentIndexChanged(int index) {
 
 void
 MainWindow::on_btnRefreshData_clicked() {
-    ionvifManager->refreshDeviceCapabilities(currentDevice());
-    ionvifManager->refreshDeviceInformations(currentDevice());
-    ionvifManager->refreshDeviceVideoConfigs(currentDevice());
-    ionvifManager->refreshDeviceProfiles(currentDevice());
-    ionvifManager->refreshDeviceInterfaces(currentDevice());
-    ionvifManager->refreshDeviceUsers(currentDevice());
-    ionvifManager->refreshDeviceScopes(currentDevice());
+    ui->txtLocation->setText("");
+    ui->txtName->setText("");
+//    ionvifManager->refreshDeviceCapabilities(currentDevice());
+//    ionvifManager->refreshDeviceInformations(currentDevice());
+//    ionvifManager->refreshDeviceVideoConfigs(currentDevice());
+//    ionvifManager->refreshDeviceProfiles(currentDevice());
 
-    on_btnGetDataAndTime_clicked();
+//    ionvifManager->refreshDeviceUsers(currentDevice());
+    ionvifManager->refreshDeviceScopes(currentDevice());
+//    ionvifManager->refreshDeviceInterfaces(currentDevice());
+
+    // setScopes
+    ui->txtLocation->setText(
+        ionvifManager->device(currentDevice())->data().scopes.location);
+    ui->txtName->setText(
+        ionvifManager->device(currentDevice())->data().scopes.name);
+
+//    on_btnGetDataAndTime_clicked();
     QOnvifDevice* device = ionvifManager->device(currentDevice());
 
     Q_UNUSED(device)
@@ -101,4 +110,10 @@ MainWindow::on_setUsernamePass_clicked() {
     ionvifManager->setDefaulUsernameAndPassword(
         ui->txtUserName->text(), ui->txtPassword->text());
     on_btnRefresh_clicked();
+}
+
+void
+MainWindow::on_btnSetScopes_clicked() {
+    ionvifManager->setDeviceScopes(
+        currentDevice(), ui->txtName->text(), ui->txtLocation->text());
 }

@@ -10,9 +10,10 @@ CONFIG += c++11
 
 DEFINES += QT_DLL QT_NETWORK_LIB QT_HELP_LIB QT_SCRIPT_LIB QT_WIDGETS_LIB QT_XML_LIB QT_XMLPATTERNS_LIB ONVIFC_LIB
 
-DESTDIR  = ../bin
+DESTDIR  = ../../../bin/
 
-TARGET = ../../../bin/QOnvifManager
+TARGET = QOnvifManager
+
 TEMPLATE = lib
 
 DEFINES += QONVIFMANAGER_LIBRARY
@@ -70,7 +71,8 @@ SOURCES += \
     message.cpp \
     messageparser.cpp \
     ptzmanagement.cpp \
-    service.cpp
+    service.cpp \
+    device_management/systemscopes.cpp
 
 HEADERS += \
     ../include/qonvifdevice.hpp \
@@ -115,7 +117,8 @@ HEADERS += \
     ../include/QOnvifManager/messageparser.h \
     ../include/QOnvifManager/ptzmanagement.h \
     ../include/QOnvifManager/qringbuffer_p.h \
-    ../include/QOnvifManager/service.h
+    ../include/QOnvifManager/service.h \
+    ../include/QOnvifManager/device_management/systemscopes.h
 
 #unix {
 #    TEMPDIR         = $$PRJDIR/tmp/unix/$$TARGET

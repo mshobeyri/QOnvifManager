@@ -33,6 +33,8 @@ private slots:
     void on_btsSetDateAndTime_clicked();
     void on_setUsernamePass_clicked();
 
+    void on_btnSetScopes_clicked();
+
 private:
     Ui::MainWindow *ui;
     QOnvifManager *ionvifManager;

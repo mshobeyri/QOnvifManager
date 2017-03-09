@@ -4,6 +4,7 @@
 #include "service.h"
 #include <QDateTime>
 #include "device_management/systemdateandtime.h"
+#include "device_management/systemscopes.h"
 #include "device_management/user.h"
 #include "device_management/systemfactorydefault.h"
 #include "device_management/systemreboot.h"
@@ -20,6 +21,7 @@ namespace ONVIF {
         QHash<QString, QString> getDeviceScopes();
         SystemDateAndTime *getSystemDateAndTime();
         void setSystemDateAndTime(SystemDateAndTime *systemDateAndTime);
+        void setDeviceScopes(SystemScopes* systemScopes);
         void setSystemFactoryDefault(SystemFactoryDefault *systemFactoryDefault);
         void systemReboot(SystemReboot *systemReboot);
         Users *getUsers();

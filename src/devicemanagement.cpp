@@ -17,12 +17,16 @@ DeviceManagement::namespaces(const QString& key) {
     names.insert("xsi", "http://www.w3.org/2001/XMLSchema-instance");
     names.insert("xsd", "http://www.w3.org/2001/XMLSchema");
     names.insert("c14n", "http://www.w3.org/2001/10/xml-exc-c14n#");
-    names.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/"
-                        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
+    names.insert(
+        "wsu",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
     names.insert("xenc", "http://www.w3.org/2001/04/xmlenc#");
     names.insert("ds", "http://www.w3.org/2000/09/xmldsig#");
-    names.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
-                         "oasis-200401-wss-wssecurity-secext-1.0.xsd");
+    names.insert(
+        "wsse",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-secext-1.0.xsd");
     names.insert("wsa5", "http://www.w3.org/2005/08/addressing");
     names.insert("xmime", "http://tempuri.org/xmime.xsd");
     names.insert("xop", "http://www.w3.org/2004/08/xop/include");
@@ -63,8 +67,10 @@ DeviceManagement::namespaces(const QString& key) {
         "tetpps",
         "http://www.onvif.org/ver10/events/wsdl/PullPointSubscriptionBinding");
     names.insert("tev", "http://www.onvif.org/ver10/events/wsdl");
-    names.insert("tetps", "http://www.onvif.org/ver10/events/wsdl/"
-                          "PausableSubscriptionManagerBinding");
+    names.insert(
+        "tetps",
+        "http://www.onvif.org/ver10/events/wsdl/"
+        "PausableSubscriptionManagerBinding");
     names.insert("wsnt", "http://docs.oasis-open.org/wsn/b-2");
     names.insert(
         "tetsm",
@@ -109,23 +115,34 @@ DeviceManagement::getDeviceInformation() {
 
 QHash<QString, QString>
 DeviceManagement::getDeviceScopes() {
-    QHash<QString, QString> device_info;
+    QHash<QString, QString> device_scopes;
     Message* msg = newMessage();
-    msg->appendToBody(
-        newElement("wsdl:GetScopes xmlns=\"http://www.onvif.org/ver10/device/wsdl\""));
+    msg->appendToBody(newElement(
+        "wsdl:GetScopes xmlns=\"http://www.onvif.org/ver10/device/wsdl\""));
     MessageParser* result = sendMessage(msg);
 
-    qDebug() << QString::fromStdString(result->mData);
+    qDebug() << QString::fromStdString(result->mData); // tododebug
 
     if (result != NULL) {
-        device_info.insert("location",result->getBetween("onvif://www.onvif.org/location/","<"));
-        device_info.insert("name",result->getBetween("onvif://www.onvif.org/name/","<"));
-        device_info.insert("hardware",result->getBetween("onvif://www.onvif.org/hardware/","<"));
+        device_scopes.insert(
+            "name",
+            result->getValue(
+                "//tds:GetScopesResponse/tds:Scopes[./"
+                "tt:ScopeDef[./text()='Configurable']]/"
+                "/tt:ScopeItem[starts-with(text(),'odm:name:') or "
+                "starts-with(text(),'onvif://www.onvif.org/name')]"));
+        device_scopes.insert(
+            "location",
+            result->getValue(
+                "//tds:GetScopesResponse/tds:Scopes[./"
+                "tt:ScopeDef[./text()='Configurable']]/"
+                "/tt:ScopeItem[starts-with(text(),'odm:location:') or "
+                "starts-with(text(),'onvif://www.onvif.org/location/')]"));
     }
 
     delete result;
     delete msg;
-    return device_info;
+    return device_scopes;
 }
 
 Message*
@@ -180,6 +197,21 @@ DeviceManagement::setSystemDateAndTime(SystemDateAndTime* systemDateAndTime) {
         else
             systemDateAndTime->setResult(false);
 
+        delete result;
+        delete msg;
+    }
+}
+
+void
+DeviceManagement::setDeviceScopes(SystemScopes* systemScopes) {
+    Message* msg = newMessage();
+    msg->appendToBody(systemScopes->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetScopesResponse"))
+            systemScopes->setResult(true);
+        else
+            systemScopes->setResult(false);
         delete result;
         delete msg;
     }

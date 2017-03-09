@@ -33,9 +33,7 @@ class QONVIFMANAGERSHARED_EXPORT QOnvifManager : public QObject
     Q_OBJECT
 public:
     QOnvifManager(
-        const QString _username,
-        const QString _password,
-        QObject*        _parent = 0);
+        const QString _username, const QString _password, QObject* _parent = 0);
     ~QOnvifManager();
 
     bool refreshDevicesList();
@@ -59,6 +57,9 @@ public:
     bool
     setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
     void setDefaulUsernameAndPassword(QString _username, QString _password);
+    bool setDeviceScopes(
+        QString _deviceEndPointAddress, QString _name, QString _location);
+
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
 

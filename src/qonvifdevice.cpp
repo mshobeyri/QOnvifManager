@@ -41,6 +41,7 @@ public:
         idata.probeData = _probeData;
     }
 
+
     Data::DateTime deviceDateAndTime() {
         QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(
             ideviceManagement->getSystemDateAndTime());
@@ -53,6 +54,14 @@ public:
         ONVIF::SystemDateAndTime systemDateAndTime;
         systemDateAndTime.setlocalTime(_dateAndTime);
         ideviceManagement->setSystemDateAndTime(&systemDateAndTime);
+        return true;
+    }
+
+    bool setScopes(QString _name, QString _location) {
+        ONVIF::SystemScopes systemScopes;
+        systemScopes.setScopes(_name,_location);
+
+        ideviceManagement->setDeviceScopes(&systemScopes);
         return true;
     }
 
@@ -613,8 +622,13 @@ QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData) {
     d_ptr->setDeviceProbeData(_probeData);
 }
 
+bool QOnvifDevice::setScopes(QString _name, QString _location)
+{
+    return d_ptr->setScopes(_name,_location);
+}
+
 bool
-QOnvifDevice::setDeviceDateAndTime(QDateTime _dateAndTime) {
+QOnvifDevice::setDateAndTime(QDateTime _dateAndTime) {
     return d_ptr->setDeviceDateAndTime(_dateAndTime);
 }
 

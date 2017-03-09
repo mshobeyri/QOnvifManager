@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -63,6 +63,12 @@ public:
     QLabel *label_10;
     QLineEdit *txtPassword;
     QPushButton *setUsernamePass;
+    QHBoxLayout *horizontalLayout_6;
+    QLabel *label_12;
+    QLineEdit *txtName;
+    QLabel *label_11;
+    QLineEdit *txtLocation;
+    QPushButton *btnSetScopes;
     QStatusBar *statusBar;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -71,7 +77,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(616, 547);
+        MainWindow->resize(683, 547);
         actionAbout = new QAction(MainWindow);
         actionAbout->setObjectName(QStringLiteral("actionAbout"));
         centralWidget = new QWidget(MainWindow);
@@ -236,13 +242,44 @@ public:
 
         gridLayout->addLayout(horizontalLayout_5, 6, 0, 1, 1);
 
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setSpacing(6);
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        label_12 = new QLabel(centralWidget);
+        label_12->setObjectName(QStringLiteral("label_12"));
+
+        horizontalLayout_6->addWidget(label_12);
+
+        txtName = new QLineEdit(centralWidget);
+        txtName->setObjectName(QStringLiteral("txtName"));
+
+        horizontalLayout_6->addWidget(txtName);
+
+        label_11 = new QLabel(centralWidget);
+        label_11->setObjectName(QStringLiteral("label_11"));
+
+        horizontalLayout_6->addWidget(label_11);
+
+        txtLocation = new QLineEdit(centralWidget);
+        txtLocation->setObjectName(QStringLiteral("txtLocation"));
+
+        horizontalLayout_6->addWidget(txtLocation);
+
+        btnSetScopes = new QPushButton(centralWidget);
+        btnSetScopes->setObjectName(QStringLiteral("btnSetScopes"));
+
+        horizontalLayout_6->addWidget(btnSetScopes);
+
+
+        gridLayout->addLayout(horizontalLayout_6, 10, 0, 1, 1);
+
         MainWindow->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 616, 19));
+        menuBar->setGeometry(QRect(0, 0, 683, 22));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -257,25 +294,29 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        actionAbout->setText(QApplication::translate("MainWindow", "About", 0));
-        label->setText(QApplication::translate("MainWindow", "Devices List:", 0));
-        btnRefresh->setText(QApplication::translate("MainWindow", "Refresh", 0));
-        label_2->setText(QApplication::translate("MainWindow", "Date and Time:", 0));
-        label_6->setText(QApplication::translate("MainWindow", "Control:", 0));
-        label_3->setText(QApplication::translate("MainWindow", "Put a break point in pointed place in btn  \"on refresh data\" slot to see device data.", 0));
-        btnRefreshData->setText(QApplication::translate("MainWindow", "Refresh Data", 0));
-        label_4->setText(QApplication::translate("MainWindow", "Local:", 0));
-        label_5->setText(QApplication::translate("MainWindow", "Utc:", 0));
-        btnGetDataAndTime->setText(QApplication::translate("MainWindow", "Get data and time", 0));
-        label_7->setText(QApplication::translate("MainWindow", "Local:", 0));
-        btsSetDateAndTime->setText(QApplication::translate("MainWindow", "Set date and time", 0));
-        label_9->setText(QApplication::translate("MainWindow", "Login:", 0));
-        label_8->setText(QApplication::translate("MainWindow", "Username:", 0));
-        txtUserName->setText(QApplication::translate("MainWindow", "admin", 0));
-        label_10->setText(QApplication::translate("MainWindow", "Password:", 0));
-        setUsernamePass->setText(QApplication::translate("MainWindow", "Set", 0));
-        menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+        actionAbout->setText(QApplication::translate("MainWindow", "About", Q_NULLPTR));
+        label->setText(QApplication::translate("MainWindow", "Devices List:", Q_NULLPTR));
+        btnRefresh->setText(QApplication::translate("MainWindow", "Refresh", Q_NULLPTR));
+        label_2->setText(QApplication::translate("MainWindow", "Date and Time:", Q_NULLPTR));
+        label_6->setText(QApplication::translate("MainWindow", "Control:", Q_NULLPTR));
+        label_3->setText(QApplication::translate("MainWindow", "Put a break point in pointed place in btn  \"on refresh data\" slot to see device data.", Q_NULLPTR));
+        btnRefreshData->setText(QApplication::translate("MainWindow", "Refresh Data", Q_NULLPTR));
+        label_4->setText(QApplication::translate("MainWindow", "Local:", Q_NULLPTR));
+        label_5->setText(QApplication::translate("MainWindow", "Utc:", Q_NULLPTR));
+        btnGetDataAndTime->setText(QApplication::translate("MainWindow", "Get data and time", Q_NULLPTR));
+        label_7->setText(QApplication::translate("MainWindow", "Local:", Q_NULLPTR));
+        btsSetDateAndTime->setText(QApplication::translate("MainWindow", "Set date and time", Q_NULLPTR));
+        label_9->setText(QApplication::translate("MainWindow", "Login:", Q_NULLPTR));
+        label_8->setText(QApplication::translate("MainWindow", "Username:", Q_NULLPTR));
+        txtUserName->setText(QApplication::translate("MainWindow", "admin", Q_NULLPTR));
+        label_10->setText(QApplication::translate("MainWindow", "Password:", Q_NULLPTR));
+        txtPassword->setText(QApplication::translate("MainWindow", "admin", Q_NULLPTR));
+        setUsernamePass->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
+        label_12->setText(QApplication::translate("MainWindow", "Name:", Q_NULLPTR));
+        label_11->setText(QApplication::translate("MainWindow", "Location:", Q_NULLPTR));
+        btnSetScopes->setText(QApplication::translate("MainWindow", "setScopes", Q_NULLPTR));
+        menuFile->setTitle(QApplication::translate("MainWindow", "File", Q_NULLPTR));
     } // retranslateUi
 
 };
