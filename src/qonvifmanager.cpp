@@ -92,10 +92,10 @@ QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshUsers();
 }
 
-Data::DateTime
-QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress) {
+bool
+QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress, Data::DateTime& _datetime) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->deviceDateAndTime();
+        ->deviceDateAndTime(_datetime);
 }
 
 QOnvifDevice*

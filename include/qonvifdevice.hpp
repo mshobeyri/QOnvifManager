@@ -26,7 +26,7 @@ public:
     ~QOnvifDevice();
     Data& data();
     //date time
-    Data::DateTime deviceDateAndTime();
+    bool deviceDateAndTime(Data::DateTime &_datetime);
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 

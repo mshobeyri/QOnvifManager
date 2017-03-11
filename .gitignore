@@ -34,9 +34,10 @@ Thumbs.db
 *.rc
 /.qmake.cache
 /.qmake.stash
+moc_*
 
 *.user
-bin/
+bin*/
 build*/
 xbin/
 3rdparty/

@@ -41,13 +41,15 @@ public:
         idata.probeData = _probeData;
     }
 
-
-    Data::DateTime deviceDateAndTime() {
+    bool deviceDateAndTime(Data::DateTime& _datetime) {
         QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(
             ideviceManagement->getSystemDateAndTime());
+        if (!systemDateAndTime)
+            return false;
         idata.dateTime.localTime = systemDateAndTime->localTime();
         idata.dateTime.utcTime   = systemDateAndTime->utcTime();
-        return idata.dateTime;
+        _datetime                = idata.dateTime;
+        return true;
     }
 
     bool setDeviceDateAndTime(QDateTime _dateAndTime) {
@@ -59,7 +61,7 @@ public:
 
     bool setScopes(QString _name, QString _location) {
         ONVIF::SystemScopes systemScopes;
-        systemScopes.setScopes(_name,_location);
+        systemScopes.setScopes(_name, _location);
 
         ideviceManagement->setDeviceScopes(&systemScopes);
         return true;
@@ -68,7 +70,8 @@ public:
     bool refreshDeviceCapabilities() {
         QScopedPointer<ONVIF::Capabilities> capabilitiesDevice(
             ideviceManagement->getCapabilitiesDevice());
-
+        if (!capabilitiesDevice)
+            return false;
         idata.capabilities.accessPolicyConfig =
             capabilitiesDevice->accessPolicyConfig();
         idata.capabilities.deviceXAddr = capabilitiesDevice->deviceXAddr();
@@ -176,7 +179,7 @@ public:
         QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
             videoEncoderConfigurationOptions(
                 imediaManagement->getVideoEncoderConfigurationOptions());
-        if(!videoEncoderConfigurationOptions)
+        if (!videoEncoderConfigurationOptions)
             return false;
         idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMax =
             videoEncoderConfigurationOptions->encodingIntervalRangeMax();
@@ -326,6 +329,9 @@ public:
     bool refreshProfiles() {
         QScopedPointer<ONVIF::Profiles> profiles(
             imediaManagement->getProfiles());
+        if (!profiles)
+            return false;
+
         idata.profiles.analytics           = profiles->m_analytics;
         idata.profiles.toKenPro            = profiles->m_toKenPro;
         idata.profiles.fixed               = profiles->m_fixed;
@@ -550,7 +556,8 @@ public:
     bool refreshInterfaces() {
         QScopedPointer<ONVIF::NetworkInterfaces> networkInterfaces(
             ideviceManagement->getNetworkInterfaces());
-
+        if (!networkInterfaces)
+            return false;
         idata.network.interfaces.networkInfacesEnabled =
             networkInterfaces->networkInfacesEnabled();
         idata.network.interfaces.autoNegotiation =
@@ -585,7 +592,8 @@ public:
 
     bool refreshUsers() {
         QScopedPointer<ONVIF::Users> users(ideviceManagement->getUsers());
-
+        if (!users)
+            return false;
         idata.users.username  = users->userName();
         idata.users.password  = users->passWord();
         idata.users.userLevel = static_cast<Data::Users::UserLevelType>(
@@ -612,9 +620,9 @@ QOnvifDevice::data() {
     return d_ptr->idata;
 }
 
-Data::DateTime
-QOnvifDevice::deviceDateAndTime() {
-    return d_ptr->deviceDateAndTime();
+bool
+QOnvifDevice::deviceDateAndTime(Data::DateTime& _datetime) {
+    return d_ptr->deviceDateAndTime(_datetime);
 }
 
 void
@@ -622,9 +630,9 @@ QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData) {
     d_ptr->setDeviceProbeData(_probeData);
 }
 
-bool QOnvifDevice::setScopes(QString _name, QString _location)
-{
-    return d_ptr->setScopes(_name,_location);
+bool
+QOnvifDevice::setScopes(QString _name, QString _location) {
+    return d_ptr->setScopes(_name, _location);
 }
 
 bool

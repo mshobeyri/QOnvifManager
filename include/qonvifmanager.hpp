@@ -49,7 +49,7 @@ public:
 
     bool refreshDeviceUsers(QString _deviceEndPointAddress);
 
-    Data::DateTime deviceDateAndTime(QString _deviceEndPointAddress);
+    bool deviceDateAndTime(QString _deviceEndPointAddress, Data::DateTime& _datetime);
 
     QOnvifDevice* device(QString _deviceEndPointAddress);
     QMap<QString, QOnvifDevice*>& devicesMap();

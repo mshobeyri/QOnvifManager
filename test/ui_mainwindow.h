@@ -68,6 +68,8 @@ public:
     QLineEdit *txtName;
     QLabel *label_11;
     QLineEdit *txtLocation;
+    QLabel *label_13;
+    QLabel *txtHardware;
     QPushButton *btnSetScopes;
     QStatusBar *statusBar;
     QMenuBar *menuBar;
@@ -265,6 +267,16 @@ public:
 
         horizontalLayout_6->addWidget(txtLocation);
 
+        label_13 = new QLabel(centralWidget);
+        label_13->setObjectName(QStringLiteral("label_13"));
+
+        horizontalLayout_6->addWidget(label_13);
+
+        txtHardware = new QLabel(centralWidget);
+        txtHardware->setObjectName(QStringLiteral("txtHardware"));
+
+        horizontalLayout_6->addWidget(txtHardware);
+
         btnSetScopes = new QPushButton(centralWidget);
         btnSetScopes->setObjectName(QStringLiteral("btnSetScopes"));
 
@@ -315,6 +327,8 @@ public:
         setUsernamePass->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
         label_12->setText(QApplication::translate("MainWindow", "Name:", Q_NULLPTR));
         label_11->setText(QApplication::translate("MainWindow", "Location:", Q_NULLPTR));
+        label_13->setText(QApplication::translate("MainWindow", "hardware:", Q_NULLPTR));
+        txtHardware->setText(QApplication::translate("MainWindow", "Unknown", Q_NULLPTR));
         btnSetScopes->setText(QApplication::translate("MainWindow", "setScopes", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", Q_NULLPTR));
     } // retranslateUi

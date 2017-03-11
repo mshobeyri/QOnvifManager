@@ -248,6 +248,20 @@
        <widget class="QLineEdit" name="txtLocation"/>
       </item>
       <item>
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>hardware:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="txtHardware">
+        <property name="text">
+         <string>Unknown</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnSetScopes">
         <property name="text">
          <string>setScopes</string>

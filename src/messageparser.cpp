@@ -9,7 +9,6 @@ using namespace ONVIF;
 MessageParser::MessageParser(
     const QString& data, QHash<QString, QString>& namespaces, QObject* parent)
     : QObject(parent) {
-    mData = data.toStdString();
     mBuffer.setData(data.toUtf8());
     mBuffer.open(QIODevice::ReadOnly);
     mQuery.bindVariable("inputDocument", &mBuffer);
@@ -37,18 +36,6 @@ MessageParser::getValue(const QString& xpath) {
     }
     mQuery.evaluateTo(&str);
     return str.trimmed();
-}
-
-QString
-MessageParser::getBetween(const QString& start, const QString& end) {
-    if(!QString::fromStdString(mData).contains(start))return "";
-    if(!QString::fromStdString(mData).contains(end))return "";
-
-    std::string str = mData.substr(
-        mData.find(start.toStdString()) + static_cast<unsigned>(start.length()),
-        mData.length());
-    str = str.substr(0, str.find(end.toStdString()));
-    return QString::fromStdString(str).trimmed();
 }
 
 bool

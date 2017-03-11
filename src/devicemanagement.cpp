@@ -121,8 +121,6 @@ DeviceManagement::getDeviceScopes() {
         "wsdl:GetScopes xmlns=\"http://www.onvif.org/ver10/device/wsdl\""));
     MessageParser* result = sendMessage(msg);
 
-    qDebug() << QString::fromStdString(result->mData); // tododebug
-
     if (result != NULL) {
         device_scopes.insert(
             "name",
@@ -138,6 +136,14 @@ DeviceManagement::getDeviceScopes() {
                 "tt:ScopeDef[./text()='Configurable']]/"
                 "/tt:ScopeItem[starts-with(text(),'odm:location:') or "
                 "starts-with(text(),'onvif://www.onvif.org/location/')]"));
+
+        device_scopes.insert(
+            "hardware",
+            result->getValue(
+                "//tds:GetScopesResponse/tds:Scopes[./"
+                "tt:ScopeDef[./text()='Fixed']]/"
+                "/tt:ScopeItem[starts-with(text(),'odm:hardware:') or "
+                "starts-with(text(),'onvif://www.onvif.org/hardware/')]").remove(0,31));
     }
 
     delete result;
@@ -451,7 +457,7 @@ DeviceManagement::getNetworkInterfaces() {
         networkInterfaces->setProperty(
             "mtu", result->getValue("//tt:MTU").toInt());
         networkInterfaces->setProperty(
-            "ipv4Enabled", result->getValue("//tt:IPv4/tt:Enabled"));
+            "ipv4esult != NULL)Enabled", result->getValue("//tt:IPv4/tt:Enabled"));
         networkInterfaces->setProperty(
             "ipv4ManualAddress", result->getValue("//tt:Manual/tt:Address"));
         networkInterfaces->setProperty(
