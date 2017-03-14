@@ -21,6 +21,26 @@ void VideoEncoderConfigurationOptions::setEncodingIntervalRangeMax(int encodingI
     m_encodingIntervalRangeMax = encodingIntervalRangeMax;
 }
 
+int VideoEncoderConfigurationOptions::bitRateRangeMax() const
+{
+    return m_bitRateRangeMax;
+}
+
+void VideoEncoderConfigurationOptions::setBitRateRangeMax(int bitRateRangeMax)
+{
+    m_bitRateRangeMax = bitRateRangeMax;
+}
+
+int VideoEncoderConfigurationOptions::bitRateRangeMin() const
+{
+    return m_bitRateRangeMin;
+}
+
+void VideoEncoderConfigurationOptions::setBitRateRangeMin(int bitRateRangeMin)
+{
+    m_bitRateRangeMin = bitRateRangeMin;
+}
+
 int VideoEncoderConfigurationOptions::encodingIntervalRangeMin() const
 {
     return m_encodingIntervalRangeMin;

@@ -241,6 +241,8 @@ struct Data {
                 int        govLengthRangeMax;
                 int        frameRateRangeMin;
                 int        frameRateRangeMax;
+                int        bitRateRangeMin;
+                int        bitRateRangeMax;
                 int        encodingIntervalRangeMin;
                 int        encodingIntervalRangeMax;
                 enum H264ProfilesSupported { Baseline, Main, Extended, High };

@@ -41,6 +41,10 @@ public:
     bool refreshDeviceInformations(QString _deviceEndPointAddress);
 
     bool refreshDeviceVideoConfigs(QString _deviceEndPointAddress);
+    bool refreshDeviceVideoConfigsOptions(
+        QString _deviceEndPointAddress,
+        QString _configToken = "",
+        QString _profileToken = "");
 
 
     bool refreshDeviceProfiles(QString _deviceEndPointAddress);
@@ -49,10 +53,8 @@ public:
 
     bool refreshDeviceUsers(QString _deviceEndPointAddress);
 
-    bool deviceDateAndTime(QString _deviceEndPointAddress, Data::DateTime& _datetime);
-
-    QOnvifDevice* device(QString _deviceEndPointAddress);
-    QMap<QString, QOnvifDevice*>& devicesMap();
+    bool deviceDateAndTime(
+        QString _deviceEndPointAddress, Data::DateTime& _datetime);
 
     bool
     setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
@@ -63,9 +65,13 @@ public:
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
 
+    QOnvifDevice* device(QString _deviceEndPointAddress);
+    QMap<QString, QOnvifDevice*>& devicesMap();
+
 protected:
     Q_DECLARE_PRIVATE(QOnvifManager)
     QScopedPointer<QOnvifManagerPrivate> d_ptr;
+    bool cameraExist(const QString& endpoinAddress);
 
 public slots:
     void onReciveData(QHash<QString, QString> _deviceHash);

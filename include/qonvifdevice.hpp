@@ -25,8 +25,8 @@ public:
         QObject* _parent);
     ~QOnvifDevice();
     Data& data();
-    //date time
-    bool deviceDateAndTime(Data::DateTime &_datetime);
+    // date time
+    bool deviceDateAndTime(Data::DateTime& _datetime);
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 
@@ -42,6 +42,8 @@ public:
 
     // media management
     bool refreshVideoConfigs();
+    bool
+    refreshVideoConfigsOptions(QString _configToken, QString _profileToken);
     bool refreshAudioConfigs();
 
 

@@ -35,7 +35,11 @@ public:
     VideoEncoderConfiguration*        getVideoEncoderConfiguration();
     AudioEncoderConfiguration*        getAudioEncoderConfiguration();
     AudioEncoderConfigurationOptions* getAudioEncoderConfigurationOptions();
-    VideoEncoderConfigurationOptions* getVideoEncoderConfigurationOptions();
+    VideoEncoderConfigurationOptions* getVideoEncoderConfigurationOptions(
+        QString _configToken, QString _profileToken);
+
+    void
+    setVideoEncoderConfiguration(VideoEncoderConfiguration* videoConfiguration);
     StreamUri* getStreamUri(const QString& token);
 
 protected:

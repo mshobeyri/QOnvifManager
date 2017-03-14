@@ -175,61 +175,13 @@ public:
     }
 
     bool refreshVideoConfigs() {
-        // get video encoder options
-        QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
-            videoEncoderConfigurationOptions(
-                imediaManagement->getVideoEncoderConfigurationOptions());
-        if (!videoEncoderConfigurationOptions)
-            return false;
-        idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMax =
-            videoEncoderConfigurationOptions->encodingIntervalRangeMax();
-
-        idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMin =
-            videoEncoderConfigurationOptions->encodingIntervalRangeMin();
-
-        idata.mediaConfig.video.encodingOptions.frameRateRangeMax =
-            videoEncoderConfigurationOptions->frameRateRangeMax();
-
-        idata.mediaConfig.video.encodingOptions.frameRateRangeMin =
-            videoEncoderConfigurationOptions->frameRateRangeMin();
-
-        idata.mediaConfig.video.encodingOptions.govLengthRangeMax =
-            videoEncoderConfigurationOptions->govLengthRangeMax();
-
-        idata.mediaConfig.video.encodingOptions.govLengthRangeMin =
-            videoEncoderConfigurationOptions->govLengthRangeMin();
-
-        idata.mediaConfig.video.encodingOptions.qualityRangeMin =
-            videoEncoderConfigurationOptions->qualityRangeMin();
-
-        idata.mediaConfig.video.encodingOptions.qulityRangeMax =
-            videoEncoderConfigurationOptions->qulityRangeMax();
-
-        idata.mediaConfig.video.encodingOptions.resAvailableHeight =
-            videoEncoderConfigurationOptions->getResAvailableHeight();
-
-        idata.mediaConfig.video.encodingOptions.resAvailableWidth =
-            videoEncoderConfigurationOptions->getResAvailableWidth();
-
-        foreach (
-            ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported
-                h264ProfilesSupporte,
-            videoEncoderConfigurationOptions->getH264ProfilesSupported()) {
-            int intCastTemp = static_cast<int>(h264ProfilesSupporte);
-
-            Data::MediaConfig::Video::EncodingOptions::H264ProfilesSupported
-                enumCastTemp =
-                    static_cast<Data::MediaConfig::Video::EncodingOptions::
-                                    H264ProfilesSupported>(intCastTemp);
-
-            idata.mediaConfig.video.encodingOptions.h264ProfilesSupported
-                .append(enumCastTemp);
-        }
-
         // get video encoder config
         QScopedPointer<ONVIF::VideoEncoderConfigurations>
             videoEncoderConfigurations(
                 imediaManagement->getVideoEncoderConfigurations());
+
+        if (!videoEncoderConfigurations)
+            return false;
 
         idata.mediaConfig.video.encodingConfig.autoStart =
             videoEncoderConfigurations->getAutoStart();
@@ -251,6 +203,9 @@ public:
 
         idata.mediaConfig.video.encodingConfig.h264Profile =
             videoEncoderConfigurations->getH264Profile();
+
+        idata.mediaConfig.video.encodingConfig.width =
+            videoEncoderConfigurations->getWidth();
 
         idata.mediaConfig.video.encodingConfig.height =
             videoEncoderConfigurations->getHeight();
@@ -290,6 +245,8 @@ public:
             videoSourceConfigurations(
                 imediaManagement->getVideoSourceConfigurations());
 
+        if (!videoSourceConfigurations)
+            return false;
 
         idata.mediaConfig.video.sourceConfig.name =
             videoSourceConfigurations->getName();
@@ -308,6 +265,8 @@ public:
             imediaManagement->getStreamUri("10")); // todo: whats this input
                                                    // exactly? meld retrun value
                                                    // and value of odm
+        if (!streamUri)
+            return false;
 
         idata.mediaConfig.video.streamUri.uri = streamUri->uri();
         idata.mediaConfig.video.streamUri.invalidAfterConnect =
@@ -315,6 +274,69 @@ public:
         idata.mediaConfig.video.streamUri.invalidAfterReboot =
             streamUri->invalidAfterReboot();
         idata.mediaConfig.video.streamUri.timeout = streamUri->timeout();
+        return true;
+    }
+
+    bool
+    refreshVideoConfigsOptions(QString _configToken, QString _profileToken) {
+        // get video encoder options
+        QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
+            videoEncoderConfigurationOptions(
+                imediaManagement->getVideoEncoderConfigurationOptions(
+                    _configToken, _profileToken));
+
+        if (!videoEncoderConfigurationOptions)
+            return false;
+        idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMax =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMax();
+
+        idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMin =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMin();
+
+        idata.mediaConfig.video.encodingOptions.frameRateRangeMax =
+            videoEncoderConfigurationOptions->frameRateRangeMax();
+
+        idata.mediaConfig.video.encodingOptions.frameRateRangeMin =
+            videoEncoderConfigurationOptions->frameRateRangeMin();
+
+        idata.mediaConfig.video.encodingOptions.bitRateRangeMax =
+            videoEncoderConfigurationOptions->bitRateRangeMax();
+
+        idata.mediaConfig.video.encodingOptions.bitRateRangeMin =
+            videoEncoderConfigurationOptions->bitRateRangeMin();
+
+        idata.mediaConfig.video.encodingOptions.govLengthRangeMax =
+            videoEncoderConfigurationOptions->govLengthRangeMax();
+
+        idata.mediaConfig.video.encodingOptions.govLengthRangeMin =
+            videoEncoderConfigurationOptions->govLengthRangeMin();
+
+        idata.mediaConfig.video.encodingOptions.qualityRangeMin =
+            videoEncoderConfigurationOptions->qualityRangeMin();
+
+        idata.mediaConfig.video.encodingOptions.qulityRangeMax =
+            videoEncoderConfigurationOptions->qulityRangeMax();
+
+        idata.mediaConfig.video.encodingOptions.resAvailableHeight =
+            videoEncoderConfigurationOptions->getResAvailableHeight();
+
+        idata.mediaConfig.video.encodingOptions.resAvailableWidth =
+            videoEncoderConfigurationOptions->getResAvailableWidth();
+
+        foreach (
+            ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported
+                h264ProfilesSupporte,
+            videoEncoderConfigurationOptions->getH264ProfilesSupported()) {
+            int intCastTemp = static_cast<int>(h264ProfilesSupporte);
+
+            Data::MediaConfig::Video::EncodingOptions::H264ProfilesSupported
+                enumCastTemp =
+                    static_cast<Data::MediaConfig::Video::EncodingOptions::
+                                    H264ProfilesSupported>(intCastTemp);
+
+            idata.mediaConfig.video.encodingOptions.h264ProfilesSupported
+                .append(enumCastTemp);
+        }
         return true;
     }
 
@@ -405,6 +427,8 @@ public:
 
         QScopedPointer<ONVIF::Profile> profile720p(
             imediaManagement->getProfile720P());
+        if (!profile720p)
+            return false;
         idata.profile720p.analytics         = profile720p->m_analytics;
         idata.profile720p.toKenPro          = profile720p->m_toKenPro;
         idata.profile720p.fixed             = profile720p->m_fixed;
@@ -480,6 +504,8 @@ public:
 
         QScopedPointer<ONVIF::Profile> profileD1(
             imediaManagement->getProfileD1());
+        if (!profileD1)
+            return false;
         idata.profileD1.analytics           = profileD1->m_analytics;
         idata.profileD1.toKenPro            = profileD1->m_toKenPro;
         idata.profileD1.fixed               = profileD1->m_fixed;
@@ -668,6 +694,12 @@ QOnvifDevice::rebootDevice() {
 bool
 QOnvifDevice::refreshVideoConfigs() {
     return d_ptr->refreshVideoConfigs();
+}
+
+bool
+QOnvifDevice::refreshVideoConfigsOptions(
+    QString _configToken, QString _profileToken) {
+    return d_ptr->refreshVideoConfigsOptions(_configToken, _profileToken);
 }
 
 bool

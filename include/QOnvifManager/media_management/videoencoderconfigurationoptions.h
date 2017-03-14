@@ -1,95 +1,97 @@
 #ifndef VIDEOENCODERCONFIGURATIONOPTIONS_H
 #define VIDEOENCODERCONFIGURATIONOPTIONS_H
-#include <QObject>
 #include <QList>
+#include <QObject>
 namespace ONVIF {
-    class VideoEncoderConfigurationOptions : public QObject
-    {
-        Q_OBJECT
-        Q_ENUMS(H264ProfilesSupported)
-    public:
-        explicit VideoEncoderConfigurationOptions(QObject *parent = NULL);
-        virtual ~VideoEncoderConfigurationOptions();
-        enum H264ProfilesSupported {Baseline,Main,Extended,High};
-        H264ProfilesSupported stringToEnum(QString s)
-        {
-            if(s == QString("Baseline"))
-                return Baseline;
-            if(s == QString("Main"))
-                return Main;
-            if(s == QString("Extended"))
-                return Extended;
-//            todo : remove this line to solve warning(i have no idea about it!)
-//            if(s == QString("High"))
-                return High;
-        }
+class VideoEncoderConfigurationOptions : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(H264ProfilesSupported)
+public:
+    explicit VideoEncoderConfigurationOptions(QObject* parent = NULL);
+    virtual ~VideoEncoderConfigurationOptions();
+    enum H264ProfilesSupported { Baseline, Main, Extended, High, Unknown };
+    H264ProfilesSupported stringToEnum(QString s) {
+        if (s == QString("Baseline"))
+            return Baseline;
+        if (s == QString("Main"))
+            return Main;
+        if (s == QString("Extended"))
+            return Extended;
+        if (s == QString("High"))
+            return High;
 
-        int qualityRangeMin() const;
-        void setQualityRangeMin(int qualityRangeMin);
+        return Unknown;
+    }
 
-        int qulityRangeMax() const;
-        void setQulityRangeMax(int qulityRangeMax);
+    int  qualityRangeMin() const;
+    void setQualityRangeMin(int qualityRangeMin);
 
-        int govLengthRangeMin() const;
-        void setGovLengthRangeMin(int govLengthRangeMin);
+    int  qulityRangeMax() const;
+    void setQulityRangeMax(int qulityRangeMax);
 
-        int govLengthRangeMax() const;
-        void setGovLengthRangeMax(int govLengthRangeMax);
+    int  govLengthRangeMin() const;
+    void setGovLengthRangeMin(int govLengthRangeMin);
 
-        int frameRateRangeMin() const;
-        void setFrameRateRangeMin(int frameRateRangeMin);
+    int  govLengthRangeMax() const;
+    void setGovLengthRangeMax(int govLengthRangeMax);
 
-        int frameRateRangeMax() const;
-        void setFrameRateRangeMax(int frameRateRangeMax);
+    int  frameRateRangeMin() const;
+    void setFrameRateRangeMin(int frameRateRangeMin);
 
-        int encodingIntervalRangeMin() const;
-        void setEncodingIntervalRangeMin(int encodingIntervalRangeMin);
+    int  frameRateRangeMax() const;
+    void setFrameRateRangeMax(int frameRateRangeMax);
 
-        int encodingIntervalRangeMax() const;
-        void setEncodingIntervalRangeMax(int encodingIntervalRangeMax);
+    int  encodingIntervalRangeMin() const;
+    void setEncodingIntervalRangeMin(int encodingIntervalRangeMin);
 
-        QList<int> getResAvailableWidth() const
-        {
-            return m_resAvailableWidth;
-        }
+    int  encodingIntervalRangeMax() const;
+    void setEncodingIntervalRangeMax(int encodingIntervalRangeMax);
 
-        void setResAvailableWidth(int resAvailableWidth)
-        {
-            m_resAvailableWidth.push_back(resAvailableWidth);
-        }
+    QList<int> getResAvailableWidth() const {
+        return m_resAvailableWidth;
+    }
 
-        QList<int> getResAvailableHeight() const
-        {
-            return m_resAvailableHeight;
-        }
+    void setResAvailableWidth(int resAvailableWidth) {
+        m_resAvailableWidth.push_back(resAvailableWidth);
+    }
 
-        void setResAvailableHeight(int resAvailableHeight)
-        {
-            m_resAvailableHeight.push_back(resAvailableHeight);
-        }
+    QList<int> getResAvailableHeight() const {
+        return m_resAvailableHeight;
+    }
 
-        QList<H264ProfilesSupported> getH264ProfilesSupported() const
-        {
-            return m_h264ProfilesSupported;
-        }
+    void setResAvailableHeight(int resAvailableHeight) {
+        m_resAvailableHeight.push_back(resAvailableHeight);
+    }
 
-        void setH264ProfilesSupported(H264ProfilesSupported h264ProfilesSupported)
-        {
-            m_h264ProfilesSupported.push_back(h264ProfilesSupported);
-        }
+    QList<H264ProfilesSupported> getH264ProfilesSupported() const {
+        return m_h264ProfilesSupported;
+    }
 
-    private:
-        int m_qualityRangeMin;
-        int m_qulityRangeMax;
-        QList<int> m_resAvailableWidth;
-        QList<int> m_resAvailableHeight;
-        int m_govLengthRangeMin;
-        int m_govLengthRangeMax;
-        int m_frameRateRangeMin;
-        int m_frameRateRangeMax;
-        int m_encodingIntervalRangeMin;
-        int m_encodingIntervalRangeMax;
-        QList<H264ProfilesSupported> m_h264ProfilesSupported;
-    };
+    void setH264ProfilesSupported(H264ProfilesSupported h264ProfilesSupported) {
+        m_h264ProfilesSupported.push_back(h264ProfilesSupported);
+    }
+
+    int  bitRateRangeMax() const;
+    void setBitRateRangeMax(int bitRateRangeMax);
+
+    int  bitRateRangeMin() const;
+    void setBitRateRangeMin(int bitRateRangeMin);
+
+private:
+    int                          m_qualityRangeMin;
+    int                          m_qulityRangeMax;
+    QList<int>                   m_resAvailableWidth;
+    QList<int>                   m_resAvailableHeight;
+    int                          m_govLengthRangeMin;
+    int                          m_govLengthRangeMax;
+    int                          m_frameRateRangeMin;
+    int                          m_frameRateRangeMax;
+    int                          m_bitRateRangeMin;
+    int                          m_bitRateRangeMax;
+    int                          m_encodingIntervalRangeMin;
+    int                          m_encodingIntervalRangeMax;
+    QList<H264ProfilesSupported> m_h264ProfilesSupported;
+};
 }
 #endif // VIDEOENCODERCONFIGURATIONOPTIONS_H

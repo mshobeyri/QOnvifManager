@@ -18,7 +18,6 @@ public:
     ONVIF::DeviceSearcher* ideviceSearcher;
 };
 
-
 QOnvifManager::QOnvifManager(
     const QString _username, const QString _password, QObject* _parent)
     : QObject(_parent), d_ptr(new QOnvifManagerPrivate(_username, _password)) {
@@ -55,45 +54,70 @@ QOnvifManager::refreshDevicesList() {
 
 bool
 QOnvifManager::refreshDeviceCapabilities(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshDeviceCapabilities();
 }
 
 bool
 QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshDeviceInformation();
 }
 bool
 QOnvifManager::refreshDeviceScopes(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshDeviceScopes();
 }
 
 bool
 QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshVideoConfigs();
+            ->refreshVideoConfigs();
+}
+
+bool QOnvifManager::refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress, QString _configToken, QString _profileToken)
+{
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+            ->refreshVideoConfigsOptions(_configToken,_profileToken);
 }
 
 bool
 QOnvifManager::refreshDeviceProfiles(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProfiles();
 }
 
 bool
 QOnvifManager::refreshDeviceInterfaces(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshInterfaces();
 }
 
 bool
 QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshUsers();
 }
 
 bool
-QOnvifManager::deviceDateAndTime(QString _deviceEndPointAddress, Data::DateTime& _datetime) {
+QOnvifManager::deviceDateAndTime(
+    QString _deviceEndPointAddress, Data::DateTime& _datetime) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->deviceDateAndTime(_datetime);
 }
@@ -106,6 +130,13 @@ QOnvifManager::device(QString _deviceEndPointAddress) {
 QMap<QString, QOnvifDevice*>&
 QOnvifManager::devicesMap() {
     return d_ptr->idevicesMap;
+}
+
+bool
+QOnvifManager::cameraExist(const QString& endpoinAddress) {
+    if (d_ptr->idevicesMap.contains(endpoinAddress))
+        return true;
+    return false;
 }
 
 bool
@@ -123,10 +154,11 @@ QOnvifManager::setDefaulUsernameAndPassword(
     refreshDevicesList();
 }
 
-bool QOnvifManager::setDeviceScopes(QString _deviceEndPointAddress, QString _name, QString _location)
-{
+bool
+QOnvifManager::setDeviceScopes(
+    QString _deviceEndPointAddress, QString _name, QString _location) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setScopes(_name,_location);
+        ->setScopes(_name, _location);
 }
 
 bool
