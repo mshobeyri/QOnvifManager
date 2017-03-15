@@ -41,10 +41,7 @@ public:
     bool refreshDeviceInformations(QString _deviceEndPointAddress);
 
     bool refreshDeviceVideoConfigs(QString _deviceEndPointAddress);
-    bool refreshDeviceVideoConfigsOptions(
-        QString _deviceEndPointAddress,
-        QString _configToken = "",
-        QString _profileToken = "");
+    bool refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress);
 
 
     bool refreshDeviceProfiles(QString _deviceEndPointAddress);

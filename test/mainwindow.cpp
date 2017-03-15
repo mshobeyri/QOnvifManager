@@ -58,8 +58,8 @@ MainWindow::on_btnRefreshData_clicked() {
 //    ionvifManager->refreshDeviceCapabilities(currentDevice());
 //    ionvifManager->refreshDeviceInformations(currentDevice());
     ionvifManager->refreshDeviceProfiles(currentDevice());
-    ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
     ionvifManager->refreshDeviceVideoConfigs(currentDevice());
+    ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
 
 //    ionvifManager->refreshDeviceUsers(currentDevice());
 //    ionvifManager->refreshDeviceScopes(currentDevice());

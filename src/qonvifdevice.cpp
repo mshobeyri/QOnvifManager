@@ -274,6 +274,7 @@ public:
         idata.mediaConfig.video.streamUri.invalidAfterReboot =
             streamUri->invalidAfterReboot();
         idata.mediaConfig.video.streamUri.timeout = streamUri->timeout();
+
         return true;
     }
 
@@ -287,41 +288,62 @@ public:
 
         if (!videoEncoderConfigurationOptions)
             return false;
-        idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMax =
-            videoEncoderConfigurationOptions->encodingIntervalRangeMax();
 
-        idata.mediaConfig.video.encodingOptions.encodingIntervalRangeMin =
-            videoEncoderConfigurationOptions->encodingIntervalRangeMin();
+        Data::MediaConfig::Video::EncodingOptions encodingOptions;
 
-        idata.mediaConfig.video.encodingOptions.frameRateRangeMax =
-            videoEncoderConfigurationOptions->frameRateRangeMax();
+        encodingOptions.encodingIntervalRangeMaxH264 =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMaxH264();
 
-        idata.mediaConfig.video.encodingOptions.frameRateRangeMin =
-            videoEncoderConfigurationOptions->frameRateRangeMin();
+        encodingOptions.encodingIntervalRangeMinH264 =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMinH264();
 
-        idata.mediaConfig.video.encodingOptions.bitRateRangeMax =
+        encodingOptions.frameRateRangeMaxH264 =
+            videoEncoderConfigurationOptions->frameRateRangeMaxH264();
+
+        encodingOptions.frameRateRangeMinH264 =
+            videoEncoderConfigurationOptions->frameRateRangeMinH264();
+
+        encodingOptions.bitRateRangeMax =
             videoEncoderConfigurationOptions->bitRateRangeMax();
 
-        idata.mediaConfig.video.encodingOptions.bitRateRangeMin =
+        encodingOptions.bitRateRangeMin =
             videoEncoderConfigurationOptions->bitRateRangeMin();
 
-        idata.mediaConfig.video.encodingOptions.govLengthRangeMax =
+        encodingOptions.govLengthRangeMax =
             videoEncoderConfigurationOptions->govLengthRangeMax();
 
-        idata.mediaConfig.video.encodingOptions.govLengthRangeMin =
+        encodingOptions.govLengthRangeMin =
             videoEncoderConfigurationOptions->govLengthRangeMin();
 
-        idata.mediaConfig.video.encodingOptions.qualityRangeMin =
+        encodingOptions.qualityRangeMin =
             videoEncoderConfigurationOptions->qualityRangeMin();
 
-        idata.mediaConfig.video.encodingOptions.qulityRangeMax =
+        encodingOptions.qualityRangeMax =
             videoEncoderConfigurationOptions->qulityRangeMax();
 
-        idata.mediaConfig.video.encodingOptions.resAvailableHeight =
-            videoEncoderConfigurationOptions->getResAvailableHeight();
+        encodingOptions.resAvailableHeightH264 =
+            videoEncoderConfigurationOptions->resAvailableHeightH264();
 
-        idata.mediaConfig.video.encodingOptions.resAvailableWidth =
-            videoEncoderConfigurationOptions->getResAvailableWidth();
+        encodingOptions.resAvailableWidthH264 =
+            videoEncoderConfigurationOptions->resAvailableWidthH264();
+
+        encodingOptions.encodingIntervalRangeMaxJpeg =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMaxJpeg();
+
+        encodingOptions.encodingIntervalRangeMinJpeg =
+            videoEncoderConfigurationOptions->encodingIntervalRangeMinJpeg();
+
+        encodingOptions.frameRateRangeMaxJpeg =
+            videoEncoderConfigurationOptions->frameRateRangeMaxJpeg();
+
+        encodingOptions.frameRateRangeMinJpeg =
+            videoEncoderConfigurationOptions->frameRateRangeMinJpeg();
+
+        encodingOptions.resAvailableHeightJpeg =
+            videoEncoderConfigurationOptions->resAvailableHeightJpeg();
+
+        encodingOptions.resAvailableWidthJpeg =
+            videoEncoderConfigurationOptions->resAvailableWidthJpeg();
 
         foreach (
             ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported
@@ -334,9 +356,10 @@ public:
                     static_cast<Data::MediaConfig::Video::EncodingOptions::
                                     H264ProfilesSupported>(intCastTemp);
 
-            idata.mediaConfig.video.encodingOptions.h264ProfilesSupported
-                .append(enumCastTemp);
+            encodingOptions.h264ProfilesSupported.append(enumCastTemp);
         }
+
+        idata.mediaConfig.video.encodingsOptions.append(encodingOptions);
         return true;
     }
 
@@ -693,13 +716,16 @@ QOnvifDevice::rebootDevice() {
 
 bool
 QOnvifDevice::refreshVideoConfigs() {
-    return d_ptr->refreshVideoConfigs();
+    bool result = d_ptr->refreshVideoConfigs();
+    refreshVideoConfigsOptions();
+    return result;
 }
 
 bool
-QOnvifDevice::refreshVideoConfigsOptions(
-    QString _configToken, QString _profileToken) {
-    return d_ptr->refreshVideoConfigsOptions(_configToken, _profileToken);
+QOnvifDevice::refreshVideoConfigsOptions() {
+    return d_ptr->refreshVideoConfigsOptions(
+        data().mediaConfig.video.encodingConfig.token[0],
+        data().profiles.nodeToken[0]);
 }
 
 bool

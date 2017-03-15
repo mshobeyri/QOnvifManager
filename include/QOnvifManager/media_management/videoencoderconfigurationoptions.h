@@ -36,61 +36,77 @@ public:
     int  govLengthRangeMax() const;
     void setGovLengthRangeMax(int govLengthRangeMax);
 
-    int  frameRateRangeMin() const;
-    void setFrameRateRangeMin(int frameRateRangeMin);
-
-    int  frameRateRangeMax() const;
-    void setFrameRateRangeMax(int frameRateRangeMax);
-
-    int  encodingIntervalRangeMin() const;
-    void setEncodingIntervalRangeMin(int encodingIntervalRangeMin);
-
-    int  encodingIntervalRangeMax() const;
-    void setEncodingIntervalRangeMax(int encodingIntervalRangeMax);
-
-    QList<int> getResAvailableWidth() const {
-        return m_resAvailableWidth;
-    }
-
-    void setResAvailableWidth(int resAvailableWidth) {
-        m_resAvailableWidth.push_back(resAvailableWidth);
-    }
-
-    QList<int> getResAvailableHeight() const {
-        return m_resAvailableHeight;
-    }
-
-    void setResAvailableHeight(int resAvailableHeight) {
-        m_resAvailableHeight.push_back(resAvailableHeight);
-    }
-
-    QList<H264ProfilesSupported> getH264ProfilesSupported() const {
-        return m_h264ProfilesSupported;
-    }
-
-    void setH264ProfilesSupported(H264ProfilesSupported h264ProfilesSupported) {
-        m_h264ProfilesSupported.push_back(h264ProfilesSupported);
-    }
+    int  bitRateRangeMin() const;
+    void setBitRateRangeMin(int bitRateRangeMin);
 
     int  bitRateRangeMax() const;
     void setBitRateRangeMax(int bitRateRangeMax);
 
-    int  bitRateRangeMin() const;
-    void setBitRateRangeMin(int bitRateRangeMin);
+
+    int  frameRateRangeMinJpeg() const;
+    void setFrameRateRangeMinJpeg(int frameRateRangeMinJpeg);
+
+    int  frameRateRangeMaxJpeg() const;
+    void setFrameRateRangeMaxJpeg(int frameRateRangeMaxJpeg);
+
+    int  frameRateRangeMinH264() const;
+    void setFrameRateRangeMinH264(int frameRateRangeMinH264);
+
+    int  frameRateRangeMaxH264() const;
+    void setFrameRateRangeMaxH264(int frameRateRangeMaxH264);
+
+
+    int  encodingIntervalRangeMinJpeg() const;
+    void setEncodingIntervalRangeMinJpeg(int encodingIntervalRangeMinJpeg);
+
+    int  encodingIntervalRangeMaxJpeg() const;
+    void setEncodingIntervalRangeMaxJpeg(int encodingIntervalRangeMaxJpeg);
+
+    int  encodingIntervalRangeMinH264() const;
+    void setEncodingIntervalRangeMinH264(int encodingIntervalRangeMinH264);
+
+    int  encodingIntervalRangeMaxH264() const;
+    void setEncodingIntervalRangeMaxH264(int encodingIntervalRangeMaxH264);
+
+
+    QList<int> resAvailableWidthJpeg() const;
+    void setResAvailableWidthJpeg(int resAvailableWidth);
+
+    QList<int> resAvailableHeightJpeg() const;
+    void setResAvailableHeightJpeg(int resAvailableHeight);
+
+    QList<int> resAvailableWidthH264() const;
+    void setResAvailableWidthH264(int resAvailableWidth);
+
+    QList<int> resAvailableHeightH264() const;
+    void setResAvailableHeightH264(int resAvailableHeight);
+
+    QList<H264ProfilesSupported> getH264ProfilesSupported() const;
+    void setH264ProfilesSupported(H264ProfilesSupported h264ProfilesSupported);
+
 
 private:
-    int                          m_qualityRangeMin;
-    int                          m_qulityRangeMax;
-    QList<int>                   m_resAvailableWidth;
-    QList<int>                   m_resAvailableHeight;
-    int                          m_govLengthRangeMin;
-    int                          m_govLengthRangeMax;
-    int                          m_frameRateRangeMin;
-    int                          m_frameRateRangeMax;
-    int                          m_bitRateRangeMin;
-    int                          m_bitRateRangeMax;
-    int                          m_encodingIntervalRangeMin;
-    int                          m_encodingIntervalRangeMax;
+    int m_qualityRangeMin;
+    int m_qualityRangeMax;
+    int m_govLengthRangeMin;
+    int m_govLengthRangeMax;
+    int m_bitRateRangeMin;
+    int m_bitRateRangeMax;
+
+    int m_frameRateRangeMinJpeg;
+    int m_frameRateRangeMaxJpeg;
+    int m_frameRateRangeMinH264;
+    int m_frameRateRangeMaxH264;
+
+    int m_encodingIntervalRangeMinJpeg;
+    int m_encodingIntervalRangeMaxJpeg;
+    int m_encodingIntervalRangeMinH264;
+    int m_encodingIntervalRangeMaxH264;
+
+    QList<int>                   m_resAvailableWidthJpeg;
+    QList<int>                   m_resAvailableHeightJpeg;
+    QList<int>                   m_resAvailableWidthH264;
+    QList<int>                   m_resAvailableHeightH264;
     QList<H264ProfilesSupported> m_h264ProfilesSupported;
 };
 }

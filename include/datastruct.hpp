@@ -234,20 +234,28 @@ struct Data {
 
             struct EncodingOptions {
                 int        qualityRangeMin;
-                int        qulityRangeMax;
-                QList<int> resAvailableWidth;
-                QList<int> resAvailableHeight;
+                int        qualityRangeMax;
+                QList<int> resAvailableWidthH264;
+                QList<int> resAvailableHeightH264;
+                QList<int> resAvailableWidthJpeg;
+                QList<int> resAvailableHeightJpeg;
                 int        govLengthRangeMin;
                 int        govLengthRangeMax;
-                int        frameRateRangeMin;
-                int        frameRateRangeMax;
+                int        frameRateRangeMinH264;
+                int        frameRateRangeMaxH264;
+                int        frameRateRangeMinJpeg;
+                int        frameRateRangeMaxJpeg;
                 int        bitRateRangeMin;
                 int        bitRateRangeMax;
-                int        encodingIntervalRangeMin;
-                int        encodingIntervalRangeMax;
+                int        encodingIntervalRangeMinH264;
+                int        encodingIntervalRangeMaxH264;
+                int        encodingIntervalRangeMinJpeg;
+                int        encodingIntervalRangeMaxJpeg;
                 enum H264ProfilesSupported { Baseline, Main, Extended, High };
                 QList<H264ProfilesSupported> h264ProfilesSupported;
-            } encodingOptions;
+            };
+            typedef QList<EncodingOptions> EncodingsOptions;
+            EncodingsOptions               encodingsOptions;
 
             struct EncoderConfig {
                 QList<QString> token;

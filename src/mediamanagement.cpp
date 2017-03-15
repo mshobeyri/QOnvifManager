@@ -16,12 +16,16 @@ MediaManagement::namespaces(const QString& key) {
     names.insert("xsi", "http://www.w3.org/2001/XMLSchema-instance");
     names.insert("xsd", "http://www.w3.org/2001/XMLSchema");
     names.insert("c14n", "http://www.w3.org/2001/10/xml-exc-c14n#");
-    names.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/"
-                        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
+    names.insert(
+        "wsu",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
     names.insert("xenc", "http://www.w3.org/2001/04/xmlenc#");
     names.insert("ds", "http://www.w3.org/2000/09/xmldsig#");
-    names.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
-                         "oasis-200401-wss-wssecurity-secext-1.0.xsd");
+    names.insert(
+        "wsse",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-secext-1.0.xsd");
     names.insert("wsa5", "http://www.w3.org/2005/08/addressing");
     names.insert("xmime", "http://tempuri.org/xmime.xsd");
     names.insert("xop", "http://www.w3.org/2004/08/xop/include");
@@ -62,8 +66,10 @@ MediaManagement::namespaces(const QString& key) {
         "tetpps",
         "http://www.onvif.org/ver10/events/wsdl/PullPointSubscriptionBinding");
     names.insert("tev", "http://www.onvif.org/ver10/events/wsdl");
-    names.insert("tetps", "http://www.onvif.org/ver10/events/wsdl/"
-                          "PausableSubscriptionManagerBinding");
+    names.insert(
+        "tetps",
+        "http://www.onvif.org/ver10/events/wsdl/"
+        "PausableSubscriptionManagerBinding");
     names.insert("wsnt", "http://docs.oasis-open.org/wsn/b-2");
     names.insert(
         "tetsm",
@@ -496,50 +502,56 @@ MediaManagement::getProfiles() {
             query->evaluateTo(&value);
             profiles->m_nodeToken.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultAbsolutePantTiltPosit"
-                                                  "ionSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultAbsolutePantTiltPosit"
+                                      "ionSpace/string()");
             query->evaluateTo(&value);
             profiles->m_defaultAbsolutePantTiltPositionSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultAbsoluteZoomPositionS"
-                                                  "pace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultAbsoluteZoomPositionS"
+                                      "pace/string()");
             query->evaluateTo(&value);
             profiles->m_defaultAbsoluteZoomPositionSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultRelativePanTiltTransl"
-                                                  "ationSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultRelativePanTiltTransl"
+                                      "ationSpace/string()");
             query->evaluateTo(&value);
             profiles->m_defaultRelativePantTiltTranslationSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultRelativeZoomTranslati"
-                                                  "onSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultRelativeZoomTranslati"
+                                      "onSpace/string()");
             query->evaluateTo(&value);
             profiles->m_defaultRelativeZoomTranslationSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultContinuousPanTiltVelo"
-                                                  "citySpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultContinuousPanTiltVelo"
+                                      "citySpace/string()");
             query->evaluateTo(&value);
             profiles->m_defaultContinuousPantTiltVelocitySpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultContinuousZoomVelocit"
-                                                  "ySpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultContinuousZoomVelocit"
+                                      "ySpace/string()");
             query->evaluateTo(&value);
             profiles->m_defaultContinuousZoomVelocitySpace.push_back(
                 value.trimmed());
@@ -580,34 +592,39 @@ MediaManagement::getProfiles() {
             query->evaluateTo(&value);
             profiles->m_defaultPTZTimeout.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:URI/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:URI/string()");
             query->evaluateTo(&value);
             profiles->m_panTiltUri.push_back(value.trimmed());
 
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:XRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:XRange/tt:Min/string()");
             query->evaluateTo(&value);
             profiles->m_xRangeMinPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:XRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:XRange/tt:Max/string()");
             query->evaluateTo(&value);
             profiles->m_xRangeMaxPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:YRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:YRange/tt:Min/string()");
             query->evaluateTo(&value);
             profiles->m_yRangeMinPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:YRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:YRange/tt:Max/string()");
             query->evaluateTo(&value);
             profiles->m_yRangeMaxPt.push_back(value.trimmed().toInt());
 
@@ -617,15 +634,17 @@ MediaManagement::getProfiles() {
             query->evaluateTo(&value);
             profiles->m_zoomUri.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:ZoomLimits/tt:Range/"
-                                                  "tt:XRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:ZoomLimits/tt:Range/"
+                                      "tt:XRange/tt:Min/string()");
             query->evaluateTo(&value);
             profiles->m_xRangeMinZm.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:ZoomLimits/tt:Range/"
-                                                  "tt:XRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:ZoomLimits/tt:Range/"
+                                      "tt:XRange/tt:Max/string()");
             query->evaluateTo(&value);
             profiles->m_xRangeMaxZm.push_back(value.trimmed().toInt());
 
@@ -675,21 +694,24 @@ MediaManagement::getProfiles() {
             profiles->m_analytics.push_back(
                 value.trimmed() == "true" ? true : false);
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:Type/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:Type/string()");
             query->evaluateTo(&value);
             profiles->m_typeMc.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:IPv4Address/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:IPv4Address/string()");
             query->evaluateTo(&value);
             profiles->m_ipv4AddressMc.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:IPv6Address/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:IPv6Address/string()");
             query->evaluateTo(&value);
             profiles->m_ipv6AddressMc.push_back(value.trimmed());
 
@@ -705,9 +727,10 @@ MediaManagement::getProfiles() {
             query->evaluateTo(&value);
             profiles->m_ttlMc.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:AutoStart/"
-                                                  "string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:AutoStart/"
+                                      "string()");
             query->evaluateTo(&value);
             profiles->m_autoStartMc.push_back(
                 value.trimmed() == "true" ? true : false);
@@ -934,50 +957,56 @@ MediaManagement::getProfile720P() {
             query->evaluateTo(&value);
             profile->m_nodeToken.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultAbsolutePantTiltPosit"
-                                                  "ionSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultAbsolutePantTiltPosit"
+                                      "ionSpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultAbsolutePantTiltPositionSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultAbsoluteZoomPositionS"
-                                                  "pace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultAbsoluteZoomPositionS"
+                                      "pace/string()");
             query->evaluateTo(&value);
             profile->m_defaultAbsoluteZoomPositionSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultRelativePanTiltTransl"
-                                                  "ationSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultRelativePanTiltTransl"
+                                      "ationSpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultRelativePantTiltTranslationSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultRelativeZoomTranslati"
-                                                  "onSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultRelativeZoomTranslati"
+                                      "onSpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultRelativeZoomTranslationSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultContinuousPanTiltVelo"
-                                                  "citySpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultContinuousPanTiltVelo"
+                                      "citySpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultContinuousPantTiltVelocitySpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultContinuousZoomVelocit"
-                                                  "ySpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultContinuousZoomVelocit"
+                                      "ySpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultContinuousZoomVelocitySpace.push_back(
                 value.trimmed());
@@ -1018,34 +1047,39 @@ MediaManagement::getProfile720P() {
             query->evaluateTo(&value);
             profile->m_defaultPTZTimeout.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:URI/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:URI/string()");
             query->evaluateTo(&value);
             profile->m_panTiltUri.push_back(value.trimmed());
 
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:XRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:XRange/tt:Min/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMinPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:XRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:XRange/tt:Max/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMaxPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:YRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:YRange/tt:Min/string()");
             query->evaluateTo(&value);
             profile->m_yRangeMinPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:YRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:YRange/tt:Max/string()");
             query->evaluateTo(&value);
             profile->m_yRangeMaxPt.push_back(value.trimmed().toInt());
 
@@ -1055,15 +1089,17 @@ MediaManagement::getProfile720P() {
             query->evaluateTo(&value);
             profile->m_zoomUri.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:ZoomLimits/tt:Range/"
-                                                  "tt:XRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:ZoomLimits/tt:Range/"
+                                      "tt:XRange/tt:Min/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMinZm.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:ZoomLimits/tt:Range/"
-                                                  "tt:XRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:ZoomLimits/tt:Range/"
+                                      "tt:XRange/tt:Max/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMaxZm.push_back(value.trimmed().toInt());
 
@@ -1113,21 +1149,24 @@ MediaManagement::getProfile720P() {
             profile->m_analytics.push_back(
                 value.trimmed() == "true" ? true : false);
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:Type/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:Type/string()");
             query->evaluateTo(&value);
             profile->m_typeMc.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:IPv4Address/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:IPv4Address/string()");
             query->evaluateTo(&value);
             profile->m_ipv4AddressMc.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:IPv6Address/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:IPv6Address/string()");
             query->evaluateTo(&value);
             profile->m_ipv6AddressMc.push_back(value.trimmed());
 
@@ -1143,9 +1182,10 @@ MediaManagement::getProfile720P() {
             query->evaluateTo(&value);
             profile->m_ttlMc.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:AutoStart/"
-                                                  "string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:AutoStart/"
+                                      "string()");
             query->evaluateTo(&value);
             profile->m_autoStartMc.push_back(
                 value.trimmed() == "true" ? true : false);
@@ -1373,50 +1413,56 @@ MediaManagement::getProfileD1() {
             query->evaluateTo(&value);
             profile->m_nodeToken.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultAbsolutePantTiltPosit"
-                                                  "ionSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultAbsolutePantTiltPosit"
+                                      "ionSpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultAbsolutePantTiltPositionSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultAbsoluteZoomPositionS"
-                                                  "pace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultAbsoluteZoomPositionS"
+                                      "pace/string()");
             query->evaluateTo(&value);
             profile->m_defaultAbsoluteZoomPositionSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultRelativePanTiltTransl"
-                                                  "ationSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultRelativePanTiltTransl"
+                                      "ationSpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultRelativePantTiltTranslationSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultRelativeZoomTranslati"
-                                                  "onSpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultRelativeZoomTranslati"
+                                      "onSpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultRelativeZoomTranslationSpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultContinuousPanTiltVelo"
-                                                  "citySpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultContinuousPanTiltVelo"
+                                      "citySpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultContinuousPantTiltVelocitySpace.push_back(
                 value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:"
-                                                  "DefaultContinuousZoomVelocit"
-                                                  "ySpace/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:"
+                                      "DefaultContinuousZoomVelocit"
+                                      "ySpace/string()");
             query->evaluateTo(&value);
             profile->m_defaultContinuousZoomVelocitySpace.push_back(
                 value.trimmed());
@@ -1457,34 +1503,39 @@ MediaManagement::getProfileD1() {
             query->evaluateTo(&value);
             profile->m_defaultPTZTimeout.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:URI/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:URI/string()");
             query->evaluateTo(&value);
             profile->m_panTiltUri.push_back(value.trimmed());
 
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:XRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:XRange/tt:Min/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMinPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:XRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:XRange/tt:Max/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMaxPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:YRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:YRange/tt:Min/string()");
             query->evaluateTo(&value);
             profile->m_yRangeMinPt.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:PanTiltLimits/tt:Range/"
-                                                  "tt:YRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:PanTiltLimits/tt:Range/"
+                                      "tt:YRange/tt:Max/string()");
             query->evaluateTo(&value);
             profile->m_yRangeMaxPt.push_back(value.trimmed().toInt());
 
@@ -1494,15 +1545,17 @@ MediaManagement::getProfileD1() {
             query->evaluateTo(&value);
             profile->m_zoomUri.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:ZoomLimits/tt:Range/"
-                                                  "tt:XRange/tt:Min/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:ZoomLimits/tt:Range/"
+                                      "tt:XRange/tt:Min/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMinZm.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:PTZConfiguration/"
-                                                  "tt:ZoomLimits/tt:Range/"
-                                                  "tt:XRange/tt:Max/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:PTZConfiguration/"
+                                      "tt:ZoomLimits/tt:Range/"
+                                      "tt:XRange/tt:Max/string()");
             query->evaluateTo(&value);
             profile->m_xRangeMaxZm.push_back(value.trimmed().toInt());
 
@@ -1552,21 +1605,24 @@ MediaManagement::getProfileD1() {
             profile->m_analytics.push_back(
                 value.trimmed() == "true" ? true : false);
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:Type/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:Type/string()");
             query->evaluateTo(&value);
             profile->m_typeMc.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:IPv4Address/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:IPv4Address/string()");
             query->evaluateTo(&value);
             profile->m_ipv4AddressMc.push_back(value.trimmed());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:Address/"
-                                                  "tt:IPv6Address/string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:Address/"
+                                      "tt:IPv6Address/string()");
             query->evaluateTo(&value);
             profile->m_ipv6AddressMc.push_back(value.trimmed());
 
@@ -1582,9 +1638,10 @@ MediaManagement::getProfileD1() {
             query->evaluateTo(&value);
             profile->m_ttlMc.push_back(value.trimmed().toInt());
 
-            query->setQuery(result->nameSpace() + "./tt:MetadataConfiguration/"
-                                                  "tt:Multicast/tt:AutoStart/"
-                                                  "string()");
+            query->setQuery(
+                result->nameSpace() + "./tt:MetadataConfiguration/"
+                                      "tt:Multicast/tt:AutoStart/"
+                                      "string()");
             query->evaluateTo(&value);
             profile->m_autoStartMc.push_back(
                 value.trimmed() == "true" ? true : false);
@@ -2037,6 +2094,7 @@ MediaManagement::getVideoEncoderConfigurationOptions(
             result->getValue("//tt:QualityRange/tt:Min").trimmed().toInt());
         videoEncoderConfigurationOptions->setQulityRangeMax(
             result->getValue("//tt:QualityRange/tt:Max").trimmed().toInt());
+
         query->setQuery(
             result->nameSpace() +
             "doc($inputDocument)//tt:H264/tt:ResolutionsAvailable");
@@ -2046,14 +2104,33 @@ MediaManagement::getVideoEncoderConfigurationOptions(
             query->setFocus(item);
             query->setQuery(result->nameSpace() + "./tt:Width/string()");
             query->evaluateTo(&value);
-            videoEncoderConfigurationOptions->setResAvailableWidth(
+            videoEncoderConfigurationOptions->setResAvailableWidthH264(
                 value.trimmed().toInt());
             query->setQuery(result->nameSpace() + "./tt:Height/string()");
             query->evaluateTo(&value);
-            videoEncoderConfigurationOptions->setResAvailableHeight(
+            videoEncoderConfigurationOptions->setResAvailableHeightH264(
                 value.trimmed().toInt());
             item = items.next();
         }
+
+        query->setQuery(
+            result->nameSpace() +
+            "doc($inputDocument)//tt:JPEG/tt:ResolutionsAvailable");
+        query->evaluateTo(&items);
+        item = items.next();
+        while (!item.isNull()) {
+            query->setFocus(item);
+            query->setQuery(result->nameSpace() + "./tt:Width/string()");
+            query->evaluateTo(&value);
+            videoEncoderConfigurationOptions->setResAvailableWidthJpeg(
+                value.trimmed().toInt());
+            query->setQuery(result->nameSpace() + "./tt:Height/string()");
+            query->evaluateTo(&value);
+            videoEncoderConfigurationOptions->setResAvailableHeightJpeg(
+                value.trimmed().toInt());
+            item = items.next();
+        }
+
         videoEncoderConfigurationOptions->setGovLengthRangeMin(
             result->getValue("//tt:H264/tt:GovLengthRange/tt:Min")
                 .trimmed()
@@ -2062,11 +2139,21 @@ MediaManagement::getVideoEncoderConfigurationOptions(
             result->getValue("//tt:H264/tt:GovLengthRange/tt:Max")
                 .trimmed()
                 .toInt());
-        videoEncoderConfigurationOptions->setFrameRateRangeMin(
+
+        videoEncoderConfigurationOptions->setFrameRateRangeMinJpeg(
+            result->getValue("//tt:JPEG/tt:FrameRateRange/tt:Min")
+                .trimmed()
+                .toInt());
+        videoEncoderConfigurationOptions->setFrameRateRangeMaxJpeg(
+            result->getValue("//tt:JPEG/tt:FrameRateRange/tt:Max")
+                .trimmed()
+                .toInt());
+
+        videoEncoderConfigurationOptions->setFrameRateRangeMinH264(
             result->getValue("//tt:H264/tt:FrameRateRange/tt:Min")
                 .trimmed()
                 .toInt());
-        videoEncoderConfigurationOptions->setFrameRateRangeMax(
+        videoEncoderConfigurationOptions->setFrameRateRangeMaxH264(
             result->getValue("//tt:H264/tt:FrameRateRange/tt:Max")
                 .trimmed()
                 .toInt());
@@ -2078,11 +2165,21 @@ MediaManagement::getVideoEncoderConfigurationOptions(
             result->getValue("//tt:H264/tt:BitrateRange/tt:Max")
                 .trimmed()
                 .toInt());
-        videoEncoderConfigurationOptions->setEncodingIntervalRangeMin(
+
+        videoEncoderConfigurationOptions->setEncodingIntervalRangeMinJpeg(
+            result->getValue("//tt:JPEG/tt:EncodingIntervalRange/tt:Min")
+                .trimmed()
+                .toInt());
+        videoEncoderConfigurationOptions->setEncodingIntervalRangeMaxJpeg(
+            result->getValue("//tt:JPEG/tt:EncodingIntervalRange/tt:Max")
+                .trimmed()
+                .toInt());
+
+        videoEncoderConfigurationOptions->setEncodingIntervalRangeMinH264(
             result->getValue("//tt:H264/tt:EncodingIntervalRange/tt:Min")
                 .trimmed()
                 .toInt());
-        videoEncoderConfigurationOptions->setEncodingIntervalRangeMax(
+        videoEncoderConfigurationOptions->setEncodingIntervalRangeMaxH264(
             result->getValue("//tt:H264/tt:EncodingIntervalRange/tt:Max")
                 .trimmed()
                 .toInt());

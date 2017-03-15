@@ -42,8 +42,7 @@ public:
 
     // media management
     bool refreshVideoConfigs();
-    bool
-    refreshVideoConfigsOptions(QString _configToken, QString _profileToken);
+    bool refreshVideoConfigsOptions();
     bool refreshAudioConfigs();
 
 

@@ -83,12 +83,12 @@ QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
             ->refreshVideoConfigs();
 }
 
-bool QOnvifManager::refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress, QString _configToken, QString _profileToken)
+bool QOnvifManager::refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress)
 {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->refreshVideoConfigsOptions(_configToken,_profileToken);
+            ->refreshVideoConfigsOptions();
 }
 
 bool
