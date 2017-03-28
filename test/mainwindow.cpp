@@ -60,6 +60,7 @@ MainWindow::on_btnRefreshData_clicked() {
     ionvifManager->refreshDeviceProfiles(currentDevice());
     ionvifManager->refreshDeviceVideoConfigs(currentDevice());
     ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
+    ionvifManager->refreshDeviceStreamUri(currentDevice());
 
 //    ionvifManager->refreshDeviceUsers(currentDevice());
 //    ionvifManager->refreshDeviceScopes(currentDevice());

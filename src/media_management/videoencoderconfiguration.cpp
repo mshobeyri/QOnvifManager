@@ -5,20 +5,17 @@ using namespace ONVIF;
 
 VideoEncoderConfiguration::VideoEncoderConfiguration(QObject* parent)
     : QObject(parent) {}
-
 VideoEncoderConfiguration::~VideoEncoderConfiguration() {}
-
 QDomElement
 VideoEncoderConfiguration::toxml() {
     QDomElement setVideoConfiguration, configuration, width, height, name,
-        useCount, encoding, resolution, quality, rateControl, frameRateLimit,
-        encodingInterval, bitrateLimit, h264, h264profile, govLength, multicast,
-        address, type, ipv4Address, port, ttl, autoStart, sessionTimeout,
-        forcePresistence;
+        token, useCount, encoding, resolution, quality, rateControl,
+        frameRateLimit, encodingInterval, bitrateLimit, h264, h264profile,
+        govLength, multicast, address, type, ipv4Address, port, ttl, autoStart,
+        sessionTimeout, forcePresistence;
     setVideoConfiguration = newElement("wsdl:SetVideoEncoderConfiguration");
-
-    configuration = newElement("trt:Configuration");
-    name          = newElement("tt:Name", this->name());
+    configuration         = newElement("trt:Configuration");
+    name                  = newElement("tt:Name", this->name());
     useCount    = newElement("tt:UseCount", QString::number(this->useCount()));
     encoding    = newElement("tt:Encoding", this->encoding());
     resolution  = newElement("tt:Resolution");
@@ -46,6 +43,19 @@ VideoEncoderConfiguration::toxml() {
     sessionTimeout   = newElement("tt:SessionTimeout", this->sessionTimeout());
     forcePresistence = newElement("tt:ForcePersistence", "true");
 
+    setVideoConfiguration.setAttribute(
+        "xmlns", "http://www.onvif.org/ver10/media/wsdl");
+    configuration.setAttribute("token", this->token());
+    name.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    useCount.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    encoding.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    resolution.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    quality.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    rateControl.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    h264.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    multicast.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    sessionTimeout.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+
     resolution.appendChild(width);
     resolution.appendChild(height);
     rateControl.appendChild(frameRateLimit);
@@ -70,5 +80,7 @@ VideoEncoderConfiguration::toxml() {
     configuration.appendChild(multicast);
     configuration.appendChild(sessionTimeout);
     configuration.appendChild(forcePresistence);
+
+    setVideoConfiguration.appendChild(configuration);
     return setVideoConfiguration;
 }

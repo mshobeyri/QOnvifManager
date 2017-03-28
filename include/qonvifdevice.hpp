@@ -32,6 +32,7 @@ public:
 
     bool setDateAndTime(QDateTime _dateAndTime);
     bool setScopes(QString _name, QString _location);
+    bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
     bool refreshDeviceCapabilities();
     bool refreshDeviceInformation();
@@ -43,6 +44,7 @@ public:
     // media management
     bool refreshVideoConfigs();
     bool refreshVideoConfigsOptions();
+    bool refreshStreamUri();
     bool refreshAudioConfigs();
 
 

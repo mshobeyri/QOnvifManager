@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 #include <QRect>
-#include <qstring.h>
+#include <QString>
 
 struct Data {
     struct ProbeData {
@@ -232,32 +232,7 @@ struct Data {
                 QString timeout;
             } streamUri;
 
-            struct EncodingOptions {
-                int        qualityRangeMin;
-                int        qualityRangeMax;
-                QList<int> resAvailableWidthH264;
-                QList<int> resAvailableHeightH264;
-                QList<int> resAvailableWidthJpeg;
-                QList<int> resAvailableHeightJpeg;
-                int        govLengthRangeMin;
-                int        govLengthRangeMax;
-                int        frameRateRangeMinH264;
-                int        frameRateRangeMaxH264;
-                int        frameRateRangeMinJpeg;
-                int        frameRateRangeMaxJpeg;
-                int        bitRateRangeMin;
-                int        bitRateRangeMax;
-                int        encodingIntervalRangeMinH264;
-                int        encodingIntervalRangeMaxH264;
-                int        encodingIntervalRangeMinJpeg;
-                int        encodingIntervalRangeMaxJpeg;
-                enum H264ProfilesSupported { Baseline, Main, Extended, High };
-                QList<H264ProfilesSupported> h264ProfilesSupported;
-            };
-            typedef QList<EncodingOptions> EncodingsOptions;
-            EncodingsOptions               encodingsOptions;
-
-            struct EncoderConfig {
+            struct EncoderConfigs {
                 QList<QString> token;
                 QList<QString> name;
                 QList<int>     useCount;
@@ -277,6 +252,57 @@ struct Data {
                 QList<int>     ttl;
                 QList<bool>    autoStart;
                 QList<QString> sessionTimeout;
+                struct Option {
+                    int        qualityRangeMin;
+                    int        qualityRangeMax;
+                    QList<int> resAvailableWidthH264;
+                    QList<int> resAvailableHeightH264;
+                    QList<int> resAvailableWidthJpeg;
+                    QList<int> resAvailableHeightJpeg;
+                    int        govLengthRangeMin;
+                    int        govLengthRangeMax;
+                    int        frameRateRangeMinH264;
+                    int        frameRateRangeMaxH264;
+                    int        frameRateRangeMinJpeg;
+                    int        frameRateRangeMaxJpeg;
+                    int        bitRateRangeMin;
+                    int        bitRateRangeMax;
+                    int        encodingIntervalRangeMinH264;
+                    int        encodingIntervalRangeMaxH264;
+                    int        encodingIntervalRangeMinJpeg;
+                    int        encodingIntervalRangeMaxJpeg;
+                    enum H264ProfilesSupported {
+                        Baseline,
+                        Main,
+                        Extended,
+                        High
+                    };
+                    QList<H264ProfilesSupported> h264ProfilesSupported;
+                };
+                typedef QList<Option> Options;
+                Options               options;
+            } encodingConfigs;
+
+            struct EncoderConfig {
+                QString token;
+                QString name;
+                int     useCount;
+                QString encoding;
+                int     width;
+                int     height;
+                int     quality;
+                int     frameRateLimit;
+                int     encodingInterval;
+                int     bitrateLimit;
+                int     govLength;
+                QString h264Profile;
+                QString type;
+                QString ipv4Address;
+                QString ipv6Address;
+                int     port;
+                int     ttl;
+                bool    autoStart;
+                QString sessionTimeout;
             } encodingConfig;
 
             struct SourceConfig {

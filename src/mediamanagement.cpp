@@ -2132,29 +2132,29 @@ MediaManagement::getVideoEncoderConfigurationOptions(
         }
 
         videoEncoderConfigurationOptions->setGovLengthRangeMin(
-            result->getValue("//tt:H264/tt:GovLengthRange/tt:Min")
+            result->getValue("//trt:Options/tt:H264/tt:GovLengthRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setGovLengthRangeMax(
-            result->getValue("//tt:H264/tt:GovLengthRange/tt:Max")
+            result->getValue("//trt:Options/tt:H264/tt:GovLengthRange/tt:Max")
                 .trimmed()
                 .toInt());
 
         videoEncoderConfigurationOptions->setFrameRateRangeMinJpeg(
-            result->getValue("//tt:JPEG/tt:FrameRateRange/tt:Min")
+            result->getValue("//trt:Options/tt:JPEG/tt:FrameRateRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setFrameRateRangeMaxJpeg(
-            result->getValue("//tt:JPEG/tt:FrameRateRange/tt:Max")
+            result->getValue("//trt:Options/tt:JPEG/tt:FrameRateRange/tt:Max")
                 .trimmed()
                 .toInt());
 
         videoEncoderConfigurationOptions->setFrameRateRangeMinH264(
-            result->getValue("//tt:H264/tt:FrameRateRange/tt:Min")
+            result->getValue("//trt:Options/tt:H264/tt:FrameRateRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setFrameRateRangeMaxH264(
-            result->getValue("//tt:H264/tt:FrameRateRange/tt:Max")
+            result->getValue("//trt:Options/tt:H264/tt:FrameRateRange/tt:Max")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setBitRateRangeMin(
@@ -2165,22 +2165,21 @@ MediaManagement::getVideoEncoderConfigurationOptions(
             result->getValue("//tt:H264/tt:BitrateRange/tt:Max")
                 .trimmed()
                 .toInt());
-
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMinJpeg(
-            result->getValue("//tt:JPEG/tt:EncodingIntervalRange/tt:Min")
+            result->getValue("//trt:Options/tt:JPEG/tt:EncodingIntervalRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMaxJpeg(
-            result->getValue("//tt:JPEG/tt:EncodingIntervalRange/tt:Max")
+            result->getValue("//trt:Options/tt:JPEG/tt:EncodingIntervalRange/tt:Max")
                 .trimmed()
                 .toInt());
 
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMinH264(
-            result->getValue("//tt:H264/tt:EncodingIntervalRange/tt:Min")
+            result->getValue("//trt:Options/tt:H264/tt:EncodingIntervalRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMaxH264(
-            result->getValue("//tt:H264/tt:EncodingIntervalRange/tt:Max")
+            result->getValue("//trt:Options/tt:H264/tt:EncodingIntervalRange/tt:Max")
                 .trimmed()
                 .toInt());
 
@@ -2204,17 +2203,15 @@ MediaManagement::getVideoEncoderConfigurationOptions(
 }
 
 void
-MediaManagement::setVideoEncoderConfiguration(
-    VideoEncoderConfiguration* videoConfiguration) {
+MediaManagement::setVideoEncoderConfiguration(VideoEncoderConfiguration *videoConfigurations) {
     Message* msg = newMessage();
-    msg->appendToBody(videoConfiguration->toxml());
+    msg->appendToBody(videoConfigurations->toxml());
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         if (result->find("//tds:SetVideoEncoderConfigurationResponse"))
-            videoConfiguration->setResult(true);
+            videoConfigurations->setResult(true);
         else
-            videoConfiguration->setResult(false);
-
+            videoConfigurations->setResult(false);
         delete result;
         delete msg;
     }
@@ -2231,6 +2228,11 @@ MediaManagement::getStreamUri(const QString& token) {
     QDomElement streamSetup  = newElement("wsdl:StreamSetup");
     QDomElement getStreamUri = newElement("wsdl:GetStreamUri");
     QDomElement profileToken = newElement("wsdl:ProfileToken", token);
+    getStreamUri.setAttribute("xmlns","http://www.onvif.org/ver10/media/wsdl");
+    transport.setAttribute("xmlns","http://www.onvif.org/ver10/media/wsdl");
+    stream.setAttribute("xmlns","http://www.onvif.org/ver10/media/wsdl");
+
+
     getStreamUri.appendChild(streamSetup);
     getStreamUri.appendChild(profileToken);
     streamSetup.appendChild(stream);

@@ -41,6 +41,7 @@ public:
     bool refreshDeviceInformations(QString _deviceEndPointAddress);
 
     bool refreshDeviceVideoConfigs(QString _deviceEndPointAddress);
+    bool refreshDeviceStreamUri(QString _deviceEndPointAddress);
     bool refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress);
 
 
@@ -58,6 +59,9 @@ public:
     void setDefaulUsernameAndPassword(QString _username, QString _password);
     bool setDeviceScopes(
         QString _deviceEndPointAddress, QString _name, QString _location);
+    bool setDeviceVideoConfig(
+        QString                                 _deviceEndPointAddress,
+        Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
