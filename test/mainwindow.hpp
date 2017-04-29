@@ -35,6 +35,8 @@ private slots:
 
     void on_btnSetScopes_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QOnvifManager *ionvifManager;

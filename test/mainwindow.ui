@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
-    <height>547</height>
+    <width>741</width>
+    <height>642</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,17 +15,63 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Date and Time:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Devices List:</string>
+         <string>Username:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="cmbDevicesComboBox">
+       <widget class="QLineEdit" name="txtUserName">
+        <property name="text">
+         <string>admin</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Password:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtPassword">
+        <property name="text">
+         <string>admin</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="setUsernamePass">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="9" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Local:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateTimeEdit" name="dateTimeEditSet">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -35,39 +81,70 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnRefresh">
+       <widget class="QPushButton" name="btsSetDateAndTime">
         <property name="text">
-         <string>Refresh</string>
+         <string>Set date and time</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Date and Time:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="12" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Control:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="13" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item row="10" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_12">
         <property name="text">
-         <string>Put a break point in pointed place in btn  &quot;on refresh data&quot; slot to see device data.</string>
+         <string>Name:</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
+       <widget class="QLineEdit" name="txtName"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Location:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtLocation"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>hardware:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="txtHardware">
+        <property name="text">
+         <string>Unknown</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSetScopes">
+        <property name="text">
+         <string>setScopes</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Login:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -80,13 +157,72 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnRefreshData">
-        <property name="text">
-         <string>Refresh Data</string>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="2" column="1">
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="text">
+           <string>zoomIn</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>up</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QPushButton" name="pushButton_6">
+          <property name="text">
+           <string>zoomOut</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="text">
+           <string>right</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="text">
+           <string>left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pushButton_5">
+          <property name="text">
+           <string>down</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
+    </item>
+    <item row="12" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Control:</string>
+      </property>
+     </widget>
     </item>
     <item row="8" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -151,17 +287,17 @@
       </item>
      </layout>
     </item>
-    <item row="9" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item row="3" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Local:</string>
+         <string>Devices List:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QDateTimeEdit" name="dateTimeEditSet">
+       <widget class="QComboBox" name="cmbDevicesComboBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -171,100 +307,40 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btsSetDateAndTime">
+       <widget class="QPushButton" name="btnRefresh">
         <property name="text">
-         <string>Set date and time</string>
+         <string>Refresh</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>Login:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <item row="13" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Username:</string>
+         <string>Put a break point in pointed place in btn  &quot;on refresh data&quot; slot to see device data.</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="txtUserName">
-        <property name="text">
-         <string>admin</string>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Password:</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
         </property>
-       </widget>
+       </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="txtPassword">
+       <widget class="QPushButton" name="btnRefreshData">
         <property name="text">
-         <string>admin</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="setUsernamePass">
-        <property name="text">
-         <string>Set</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="10" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
-      <item>
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Name:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="txtName"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Location:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="txtLocation"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>hardware:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="txtHardware">
-        <property name="text">
-         <string>Unknown</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnSetScopes">
-        <property name="text">
-         <string>setScopes</string>
+         <string>Refresh Data</string>
         </property>
        </widget>
       </item>
@@ -278,7 +354,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>683</width>
+     <width>741</width>
      <height>22</height>
     </rect>
    </property>

@@ -39,7 +39,7 @@ VideoEncoderConfiguration::toxml() {
     port        = newElement("tt:Port", QString::number(this->port()));
     ttl         = newElement("tt:TTL", QString::number(this->ttl()));
     autoStart   = newElement(
-        "tt:BitrateLimit", this->autoStart() == true ? "true" : "false");
+        "tt:AutoStart", this->autoStart() == true ? "true" : "false");
     sessionTimeout   = newElement("tt:SessionTimeout", this->sessionTimeout());
     forcePresistence = newElement("tt:ForcePersistence", "true");
 
@@ -64,7 +64,7 @@ VideoEncoderConfiguration::toxml() {
     h264.appendChild(govLength);
     h264.appendChild(h264profile);
     address.appendChild(type);
-    address.appendChild(ipv4Address);
+//    address.appendChild(ipv4Address);
     multicast.appendChild(address);
     multicast.appendChild(port);
     multicast.appendChild(ttl);
@@ -79,8 +79,8 @@ VideoEncoderConfiguration::toxml() {
     configuration.appendChild(h264);
     configuration.appendChild(multicast);
     configuration.appendChild(sessionTimeout);
-    configuration.appendChild(forcePresistence);
 
     setVideoConfiguration.appendChild(configuration);
+    setVideoConfiguration.appendChild(forcePresistence);
     return setVideoConfiguration;
 }

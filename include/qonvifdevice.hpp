@@ -53,6 +53,9 @@ public:
 
     bool refreshUsers();
 
+    //ptz management
+    bool refreshPtzConfiguration();
+
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
     QScopedPointer<QOnvifDevicePrivate> d_ptr;

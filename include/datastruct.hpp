@@ -314,5 +314,35 @@ struct Data {
 
         } video;
     } mediaConfig;
+
+    struct Ptz {
+        struct Config{
+            QString profileToken;
+            QString name;
+            int     useCount;
+            QString nodeToken;
+            QString defaultAbsolutePantTiltPositionSpace;
+            QString defaultAbsoluteZoomPositionSpace;
+            QString defaultRelativePanTiltTranslationSpace;
+            QString defaultRelativeZoomTranslationSpace;
+            QString defaultContinuousPanTiltVelocitySpace;
+            QString defaultContinuousZoomVelocitySpace;
+            float   panTiltX;
+            float   panTiltY;
+            QString zoomSpace;
+            QString defaultPTZTimeout;
+            QString panTiltUri;
+            float   panTiltXRangeMin;
+            float   panTiltXRangeMax;
+            float   panTiltYRangeMin;
+            float   panTiltYRangeMax;
+            QString zoomUri;
+            float   zoomXRangeMin;
+            float   zoomXRangeMax;
+            QString ptzConfigurationToken;
+            QString panTiltSpace;
+            float   zoomX;
+        }config;
+    } ptz;
 };
 #endif // DATASTRUCT_HPP

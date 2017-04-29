@@ -1,6 +1,7 @@
 #include "qonvifdevice.hpp"
 #include "devicemanagement.h"
 #include "mediamanagement.h"
+#include "ptzmanagement.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace device {
@@ -18,20 +19,24 @@ public:
 
         imediaManagement =
             new ONVIF::MediaManagement{_serviceAddress, iuserName, ipassword};
+
+        iptzManagement =
+            new ONVIF::PtzManagement{_serviceAddress, iuserName, ipassword};
     }
     ~QOnvifDevicePrivate() {
         delete ideviceManagement;
         delete imediaManagement;
+        delete iptzManagement;
     }
 
     QString iuserName;
     QString ipassword;
     Data    idata;
 
-    // device management
+    // onvif managers
     ONVIF::DeviceManagement* ideviceManagement;
-    // media management
-    ONVIF::MediaManagement* imediaManagement;
+    ONVIF::MediaManagement*  imediaManagement;
+    ONVIF::PtzManagement*    iptzManagement;
 
     Data::ProbeData deviceProbeData() {
         return idata.probeData;
@@ -97,71 +102,60 @@ public:
             ideviceManagement->getCapabilitiesDevice());
         if (!capabilitiesDevice)
             return false;
-        idata.capabilities.accessPolicyConfig =
-            capabilitiesDevice->accessPolicyConfig();
-        idata.capabilities.deviceXAddr = capabilitiesDevice->deviceXAddr();
-        idata.capabilities.iPFilter    = capabilitiesDevice->iPFilter();
-        idata.capabilities.zeroConfiguration =
-            capabilitiesDevice->zeroConfiguration();
-        idata.capabilities.iPVersion6 = capabilitiesDevice->iPVersion6();
-        idata.capabilities.dynDNS     = capabilitiesDevice->dynDNS();
-        idata.capabilities.discoveryResolve =
-            capabilitiesDevice->discoveryResolve();
-        idata.capabilities.systemLogging = capabilitiesDevice->systemLogging();
-        idata.capabilities.firmwareUpgrade =
-            capabilitiesDevice->firmwareUpgrade();
-        idata.capabilities.major = capabilitiesDevice->major();
-        idata.capabilities.minor = capabilitiesDevice->minor();
-        idata.capabilities.httpFirmwareUpgrade =
-            capabilitiesDevice->httpFirmwareUpgrade();
-        idata.capabilities.httpSystemBackup =
-            capabilitiesDevice->httpSystemBackup();
-        idata.capabilities.httpSystemLogging =
-            capabilitiesDevice->httpSystemLogging();
-        idata.capabilities.httpSupportInformation =
-            capabilitiesDevice->httpSupportInformation();
-        idata.capabilities.inputConnectors =
-            capabilitiesDevice->inputConnectors();
-        idata.capabilities.relayOutputs = capabilitiesDevice->relayOutputs();
-        idata.capabilities.tls11        = capabilitiesDevice->tls11();
-        idata.capabilities.tls22        = capabilitiesDevice->tls22();
-        idata.capabilities.onboardKeyGeneration =
-            capabilitiesDevice->onboardKeyGeneration();
-        idata.capabilities.accessPolicyConfig =
-            capabilitiesDevice->accessPolicyConfig();
-        idata.capabilities.x509Token     = capabilitiesDevice->x509Token();
-        idata.capabilities.samlToken     = capabilitiesDevice->samlToken();
-        idata.capabilities.kerberosToken = capabilitiesDevice->kerberosToken();
-        idata.capabilities.relToken      = capabilitiesDevice->relToken();
-        idata.capabilities.tls10         = capabilitiesDevice->tls10();
-        idata.capabilities.dot1x         = capabilitiesDevice->dot1x();
-        idata.capabilities.remoteUserHanding =
-            capabilitiesDevice->remoteUserHanding();
-        idata.capabilities.systemBackup = capabilitiesDevice->systemBackup();
-        idata.capabilities.discoveryBye = capabilitiesDevice->discoveryBye();
-        idata.capabilities.remoteDiscovery =
-            capabilitiesDevice->remoteDiscovery();
+
+        auto& src = capabilitiesDevice;
+        auto& des = idata.capabilities;
+
+        des.accessPolicyConfig     = src->accessPolicyConfig();
+        des.deviceXAddr            = src->deviceXAddr();
+        des.iPFilter               = src->iPFilter();
+        des.zeroConfiguration      = src->zeroConfiguration();
+        des.iPVersion6             = src->iPVersion6();
+        des.dynDNS                 = src->dynDNS();
+        des.discoveryResolve       = src->discoveryResolve();
+        des.systemLogging          = src->systemLogging();
+        des.firmwareUpgrade        = src->firmwareUpgrade();
+        des.major                  = src->major();
+        des.minor                  = src->minor();
+        des.httpFirmwareUpgrade    = src->httpFirmwareUpgrade();
+        des.httpSystemBackup       = src->httpSystemBackup();
+        des.httpSystemLogging      = src->httpSystemLogging();
+        des.httpSupportInformation = src->httpSupportInformation();
+        des.inputConnectors        = src->inputConnectors();
+        des.relayOutputs           = src->relayOutputs();
+        des.tls11                  = src->tls11();
+        des.tls22                  = src->tls22();
+        des.onboardKeyGeneration   = src->onboardKeyGeneration();
+        des.accessPolicyConfig     = src->accessPolicyConfig();
+        des.x509Token              = src->x509Token();
+        des.samlToken              = src->samlToken();
+        des.kerberosToken          = src->kerberosToken();
+        des.relToken               = src->relToken();
+        des.tls10                  = src->tls10();
+        des.dot1x                  = src->dot1x();
+        des.remoteUserHanding      = src->remoteUserHanding();
+        des.systemBackup           = src->systemBackup();
+        des.discoveryBye           = src->discoveryBye();
+        des.remoteDiscovery        = src->remoteDiscovery();
 
         // ptz capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesPtz(
             ideviceManagement->getCapabilitiesDevice());
-
-        idata.capabilities.ptzAddress = capabilitiesPtz->ptzXAddr();
+        des.ptzAddress = capabilitiesPtz->ptzXAddr();
 
         // image capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesImage(
             ideviceManagement->getCapabilitiesDevice());
-
-        idata.capabilities.imagingXAddress = capabilitiesImage->imagingXAddr();
+        des.imagingXAddress = capabilitiesImage->imagingXAddr();
 
         // media capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesMedia(
             ideviceManagement->getCapabilitiesDevice());
 
-        idata.capabilities.mediaXAddress = capabilitiesMedia->mediaXAddr();
-        idata.capabilities.rtpMulticast  = capabilitiesMedia->rtpMulticast();
-        idata.capabilities.rtpTcp        = capabilitiesMedia->rtpTcp();
-        idata.capabilities.rtpRtspTcp    = capabilitiesMedia->rtpRtspTcp();
+        des.mediaXAddress = capabilitiesMedia->mediaXAddr();
+        des.rtpMulticast  = capabilitiesMedia->rtpMulticast();
+        des.rtpTcp        = capabilitiesMedia->rtpTcp();
+        des.rtpRtspTcp    = capabilitiesMedia->rtpRtspTcp();
 
         return true;
     }
@@ -207,63 +201,30 @@ public:
 
         if (!videoEncoderConfigurations)
             return false;
+        {
+            auto& des = idata.mediaConfig.video.encodingConfigs;
+            auto& src = videoEncoderConfigurations;
 
-        idata.mediaConfig.video.encodingConfigs.autoStart =
-            videoEncoderConfigurations->getAutoStart();
-
-        idata.mediaConfig.video.encodingConfigs.bitrateLimit =
-            videoEncoderConfigurations->getBitrateLimit();
-
-        idata.mediaConfig.video.encodingConfigs.encoding =
-            videoEncoderConfigurations->getEncoding();
-
-        idata.mediaConfig.video.encodingConfigs.encodingInterval =
-            videoEncoderConfigurations->getEncodingInterval();
-
-        idata.mediaConfig.video.encodingConfigs.frameRateLimit =
-            videoEncoderConfigurations->getFrameRateLimit();
-
-        idata.mediaConfig.video.encodingConfigs.govLength =
-            videoEncoderConfigurations->getGovLength();
-
-        idata.mediaConfig.video.encodingConfigs.h264Profile =
-            videoEncoderConfigurations->getH264Profile();
-
-        idata.mediaConfig.video.encodingConfigs.width =
-            videoEncoderConfigurations->getWidth();
-
-        idata.mediaConfig.video.encodingConfigs.height =
-            videoEncoderConfigurations->getHeight();
-
-        idata.mediaConfig.video.encodingConfigs.ipv4Address =
-            videoEncoderConfigurations->getIpv4Address();
-
-        idata.mediaConfig.video.encodingConfigs.ipv6Address =
-            videoEncoderConfigurations->getIpv6Address();
-
-        idata.mediaConfig.video.encodingConfigs.name =
-            videoEncoderConfigurations->getName();
-
-        idata.mediaConfig.video.encodingConfigs.port =
-            videoEncoderConfigurations->getPort();
-
-        idata.mediaConfig.video.encodingConfigs.quality =
-            videoEncoderConfigurations->getQuality();
-
-        idata.mediaConfig.video.encodingConfigs.sessionTimeout =
-            videoEncoderConfigurations->getSessionTimeout();
-
-        idata.mediaConfig.video.encodingConfigs.token =
-            videoEncoderConfigurations->getToken();
-
-        idata.mediaConfig.video.encodingConfigs.ttl =
-            videoEncoderConfigurations->getTtl();
-
-        idata.mediaConfig.video.encodingConfigs.type =
-            videoEncoderConfigurations->getType();
-
-        idata.mediaConfig.video.encodingConfigs.useCount =
-            videoEncoderConfigurations->getUseCount();
+            des.autoStart        = src->getAutoStart();
+            des.bitrateLimit     = src->getBitrateLimit();
+            des.encoding         = src->getEncoding();
+            des.encodingInterval = src->getEncodingInterval();
+            des.frameRateLimit   = src->getFrameRateLimit();
+            des.govLength        = src->getGovLength();
+            des.h264Profile      = src->getH264Profile();
+            des.width            = src->getWidth();
+            des.height           = src->getHeight();
+            des.ipv4Address      = src->getIpv4Address();
+            des.ipv6Address      = src->getIpv6Address();
+            des.name             = src->getName();
+            des.port             = src->getPort();
+            des.quality          = src->getQuality();
+            des.sessionTimeout   = src->getSessionTimeout();
+            des.token            = src->getToken();
+            des.ttl              = src->getTtl();
+            des.type             = src->getType();
+            des.useCount         = src->getUseCount();
+        }
 
         // get video source config
         QScopedPointer<ONVIF::VideoSourceConfigurations>
@@ -273,17 +234,15 @@ public:
         if (!videoSourceConfigurations)
             return false;
 
-        idata.mediaConfig.video.sourceConfig.name =
-            videoSourceConfigurations->getName();
+        {
+            auto& des       = idata.mediaConfig.video.sourceConfig;
+            auto& src       = videoSourceConfigurations;
+            des.name        = src->getName();
+            des.useCount    = src->getUseCount();
+            des.sourceToken = src->getSourceToken();
+            des.bounds      = src->getBounds();
+        }
 
-        idata.mediaConfig.video.sourceConfig.useCount =
-            videoSourceConfigurations->getUseCount();
-
-        idata.mediaConfig.video.sourceConfig.sourceToken =
-            videoSourceConfigurations->getSourceToken();
-
-        idata.mediaConfig.video.sourceConfig.bounds =
-            videoSourceConfigurations->getBounds();
         return true;
     }
 
@@ -292,8 +251,8 @@ public:
         QScopedPointer<ONVIF::StreamUri> streamUri(
             imediaManagement->getStreamUri(
                 idata.profiles.toKenPro.value(0))); // todo: whats this input
-                          // exactly? meld retrun value
-                          // and value of odm
+        // exactly? meld retrun value
+        // and value of odm
         if (!streamUri)
             return false;
 
@@ -314,7 +273,6 @@ public:
             QString _configToken,
             idata.mediaConfig.video.encodingConfigs.token) {
 
-
             QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
                 videoEncoderConfigurationOptions(
                     imediaManagement->getVideoEncoderConfigurationOptions(
@@ -325,68 +283,36 @@ public:
 
             Data::MediaConfig::Video::EncoderConfigs::Option encodingOptions;
 
-            encodingOptions.encodingIntervalRangeMaxH264 =
-                videoEncoderConfigurationOptions
-                    ->encodingIntervalRangeMaxH264();
+            auto& des = encodingOptions;
+            auto& src = videoEncoderConfigurationOptions;
 
-            encodingOptions.encodingIntervalRangeMinH264 =
-                videoEncoderConfigurationOptions
-                    ->encodingIntervalRangeMinH264();
-
-            encodingOptions.frameRateRangeMaxH264 =
-                videoEncoderConfigurationOptions->frameRateRangeMaxH264();
-
-            encodingOptions.frameRateRangeMinH264 =
-                videoEncoderConfigurationOptions->frameRateRangeMinH264();
-
-            encodingOptions.bitRateRangeMax =
-                videoEncoderConfigurationOptions->bitRateRangeMax();
-
-            encodingOptions.bitRateRangeMin =
-                videoEncoderConfigurationOptions->bitRateRangeMin();
-
-            encodingOptions.govLengthRangeMax =
-                videoEncoderConfigurationOptions->govLengthRangeMax();
-
-            encodingOptions.govLengthRangeMin =
-                videoEncoderConfigurationOptions->govLengthRangeMin();
-
-            encodingOptions.qualityRangeMin =
-                videoEncoderConfigurationOptions->qualityRangeMin();
-
-            encodingOptions.qualityRangeMax =
-                videoEncoderConfigurationOptions->qulityRangeMax();
-
-            encodingOptions.resAvailableHeightH264 =
-                videoEncoderConfigurationOptions->resAvailableHeightH264();
-
-            encodingOptions.resAvailableWidthH264 =
-                videoEncoderConfigurationOptions->resAvailableWidthH264();
-
-            encodingOptions.encodingIntervalRangeMaxJpeg =
-                videoEncoderConfigurationOptions
-                    ->encodingIntervalRangeMaxJpeg();
-
-            encodingOptions.encodingIntervalRangeMinJpeg =
-                videoEncoderConfigurationOptions
-                    ->encodingIntervalRangeMinJpeg();
-
-            encodingOptions.frameRateRangeMaxJpeg =
-                videoEncoderConfigurationOptions->frameRateRangeMaxJpeg();
-
-            encodingOptions.frameRateRangeMinJpeg =
-                videoEncoderConfigurationOptions->frameRateRangeMinJpeg();
-
-            encodingOptions.resAvailableHeightJpeg =
-                videoEncoderConfigurationOptions->resAvailableHeightJpeg();
-
-            encodingOptions.resAvailableWidthJpeg =
-                videoEncoderConfigurationOptions->resAvailableWidthJpeg();
+            des.encodingIntervalRangeMaxH264 =
+                src->encodingIntervalRangeMaxH264();
+            des.encodingIntervalRangeMinH264 =
+                src->encodingIntervalRangeMinH264();
+            des.frameRateRangeMaxH264  = src->frameRateRangeMaxH264();
+            des.frameRateRangeMinH264  = src->frameRateRangeMinH264();
+            des.bitRateRangeMax        = src->bitRateRangeMax();
+            des.bitRateRangeMin        = src->bitRateRangeMin();
+            des.govLengthRangeMax      = src->govLengthRangeMax();
+            des.govLengthRangeMin      = src->govLengthRangeMin();
+            des.qualityRangeMin        = src->qualityRangeMin();
+            des.qualityRangeMax        = src->qulityRangeMax();
+            des.resAvailableHeightH264 = src->resAvailableHeightH264();
+            des.resAvailableWidthH264  = src->resAvailableWidthH264();
+            des.encodingIntervalRangeMaxJpeg =
+                src->encodingIntervalRangeMaxJpeg();
+            des.encodingIntervalRangeMinJpeg =
+                src->encodingIntervalRangeMinJpeg();
+            des.frameRateRangeMaxJpeg  = src->frameRateRangeMaxJpeg();
+            des.frameRateRangeMinJpeg  = src->frameRateRangeMinJpeg();
+            des.resAvailableHeightJpeg = src->resAvailableHeightJpeg();
+            des.resAvailableWidthJpeg  = src->resAvailableWidthJpeg();
 
             foreach (
                 ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported
                     h264ProfilesSupporte,
-                videoEncoderConfigurationOptions->getH264ProfilesSupported()) {
+                src->getH264ProfilesSupported()) {
                 int intCastTemp = static_cast<int>(h264ProfilesSupporte);
 
                 Data::MediaConfig::Video::EncoderConfigs::Option::
@@ -395,11 +321,9 @@ public:
                                         Option::H264ProfilesSupported>(
                             intCastTemp);
 
-                encodingOptions.h264ProfilesSupported.append(enumCastTemp);
+                des.h264ProfilesSupported.append(enumCastTemp);
             }
-
-            idata.mediaConfig.video.encodingConfigs.options.append(
-                encodingOptions);
+            idata.mediaConfig.video.encodingConfigs.options.append(des);
         }
 
         return true;
@@ -418,154 +342,154 @@ public:
             imediaManagement->getProfiles());
         if (!profiles)
             return false;
+        {
+            auto& des = idata.profiles;
 
-        idata.profiles.analytics           = profiles->m_analytics;
-        idata.profiles.toKenPro            = profiles->m_toKenPro;
-        idata.profiles.fixed               = profiles->m_fixed;
-        idata.profiles.namePro             = profiles->m_namePro;
-        idata.profiles.nameVsc             = profiles->m_nameVsc;
-        idata.profiles.useCountVsc         = profiles->m_useCountVsc;
-        idata.profiles.sourceTokenVsc      = profiles->m_sourceTokenVsc;
-        idata.profiles.boundsVsc           = profiles->m_boundsVsc;
-        idata.profiles.nameVec             = profiles->m_nameVec;
-        idata.profiles.useCountVec         = profiles->m_useCountVec;
-        idata.profiles.encodingVec         = profiles->m_encodingVec;
-        idata.profiles.widthVec            = profiles->m_widthVec;
-        idata.profiles.heightVec           = profiles->m_heightVec;
-        idata.profiles.qualityVec          = profiles->m_qualityVec;
-        idata.profiles.frameRateLimitVec   = profiles->m_frameRateLimitVec;
-        idata.profiles.encodingIntervalVec = profiles->m_encodingIntervalVec;
-        idata.profiles.bitrateLimitVec     = profiles->m_bitrateLimitVec;
-        idata.profiles.govLengthVec        = profiles->m_govLengthVec;
-        idata.profiles.h264ProfileVec      = profiles->m_h264ProfileVec;
-        idata.profiles.typeVec             = profiles->m_typeVec;
-        idata.profiles.ipv4AddressVec      = profiles->m_ipv4AddressVec;
-        idata.profiles.ipv6AddressVec      = profiles->m_ipv6AddressVec;
-        idata.profiles.portVec             = profiles->m_portVec;
-        idata.profiles.ttlVec              = profiles->m_ttlVec;
-        idata.profiles.autoStartVec        = profiles->m_autoStartVec;
-        idata.profiles.sessionTimeoutVec   = profiles->m_sessionTimeoutVec;
-        idata.profiles.namePtz             = profiles->m_namePtz;
-        idata.profiles.useCountPtz         = profiles->m_useCountPtz;
-        idata.profiles.nodeToken           = profiles->m_nodeToken;
-        idata.profiles.defaultAbsolutePantTiltPositionSpace =
-            profiles->m_defaultAbsolutePantTiltPositionSpace;
-        idata.profiles.defaultAbsoluteZoomPositionSpace =
-            profiles->m_defaultAbsoluteZoomPositionSpace;
-        idata.profiles.defaultRelativePantTiltTranslationSpace =
-            profiles->m_defaultRelativePantTiltTranslationSpace;
-        idata.profiles.defaultRelativeZoomTranslationSpace =
-            profiles->m_defaultRelativeZoomTranslationSpace;
-        idata.profiles.defaultContinuousPantTiltVelocitySpace =
-            profiles->m_defaultContinuousPantTiltVelocitySpace;
-        idata.profiles.defaultContinuousZoomVelocitySpace =
-            profiles->m_defaultContinuousZoomVelocitySpace;
-        idata.profiles.panTiltSpace       = profiles->m_panTiltSpace;
-        idata.profiles.panTiltX           = profiles->m_panTiltX;
-        idata.profiles.panTiltY           = profiles->m_panTiltY;
-        idata.profiles.zoomSpace          = profiles->m_zoomSpace;
-        idata.profiles.zoomX              = profiles->m_zoomX;
-        idata.profiles.defaultPTZTimeout  = profiles->m_defaultPTZTimeout;
-        idata.profiles.panTiltUri         = profiles->m_panTiltUri;
-        idata.profiles.xRangeMinPt        = profiles->m_xRangeMinPt;
-        idata.profiles.xRangeMaxPt        = profiles->m_xRangeMaxPt;
-        idata.profiles.yRangeMinPt        = profiles->m_yRangeMinPt;
-        idata.profiles.yRangeMaxPt        = profiles->m_yRangeMaxPt;
-        idata.profiles.zoomUri            = profiles->m_zoomUri;
-        idata.profiles.xRangeMinZm        = profiles->m_xRangeMinZm;
-        idata.profiles.xRangeMaxZm        = profiles->m_xRangeMaxZm;
-        idata.profiles.nameMc             = profiles->m_nameMc;
-        idata.profiles.useCountMc         = profiles->m_useCountMc;
-        idata.profiles.status             = profiles->m_status;
-        idata.profiles.position           = profiles->m_position;
-        idata.profiles.filter             = profiles->m_filter;
-        idata.profiles.subscriptionPolicy = profiles->m_subscriptionPolicy;
-        idata.profiles.analytics          = profiles->m_analytics;
-        idata.profiles.typeMc             = profiles->m_typeMc;
-        idata.profiles.ipv4AddressMc      = profiles->m_ipv4AddressMc;
-        idata.profiles.ipv6AddressMc      = profiles->m_ipv6AddressMc;
-        idata.profiles.portMc             = profiles->m_portMc;
-        idata.profiles.ttlMc              = profiles->m_ttlMc;
-        idata.profiles.autoStartMc        = profiles->m_autoStartMc;
-        idata.profiles.sessionTimeoutMc   = profiles->m_sessionTimeoutMc;
-
-
+            des.analytics           = profiles->m_analytics;
+            des.toKenPro            = profiles->m_toKenPro;
+            des.fixed               = profiles->m_fixed;
+            des.namePro             = profiles->m_namePro;
+            des.nameVsc             = profiles->m_nameVsc;
+            des.useCountVsc         = profiles->m_useCountVsc;
+            des.sourceTokenVsc      = profiles->m_sourceTokenVsc;
+            des.boundsVsc           = profiles->m_boundsVsc;
+            des.nameVec             = profiles->m_nameVec;
+            des.useCountVec         = profiles->m_useCountVec;
+            des.encodingVec         = profiles->m_encodingVec;
+            des.widthVec            = profiles->m_widthVec;
+            des.heightVec           = profiles->m_heightVec;
+            des.qualityVec          = profiles->m_qualityVec;
+            des.frameRateLimitVec   = profiles->m_frameRateLimitVec;
+            des.encodingIntervalVec = profiles->m_encodingIntervalVec;
+            des.bitrateLimitVec     = profiles->m_bitrateLimitVec;
+            des.govLengthVec        = profiles->m_govLengthVec;
+            des.h264ProfileVec      = profiles->m_h264ProfileVec;
+            des.typeVec             = profiles->m_typeVec;
+            des.ipv4AddressVec      = profiles->m_ipv4AddressVec;
+            des.ipv6AddressVec      = profiles->m_ipv6AddressVec;
+            des.portVec             = profiles->m_portVec;
+            des.ttlVec              = profiles->m_ttlVec;
+            des.autoStartVec        = profiles->m_autoStartVec;
+            des.sessionTimeoutVec   = profiles->m_sessionTimeoutVec;
+            des.namePtz             = profiles->m_namePtz;
+            des.useCountPtz         = profiles->m_useCountPtz;
+            des.nodeToken           = profiles->m_nodeToken;
+            des.panTiltSpace        = profiles->m_panTiltSpace;
+            des.panTiltX            = profiles->m_panTiltX;
+            des.panTiltY            = profiles->m_panTiltY;
+            des.zoomSpace           = profiles->m_zoomSpace;
+            des.zoomX               = profiles->m_zoomX;
+            des.defaultPTZTimeout   = profiles->m_defaultPTZTimeout;
+            des.panTiltUri          = profiles->m_panTiltUri;
+            des.xRangeMinPt         = profiles->m_xRangeMinPt;
+            des.xRangeMaxPt         = profiles->m_xRangeMaxPt;
+            des.yRangeMinPt         = profiles->m_yRangeMinPt;
+            des.yRangeMaxPt         = profiles->m_yRangeMaxPt;
+            des.zoomUri             = profiles->m_zoomUri;
+            des.xRangeMinZm         = profiles->m_xRangeMinZm;
+            des.xRangeMaxZm         = profiles->m_xRangeMaxZm;
+            des.nameMc              = profiles->m_nameMc;
+            des.useCountMc          = profiles->m_useCountMc;
+            des.status              = profiles->m_status;
+            des.position            = profiles->m_position;
+            des.filter              = profiles->m_filter;
+            des.subscriptionPolicy  = profiles->m_subscriptionPolicy;
+            des.analytics           = profiles->m_analytics;
+            des.typeMc              = profiles->m_typeMc;
+            des.ipv4AddressMc       = profiles->m_ipv4AddressMc;
+            des.ipv6AddressMc       = profiles->m_ipv6AddressMc;
+            des.portMc              = profiles->m_portMc;
+            des.ttlMc               = profiles->m_ttlMc;
+            des.autoStartMc         = profiles->m_autoStartMc;
+            des.sessionTimeoutMc    = profiles->m_sessionTimeoutMc;
+            des.defaultAbsolutePantTiltPositionSpace =
+                profiles->m_defaultAbsolutePantTiltPositionSpace;
+            des.defaultAbsoluteZoomPositionSpace =
+                profiles->m_defaultAbsoluteZoomPositionSpace;
+            des.defaultRelativePantTiltTranslationSpace =
+                profiles->m_defaultRelativePantTiltTranslationSpace;
+            des.defaultRelativeZoomTranslationSpace =
+                profiles->m_defaultRelativeZoomTranslationSpace;
+            des.defaultContinuousPantTiltVelocitySpace =
+                profiles->m_defaultContinuousPantTiltVelocitySpace;
+            des.defaultContinuousZoomVelocitySpace =
+                profiles->m_defaultContinuousZoomVelocitySpace;
+        }
         QScopedPointer<ONVIF::Profile> profile720p(
             imediaManagement->getProfile720P());
         if (!profile720p)
             return false;
-        idata.profile720p.analytics         = profile720p->m_analytics;
-        idata.profile720p.toKenPro          = profile720p->m_toKenPro;
-        idata.profile720p.fixed             = profile720p->m_fixed;
-        idata.profile720p.namePro           = profile720p->m_namePro;
-        idata.profile720p.nameVsc           = profile720p->m_nameVsc;
-        idata.profile720p.useCountVsc       = profile720p->m_useCountVsc;
-        idata.profile720p.sourceTokenVsc    = profile720p->m_sourceTokenVsc;
-        idata.profile720p.boundsVsc         = profile720p->m_boundsVsc;
-        idata.profile720p.nameVec           = profile720p->m_nameVec;
-        idata.profile720p.useCountVec       = profile720p->m_useCountVec;
-        idata.profile720p.encodingVec       = profile720p->m_encodingVec;
-        idata.profile720p.widthVec          = profile720p->m_widthVec;
-        idata.profile720p.heightVec         = profile720p->m_heightVec;
-        idata.profile720p.qualityVec        = profile720p->m_qualityVec;
-        idata.profile720p.frameRateLimitVec = profile720p->m_frameRateLimitVec;
-        idata.profile720p.encodingIntervalVec =
-            profile720p->m_encodingIntervalVec;
-        idata.profile720p.bitrateLimitVec   = profile720p->m_bitrateLimitVec;
-        idata.profile720p.govLengthVec      = profile720p->m_govLengthVec;
-        idata.profile720p.h264ProfileVec    = profile720p->m_h264ProfileVec;
-        idata.profile720p.typeVec           = profile720p->m_typeVec;
-        idata.profile720p.ipv4AddressVec    = profile720p->m_ipv4AddressVec;
-        idata.profile720p.ipv6AddressVec    = profile720p->m_ipv6AddressVec;
-        idata.profile720p.portVec           = profile720p->m_portVec;
-        idata.profile720p.ttlVec            = profile720p->m_ttlVec;
-        idata.profile720p.autoStartVec      = profile720p->m_autoStartVec;
-        idata.profile720p.sessionTimeoutVec = profile720p->m_sessionTimeoutVec;
-        idata.profile720p.namePtz           = profile720p->m_namePtz;
-        idata.profile720p.useCountPtz       = profile720p->m_useCountPtz;
-        idata.profile720p.nodeToken         = profile720p->m_nodeToken;
-        idata.profile720p.defaultAbsolutePantTiltPositionSpace =
-            profile720p->m_defaultAbsolutePantTiltPositionSpace;
-        idata.profile720p.defaultAbsoluteZoomPositionSpace =
-            profile720p->m_defaultAbsoluteZoomPositionSpace;
-        idata.profile720p.defaultRelativePantTiltTranslationSpace =
-            profile720p->m_defaultRelativePantTiltTranslationSpace;
-        idata.profile720p.defaultRelativeZoomTranslationSpace =
-            profile720p->m_defaultRelativeZoomTranslationSpace;
-        idata.profile720p.defaultContinuousPantTiltVelocitySpace =
-            profile720p->m_defaultContinuousPantTiltVelocitySpace;
-        idata.profile720p.defaultContinuousZoomVelocitySpace =
-            profile720p->m_defaultContinuousZoomVelocitySpace;
-        idata.profile720p.panTiltSpace      = profile720p->m_panTiltSpace;
-        idata.profile720p.panTiltX          = profile720p->m_panTiltX;
-        idata.profile720p.panTiltY          = profile720p->m_panTiltY;
-        idata.profile720p.zoomSpace         = profile720p->m_zoomSpace;
-        idata.profile720p.zoomX             = profile720p->m_zoomX;
-        idata.profile720p.defaultPTZTimeout = profile720p->m_defaultPTZTimeout;
-        idata.profile720p.panTiltUri        = profile720p->m_panTiltUri;
-        idata.profile720p.xRangeMinPt       = profile720p->m_xRangeMinPt;
-        idata.profile720p.xRangeMaxPt       = profile720p->m_xRangeMaxPt;
-        idata.profile720p.yRangeMinPt       = profile720p->m_yRangeMinPt;
-        idata.profile720p.yRangeMaxPt       = profile720p->m_yRangeMaxPt;
-        idata.profile720p.zoomUri           = profile720p->m_zoomUri;
-        idata.profile720p.xRangeMinZm       = profile720p->m_xRangeMinZm;
-        idata.profile720p.xRangeMaxZm       = profile720p->m_xRangeMaxZm;
-        idata.profile720p.nameMc            = profile720p->m_nameMc;
-        idata.profile720p.useCountMc        = profile720p->m_useCountMc;
-        idata.profile720p.status            = profile720p->m_status;
-        idata.profile720p.position          = profile720p->m_position;
-        idata.profile720p.filter            = profile720p->m_filter;
-        idata.profile720p.subscriptionPolicy =
-            profile720p->m_subscriptionPolicy;
-        idata.profile720p.analytics        = profile720p->m_analytics;
-        idata.profile720p.typeMc           = profile720p->m_typeMc;
-        idata.profile720p.ipv4AddressMc    = profile720p->m_ipv4AddressMc;
-        idata.profile720p.ipv6AddressMc    = profile720p->m_ipv6AddressMc;
-        idata.profile720p.portMc           = profile720p->m_portMc;
-        idata.profile720p.ttlMc            = profile720p->m_ttlMc;
-        idata.profile720p.autoStartMc      = profile720p->m_autoStartMc;
-        idata.profile720p.sessionTimeoutMc = profile720p->m_sessionTimeoutMc;
+        auto& des = idata.profile720p;
 
+        des.analytics           = profile720p->m_analytics;
+        des.toKenPro            = profile720p->m_toKenPro;
+        des.fixed               = profile720p->m_fixed;
+        des.namePro             = profile720p->m_namePro;
+        des.nameVsc             = profile720p->m_nameVsc;
+        des.useCountVsc         = profile720p->m_useCountVsc;
+        des.sourceTokenVsc      = profile720p->m_sourceTokenVsc;
+        des.boundsVsc           = profile720p->m_boundsVsc;
+        des.nameVec             = profile720p->m_nameVec;
+        des.useCountVec         = profile720p->m_useCountVec;
+        des.encodingVec         = profile720p->m_encodingVec;
+        des.widthVec            = profile720p->m_widthVec;
+        des.heightVec           = profile720p->m_heightVec;
+        des.qualityVec          = profile720p->m_qualityVec;
+        des.frameRateLimitVec   = profile720p->m_frameRateLimitVec;
+        des.encodingIntervalVec = profile720p->m_encodingIntervalVec;
+        des.bitrateLimitVec     = profile720p->m_bitrateLimitVec;
+        des.govLengthVec        = profile720p->m_govLengthVec;
+        des.h264ProfileVec      = profile720p->m_h264ProfileVec;
+        des.typeVec             = profile720p->m_typeVec;
+        des.ipv4AddressVec      = profile720p->m_ipv4AddressVec;
+        des.ipv6AddressVec      = profile720p->m_ipv6AddressVec;
+        des.portVec             = profile720p->m_portVec;
+        des.ttlVec              = profile720p->m_ttlVec;
+        des.autoStartVec        = profile720p->m_autoStartVec;
+        des.sessionTimeoutVec   = profile720p->m_sessionTimeoutVec;
+        des.namePtz             = profile720p->m_namePtz;
+        des.useCountPtz         = profile720p->m_useCountPtz;
+        des.nodeToken           = profile720p->m_nodeToken;
+        des.panTiltSpace        = profile720p->m_panTiltSpace;
+        des.panTiltX            = profile720p->m_panTiltX;
+        des.panTiltY            = profile720p->m_panTiltY;
+        des.zoomSpace           = profile720p->m_zoomSpace;
+        des.zoomX               = profile720p->m_zoomX;
+        des.defaultPTZTimeout   = profile720p->m_defaultPTZTimeout;
+        des.panTiltUri          = profile720p->m_panTiltUri;
+        des.xRangeMinPt         = profile720p->m_xRangeMinPt;
+        des.xRangeMaxPt         = profile720p->m_xRangeMaxPt;
+        des.yRangeMinPt         = profile720p->m_yRangeMinPt;
+        des.yRangeMaxPt         = profile720p->m_yRangeMaxPt;
+        des.zoomUri             = profile720p->m_zoomUri;
+        des.xRangeMinZm         = profile720p->m_xRangeMinZm;
+        des.xRangeMaxZm         = profile720p->m_xRangeMaxZm;
+        des.nameMc              = profile720p->m_nameMc;
+        des.useCountMc          = profile720p->m_useCountMc;
+        des.status              = profile720p->m_status;
+        des.position            = profile720p->m_position;
+        des.filter              = profile720p->m_filter;
+        des.subscriptionPolicy  = profile720p->m_subscriptionPolicy;
+        des.analytics           = profile720p->m_analytics;
+        des.typeMc              = profile720p->m_typeMc;
+        des.ipv4AddressMc       = profile720p->m_ipv4AddressMc;
+        des.ipv6AddressMc       = profile720p->m_ipv6AddressMc;
+        des.portMc              = profile720p->m_portMc;
+        des.ttlMc               = profile720p->m_ttlMc;
+        des.autoStartMc         = profile720p->m_autoStartMc;
+        des.sessionTimeoutMc    = profile720p->m_sessionTimeoutMc;
+        des.defaultAbsolutePantTiltPositionSpace =
+            profile720p->m_defaultAbsolutePantTiltPositionSpace;
+        des.defaultAbsoluteZoomPositionSpace =
+            profile720p->m_defaultAbsoluteZoomPositionSpace;
+        des.defaultRelativePantTiltTranslationSpace =
+            profile720p->m_defaultRelativePantTiltTranslationSpace;
+        des.defaultRelativeZoomTranslationSpace =
+            profile720p->m_defaultRelativeZoomTranslationSpace;
+        des.defaultContinuousPantTiltVelocitySpace =
+            profile720p->m_defaultContinuousPantTiltVelocitySpace;
+        des.defaultContinuousZoomVelocitySpace =
+            profile720p->m_defaultContinuousZoomVelocitySpace;
 
         QScopedPointer<ONVIF::Profile> profileD1(
             imediaManagement->getProfileD1());
@@ -600,6 +524,34 @@ public:
         idata.profileD1.namePtz             = profileD1->m_namePtz;
         idata.profileD1.useCountPtz         = profileD1->m_useCountPtz;
         idata.profileD1.nodeToken           = profileD1->m_nodeToken;
+        idata.profileD1.panTiltSpace        = profileD1->m_panTiltSpace;
+        idata.profileD1.panTiltX            = profileD1->m_panTiltX;
+        idata.profileD1.panTiltY            = profileD1->m_panTiltY;
+        idata.profileD1.zoomSpace           = profileD1->m_zoomSpace;
+        idata.profileD1.zoomX               = profileD1->m_zoomX;
+        idata.profileD1.defaultPTZTimeout   = profileD1->m_defaultPTZTimeout;
+        idata.profileD1.panTiltUri          = profileD1->m_panTiltUri;
+        idata.profileD1.xRangeMinPt         = profileD1->m_xRangeMinPt;
+        idata.profileD1.xRangeMaxPt         = profileD1->m_xRangeMaxPt;
+        idata.profileD1.yRangeMinPt         = profileD1->m_yRangeMinPt;
+        idata.profileD1.yRangeMaxPt         = profileD1->m_yRangeMaxPt;
+        idata.profileD1.zoomUri             = profileD1->m_zoomUri;
+        idata.profileD1.xRangeMinZm         = profileD1->m_xRangeMinZm;
+        idata.profileD1.xRangeMaxZm         = profileD1->m_xRangeMaxZm;
+        idata.profileD1.nameMc              = profileD1->m_nameMc;
+        idata.profileD1.useCountMc          = profileD1->m_useCountMc;
+        idata.profileD1.status              = profileD1->m_status;
+        idata.profileD1.position            = profileD1->m_position;
+        idata.profileD1.filter              = profileD1->m_filter;
+        idata.profileD1.subscriptionPolicy  = profileD1->m_subscriptionPolicy;
+        idata.profileD1.analytics           = profileD1->m_analytics;
+        idata.profileD1.typeMc              = profileD1->m_typeMc;
+        idata.profileD1.ipv4AddressMc       = profileD1->m_ipv4AddressMc;
+        idata.profileD1.ipv6AddressMc       = profileD1->m_ipv6AddressMc;
+        idata.profileD1.portMc              = profileD1->m_portMc;
+        idata.profileD1.ttlMc               = profileD1->m_ttlMc;
+        idata.profileD1.autoStartMc         = profileD1->m_autoStartMc;
+        idata.profileD1.sessionTimeoutMc    = profileD1->m_sessionTimeoutMc;
         idata.profileD1.defaultAbsolutePantTiltPositionSpace =
             profileD1->m_defaultAbsolutePantTiltPositionSpace;
         idata.profileD1.defaultAbsoluteZoomPositionSpace =
@@ -612,35 +564,6 @@ public:
             profileD1->m_defaultContinuousPantTiltVelocitySpace;
         idata.profileD1.defaultContinuousZoomVelocitySpace =
             profileD1->m_defaultContinuousZoomVelocitySpace;
-        idata.profileD1.panTiltSpace       = profileD1->m_panTiltSpace;
-        idata.profileD1.panTiltX           = profileD1->m_panTiltX;
-        idata.profileD1.panTiltY           = profileD1->m_panTiltY;
-        idata.profileD1.zoomSpace          = profileD1->m_zoomSpace;
-        idata.profileD1.zoomX              = profileD1->m_zoomX;
-        idata.profileD1.defaultPTZTimeout  = profileD1->m_defaultPTZTimeout;
-        idata.profileD1.panTiltUri         = profileD1->m_panTiltUri;
-        idata.profileD1.xRangeMinPt        = profileD1->m_xRangeMinPt;
-        idata.profileD1.xRangeMaxPt        = profileD1->m_xRangeMaxPt;
-        idata.profileD1.yRangeMinPt        = profileD1->m_yRangeMinPt;
-        idata.profileD1.yRangeMaxPt        = profileD1->m_yRangeMaxPt;
-        idata.profileD1.zoomUri            = profileD1->m_zoomUri;
-        idata.profileD1.xRangeMinZm        = profileD1->m_xRangeMinZm;
-        idata.profileD1.xRangeMaxZm        = profileD1->m_xRangeMaxZm;
-        idata.profileD1.nameMc             = profileD1->m_nameMc;
-        idata.profileD1.useCountMc         = profileD1->m_useCountMc;
-        idata.profileD1.status             = profileD1->m_status;
-        idata.profileD1.position           = profileD1->m_position;
-        idata.profileD1.filter             = profileD1->m_filter;
-        idata.profileD1.subscriptionPolicy = profileD1->m_subscriptionPolicy;
-        idata.profileD1.analytics          = profileD1->m_analytics;
-        idata.profileD1.typeMc             = profileD1->m_typeMc;
-        idata.profileD1.ipv4AddressMc      = profileD1->m_ipv4AddressMc;
-        idata.profileD1.ipv6AddressMc      = profileD1->m_ipv6AddressMc;
-        idata.profileD1.portMc             = profileD1->m_portMc;
-        idata.profileD1.ttlMc              = profileD1->m_ttlMc;
-        idata.profileD1.autoStartMc        = profileD1->m_autoStartMc;
-        idata.profileD1.sessionTimeoutMc   = profileD1->m_sessionTimeoutMc;
-
         return true;
     }
 
@@ -649,34 +572,27 @@ public:
             ideviceManagement->getNetworkInterfaces());
         if (!networkInterfaces)
             return false;
-        idata.network.interfaces.networkInfacesEnabled =
-            networkInterfaces->networkInfacesEnabled();
-        idata.network.interfaces.autoNegotiation =
-            networkInterfaces->autoNegotiation();
-        idata.network.interfaces.speed = networkInterfaces->speed();
-        idata.network.interfaces.duplex =
-            static_cast<Data::Network::Interfaces::Duplex>(
-                static_cast<int>(networkInterfaces->duplex()));
 
-        idata.network.interfaces.mtu         = networkInterfaces->mtu();
-        idata.network.interfaces.ipv4Enabled = networkInterfaces->ipv4Enabled();
-        idata.network.interfaces.ipv4ManualAddress =
-            networkInterfaces->ipv4ManualAddress();
-        idata.network.interfaces.ipv4ManualPrefixLength =
-            networkInterfaces->ipv4ManualPrefixLength();
-        idata.network.interfaces.ipv4DHCP = networkInterfaces->getIpv4DHCP();
-        idata.network.interfaces.networkInfacesName =
-            networkInterfaces->networkInfacesName();
-        idata.network.interfaces.hwAaddress = networkInterfaces->hwAaddress();
-        idata.network.interfaces.ipv4LinkLocalAddress =
-            networkInterfaces->ipv4LinkLocalAddress();
-        idata.network.interfaces.ipvLinkLocalPrefixLength =
-            networkInterfaces->ipvLinkLocalPrefixLength();
-        idata.network.interfaces.ipv4FromDHCPAddress =
-            networkInterfaces->ipv4FromDHCPAddress();
-        idata.network.interfaces.ipv4FromDHCPPrefixLength =
-            networkInterfaces->ipv4FromDHCPPrefixLength();
-        idata.network.interfaces.result = networkInterfaces->result();
+        auto& des = idata.network.interfaces;
+        auto& src = networkInterfaces;
+
+        des.networkInfacesEnabled    = src->networkInfacesEnabled();
+        des.autoNegotiation          = src->autoNegotiation();
+        des.speed                    = src->speed();
+        des.mtu                      = src->mtu();
+        des.ipv4Enabled              = src->ipv4Enabled();
+        des.ipv4ManualAddress        = src->ipv4ManualAddress();
+        des.ipv4ManualPrefixLength   = src->ipv4ManualPrefixLength();
+        des.ipv4DHCP                 = src->getIpv4DHCP();
+        des.networkInfacesName       = src->networkInfacesName();
+        des.hwAaddress               = src->hwAaddress();
+        des.ipv4LinkLocalAddress     = src->ipv4LinkLocalAddress();
+        des.ipvLinkLocalPrefixLength = src->ipvLinkLocalPrefixLength();
+        des.ipv4FromDHCPAddress      = src->ipv4FromDHCPAddress();
+        des.ipv4FromDHCPPrefixLength = src->ipv4FromDHCPPrefixLength();
+        des.result                   = src->result();
+        des.duplex = static_cast<Data::Network::Interfaces::Duplex>(
+            static_cast<int>(src->duplex()));
 
         return true;
     }
@@ -689,7 +605,44 @@ public:
         idata.users.password  = users->passWord();
         idata.users.userLevel = static_cast<Data::Users::UserLevelType>(
             static_cast<int>(users->userLevel()));
+        return true;
+    }
+    bool refreshPtzConfiguration() {
+        ONVIF::Configuration* config = new ONVIF::Configuration;
+        iptzManagement->getConfiguration(config);
+        auto& des = idata.ptz.config;
 
+        des.name                  = config->name();
+        des.useCount              = config->useCount();
+        des.nodeToken             = config->nodeToken();
+        des.panTiltY              = config->panTiltX();
+        des.panTiltY              = config->panTiltY();
+        des.zoomSpace             = config->zoomSpace();
+        des.defaultPTZTimeout     = config->defaultPTZTimeout();
+        des.panTiltUri            = config->panTiltUri();
+        des.panTiltXRangeMin      = config->panTiltXRangeMin();
+        des.panTiltXRangeMax      = config->panTiltXRangeMax();
+        des.panTiltYRangeMin      = config->panTiltXRangeMin();
+        des.panTiltYRangeMax      = config->panTiltYRangeMax();
+        des.zoomUri               = config->zoomUri();
+        des.zoomXRangeMin         = config->zoomXRangeMin();
+        des.zoomXRangeMax         = config->zoomXRangeMax();
+        des.ptzConfigurationToken = config->ptzConfigurationToken();
+        des.panTiltSpace          = config->panTiltSpace();
+        des.zoomX                 = config->zoomX();
+
+        des.defaultAbsolutePantTiltPositionSpace =
+            config->defaultAbsolutePantTiltPositionSpace();
+        des.defaultAbsoluteZoomPositionSpace =
+            config->defaultAbsoluteZoomPositionSpace();
+        des.defaultRelativePanTiltTranslationSpace =
+            config->defaultRelativePanTiltTranslationSpace();
+        des.defaultRelativeZoomTranslationSpace =
+            config->defaultRelativeZoomTranslationSpace();
+        des.defaultContinuousPanTiltVelocitySpace =
+            config->defaultContinuousPanTiltVelocitySpace();
+
+        delete config;
         return true;
     }
 };
@@ -797,6 +750,11 @@ QOnvifDevice::refreshInterfaces() {
 bool
 QOnvifDevice::refreshUsers() {
     return d_ptr->refreshUsers();
+}
+
+bool
+QOnvifDevice::refreshPtzConfiguration() {
+    return d_ptr->refreshPtzConfiguration();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
