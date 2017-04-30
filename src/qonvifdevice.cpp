@@ -651,10 +651,14 @@ public:
         ONVIF::GotoHomePosition *goHomePose = new ONVIF::GotoHomePosition;
         goHomePose->setProfileToken("MediaProfile000");
         iptzManagement->gotoHomePosition(goHomePose);
+        delete goHomePose;
         return true;
     }
     bool setHomePosition(){
-
+        ONVIF::HomePosition *homePosition = new ONVIF::HomePosition;
+        homePosition->setProfileToken("MediaProfile000");
+        iptzManagement->setHomePosition(homePosition);
+        delete homePosition;
         return true;
     }
 };

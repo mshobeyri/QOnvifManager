@@ -12,6 +12,7 @@
 #include "ptz_management/nodes.h"
 #include "ptz_management/gotopreset.h"
 #include "ptz_management/gotohomeposition.h"
+#include "ptz_management/homeposition.h"
 #include "ptz_management/configuration.h"
 #include "ptz_management/node.h"
 
@@ -34,7 +35,7 @@ namespace ONVIF {
         void stop(Stop *stop);
         void gotoPreset(GotoPreset *gotoPreset);
         void gotoHomePosition(GotoHomePosition *gotoHomePosition);
-        void setHomePosition();
+        void setHomePosition(HomePosition *homePosition);
 
     protected:
         Message *newMessage();

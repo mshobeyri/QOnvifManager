@@ -549,6 +549,21 @@ void PtzManagement::gotoHomePosition(GotoHomePosition *gotoHomePosition)
     }
 }
 
+void PtzManagement::setHomePosition(HomePosition *homePosition)
+{
+    Message *msg = newMessage();
+    msg->appendToBody(homePosition->toxml());
+    MessageParser *result =sendMessage(msg);
+    if(result != NULL) {
+        if(result->find("//tptz:SetHomePositionResponse"))
+            homePosition->setResult(true);
+        else
+            homePosition->setResult(false);
+        delete msg;
+        delete result;
+    }
+}
+
 void PtzManagement::getConfiguration(Configuration *configuration)
 {
     Message *msg = newMessage();
