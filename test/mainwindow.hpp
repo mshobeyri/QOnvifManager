@@ -35,7 +35,9 @@ private slots:
 
     void on_btnSetScopes_clicked();
 
-    void on_pushButton_clicked();
+    void on_btngoHome_clicked();
+
+    void on_btnsetHome_clicked();
 
 private:
     Ui::MainWindow *ui;

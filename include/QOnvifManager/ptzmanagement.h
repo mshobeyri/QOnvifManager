@@ -34,6 +34,7 @@ namespace ONVIF {
         void stop(Stop *stop);
         void gotoPreset(GotoPreset *gotoPreset);
         void gotoHomePosition(GotoHomePosition *gotoHomePosition);
+        void setHomePosition();
 
     protected:
         Message *newMessage();

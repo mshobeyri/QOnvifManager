@@ -31,4 +31,3 @@ QDomElement GotoHomePosition::toxml()
     gotoHomePosition.appendChild(speed);
     return gotoHomePosition;
 }
-

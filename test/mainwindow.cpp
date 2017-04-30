@@ -65,6 +65,7 @@ MainWindow::on_btnRefreshData_clicked() {
 //    ionvifManager->refreshDeviceUsers(currentDevice());
     ionvifManager->refreshDeviceScopes(currentDevice());
 //    ionvifManager->refreshDeviceInterfaces(currentDevice());
+ionvifManager->refreshDevicePtzConfigs(currentDevice());
 
     // setScopes
     ui->txtLocation->setText(
@@ -122,7 +123,12 @@ MainWindow::on_btnSetScopes_clicked() {
         currentDevice(), ui->txtName->text(), ui->txtLocation->text());
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_btngoHome_clicked()
 {
-//    ionvifManager->device(currentDevice())->
+    ionvifManager->device(currentDevice())->goHomePosition();
+}
+
+void MainWindow::on_btnsetHome_clicked()
+{
+    ionvifManager->device(currentDevice())->setHomePosition();
 }

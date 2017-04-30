@@ -87,8 +87,7 @@ bool
 QOnvifManager::refreshDeviceStreamUri(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshStreamUri();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshStreamUri();
 }
 
 bool
@@ -176,6 +175,12 @@ QOnvifManager::setDeviceVideoConfig(
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->setVideoConfig(_videoConfig);
+}
+
+bool
+QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshPtzConfiguration();
 }
 
 bool

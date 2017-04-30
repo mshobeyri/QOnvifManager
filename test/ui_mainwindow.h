@@ -26,6 +26,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -36,6 +37,10 @@ public:
     QAction *actionAbout;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout;
+    QLabel *label;
+    QComboBox *cmbDevicesComboBox;
+    QPushButton *btnRefresh;
     QLabel *label_2;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_8;
@@ -43,10 +48,10 @@ public:
     QLabel *label_10;
     QLineEdit *txtPassword;
     QPushButton *setUsernamePass;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *label_7;
-    QDateTimeEdit *dateTimeEditSet;
-    QPushButton *btsSetDateAndTime;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *label_3;
+    QSpacerItem *horizontalSpacer;
+    QPushButton *btnRefreshData;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_12;
     QLineEdit *txtName;
@@ -56,31 +61,36 @@ public:
     QLabel *txtHardware;
     QPushButton *btnSetScopes;
     QLabel *label_9;
-    QHBoxLayout *horizontalLayout_7;
-    QSpacerItem *horizontalSpacer_3;
-    QGridLayout *gridLayout_2;
-    QPushButton *pushButton_2;
-    QPushButton *pushButton;
-    QPushButton *pushButton_6;
-    QPushButton *pushButton_4;
-    QPushButton *pushButton_3;
-    QPushButton *pushButton_5;
-    QSpacerItem *horizontalSpacer_2;
-    QLabel *label_6;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_4;
     QDateTimeEdit *dateTimeEditLocal;
     QLabel *label_5;
     QDateTimeEdit *dateTimeEditUtc;
     QPushButton *btnGetDataAndTime;
-    QHBoxLayout *horizontalLayout;
-    QLabel *label;
-    QComboBox *cmbDevicesComboBox;
-    QPushButton *btnRefresh;
-    QHBoxLayout *horizontalLayout_3;
-    QLabel *label_3;
-    QSpacerItem *horizontalSpacer;
-    QPushButton *btnRefreshData;
+    QHBoxLayout *horizontalLayout_4;
+    QLabel *label_7;
+    QDateTimeEdit *dateTimeEditSet;
+    QPushButton *btsSetDateAndTime;
+    QHBoxLayout *horizontalLayout_7;
+    QVBoxLayout *verticalLayout;
+    QPushButton *btnsetHome;
+    QPushButton *btngoHome;
+    QSpacerItem *horizontalSpacer_3;
+    QGridLayout *gridLayout_2;
+    QPushButton *btnLeft;
+    QPushButton *btnDown;
+    QPushButton *btnzoomIn;
+    QPushButton *btnUp;
+    QPushButton *btnzoomOut;
+    QPushButton *btnRight;
+    QSpacerItem *horizontalSpacer_2;
+    QVBoxLayout *verticalLayout_2;
+    QComboBox *cbxPresents;
+    QPushButton *btnrefreshPresents;
+    QPushButton *btnsetPresent;
+    QPushButton *btngoPresent;
+    QLabel *label_6;
+    QLabel *label_14;
     QStatusBar *statusBar;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -98,6 +108,32 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+
+        horizontalLayout->addWidget(label);
+
+        cmbDevicesComboBox = new QComboBox(centralWidget);
+        cmbDevicesComboBox->setObjectName(QStringLiteral("cmbDevicesComboBox"));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(cmbDevicesComboBox->sizePolicy().hasHeightForWidth());
+        cmbDevicesComboBox->setSizePolicy(sizePolicy);
+
+        horizontalLayout->addWidget(cmbDevicesComboBox);
+
+        btnRefresh = new QPushButton(centralWidget);
+        btnRefresh->setObjectName(QStringLiteral("btnRefresh"));
+
+        horizontalLayout->addWidget(btnRefresh);
+
+
+        gridLayout->addLayout(horizontalLayout, 3, 0, 1, 1);
+
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
 
@@ -134,31 +170,25 @@ public:
 
         gridLayout->addLayout(horizontalLayout_5, 6, 0, 1, 1);
 
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        label_7 = new QLabel(centralWidget);
-        label_7->setObjectName(QStringLiteral("label_7"));
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QStringLiteral("label_3"));
 
-        horizontalLayout_4->addWidget(label_7);
+        horizontalLayout_3->addWidget(label_3);
 
-        dateTimeEditSet = new QDateTimeEdit(centralWidget);
-        dateTimeEditSet->setObjectName(QStringLiteral("dateTimeEditSet"));
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(dateTimeEditSet->sizePolicy().hasHeightForWidth());
-        dateTimeEditSet->setSizePolicy(sizePolicy);
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_4->addWidget(dateTimeEditSet);
+        horizontalLayout_3->addItem(horizontalSpacer);
 
-        btsSetDateAndTime = new QPushButton(centralWidget);
-        btsSetDateAndTime->setObjectName(QStringLiteral("btsSetDateAndTime"));
+        btnRefreshData = new QPushButton(centralWidget);
+        btnRefreshData->setObjectName(QStringLiteral("btnRefreshData"));
 
-        horizontalLayout_4->addWidget(btsSetDateAndTime);
+        horizontalLayout_3->addWidget(btnRefreshData);
 
 
-        gridLayout->addLayout(horizontalLayout_4, 9, 0, 1, 1);
+        gridLayout->addLayout(horizontalLayout_3, 15, 0, 1, 1);
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(6);
@@ -206,61 +236,6 @@ public:
 
         gridLayout->addWidget(label_9, 5, 0, 1, 1);
 
-        horizontalLayout_7 = new QHBoxLayout();
-        horizontalLayout_7->setSpacing(6);
-        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_7->addItem(horizontalSpacer_3);
-
-        gridLayout_2 = new QGridLayout();
-        gridLayout_2->setSpacing(6);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        pushButton_2 = new QPushButton(centralWidget);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-
-        gridLayout_2->addWidget(pushButton_2, 2, 1, 1, 1);
-
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-
-        gridLayout_2->addWidget(pushButton, 0, 2, 1, 1);
-
-        pushButton_6 = new QPushButton(centralWidget);
-        pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
-
-        gridLayout_2->addWidget(pushButton_6, 2, 3, 1, 1);
-
-        pushButton_4 = new QPushButton(centralWidget);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
-
-        gridLayout_2->addWidget(pushButton_4, 1, 3, 1, 1);
-
-        pushButton_3 = new QPushButton(centralWidget);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-
-        gridLayout_2->addWidget(pushButton_3, 1, 1, 1, 1);
-
-        pushButton_5 = new QPushButton(centralWidget);
-        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
-
-        gridLayout_2->addWidget(pushButton_5, 2, 2, 1, 1);
-
-
-        horizontalLayout_7->addLayout(gridLayout_2);
-
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_7->addItem(horizontalSpacer_2);
-
-
-        gridLayout->addLayout(horizontalLayout_7, 14, 0, 1, 1);
-
-        label_6 = new QLabel(centralWidget);
-        label_6->setObjectName(QStringLiteral("label_6"));
-
-        gridLayout->addWidget(label_6, 12, 0, 1, 1);
-
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -302,48 +277,130 @@ public:
 
         gridLayout->addLayout(horizontalLayout_2, 8, 0, 1, 1);
 
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        label_7 = new QLabel(centralWidget);
+        label_7->setObjectName(QStringLiteral("label_7"));
 
-        horizontalLayout->addWidget(label);
+        horizontalLayout_4->addWidget(label_7);
 
-        cmbDevicesComboBox = new QComboBox(centralWidget);
-        cmbDevicesComboBox->setObjectName(QStringLiteral("cmbDevicesComboBox"));
-        sizePolicy.setHeightForWidth(cmbDevicesComboBox->sizePolicy().hasHeightForWidth());
-        cmbDevicesComboBox->setSizePolicy(sizePolicy);
+        dateTimeEditSet = new QDateTimeEdit(centralWidget);
+        dateTimeEditSet->setObjectName(QStringLiteral("dateTimeEditSet"));
+        sizePolicy.setHeightForWidth(dateTimeEditSet->sizePolicy().hasHeightForWidth());
+        dateTimeEditSet->setSizePolicy(sizePolicy);
 
-        horizontalLayout->addWidget(cmbDevicesComboBox);
+        horizontalLayout_4->addWidget(dateTimeEditSet);
 
-        btnRefresh = new QPushButton(centralWidget);
-        btnRefresh->setObjectName(QStringLiteral("btnRefresh"));
+        btsSetDateAndTime = new QPushButton(centralWidget);
+        btsSetDateAndTime->setObjectName(QStringLiteral("btsSetDateAndTime"));
 
-        horizontalLayout->addWidget(btnRefresh);
-
-
-        gridLayout->addLayout(horizontalLayout, 3, 0, 1, 1);
-
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QStringLiteral("label_3"));
-
-        horizontalLayout_3->addWidget(label_3);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer);
-
-        btnRefreshData = new QPushButton(centralWidget);
-        btnRefreshData->setObjectName(QStringLiteral("btnRefreshData"));
-
-        horizontalLayout_3->addWidget(btnRefreshData);
+        horizontalLayout_4->addWidget(btsSetDateAndTime);
 
 
-        gridLayout->addLayout(horizontalLayout_3, 13, 0, 1, 1);
+        gridLayout->addLayout(horizontalLayout_4, 9, 0, 1, 1);
+
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setSpacing(6);
+        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        btnsetHome = new QPushButton(centralWidget);
+        btnsetHome->setObjectName(QStringLiteral("btnsetHome"));
+
+        verticalLayout->addWidget(btnsetHome);
+
+        btngoHome = new QPushButton(centralWidget);
+        btngoHome->setObjectName(QStringLiteral("btngoHome"));
+
+        verticalLayout->addWidget(btngoHome);
+
+
+        horizontalLayout_7->addLayout(verticalLayout);
+
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_7->addItem(horizontalSpacer_3);
+
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        btnLeft = new QPushButton(centralWidget);
+        btnLeft->setObjectName(QStringLiteral("btnLeft"));
+
+        gridLayout_2->addWidget(btnLeft, 1, 1, 1, 1);
+
+        btnDown = new QPushButton(centralWidget);
+        btnDown->setObjectName(QStringLiteral("btnDown"));
+
+        gridLayout_2->addWidget(btnDown, 2, 2, 1, 1);
+
+        btnzoomIn = new QPushButton(centralWidget);
+        btnzoomIn->setObjectName(QStringLiteral("btnzoomIn"));
+
+        gridLayout_2->addWidget(btnzoomIn, 2, 1, 1, 1);
+
+        btnUp = new QPushButton(centralWidget);
+        btnUp->setObjectName(QStringLiteral("btnUp"));
+
+        gridLayout_2->addWidget(btnUp, 0, 2, 1, 1);
+
+        btnzoomOut = new QPushButton(centralWidget);
+        btnzoomOut->setObjectName(QStringLiteral("btnzoomOut"));
+
+        gridLayout_2->addWidget(btnzoomOut, 2, 3, 1, 1);
+
+        btnRight = new QPushButton(centralWidget);
+        btnRight->setObjectName(QStringLiteral("btnRight"));
+
+        gridLayout_2->addWidget(btnRight, 1, 3, 1, 1);
+
+
+        horizontalLayout_7->addLayout(gridLayout_2);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_7->addItem(horizontalSpacer_2);
+
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        cbxPresents = new QComboBox(centralWidget);
+        cbxPresents->setObjectName(QStringLiteral("cbxPresents"));
+
+        verticalLayout_2->addWidget(cbxPresents);
+
+        btnrefreshPresents = new QPushButton(centralWidget);
+        btnrefreshPresents->setObjectName(QStringLiteral("btnrefreshPresents"));
+
+        verticalLayout_2->addWidget(btnrefreshPresents);
+
+        btnsetPresent = new QPushButton(centralWidget);
+        btnsetPresent->setObjectName(QStringLiteral("btnsetPresent"));
+
+        verticalLayout_2->addWidget(btnsetPresent);
+
+        btngoPresent = new QPushButton(centralWidget);
+        btngoPresent->setObjectName(QStringLiteral("btngoPresent"));
+
+        verticalLayout_2->addWidget(btngoPresent);
+
+
+        horizontalLayout_7->addLayout(verticalLayout_2);
+
+
+        gridLayout->addLayout(horizontalLayout_7, 13, 0, 1, 1);
+
+        label_6 = new QLabel(centralWidget);
+        label_6->setObjectName(QStringLiteral("label_6"));
+
+        gridLayout->addWidget(label_6, 14, 0, 1, 1);
+
+        label_14 = new QLabel(centralWidget);
+        label_14->setObjectName(QStringLiteral("label_14"));
+
+        gridLayout->addWidget(label_14, 11, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(MainWindow);
@@ -368,34 +425,40 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
         actionAbout->setText(QApplication::translate("MainWindow", "About", Q_NULLPTR));
+        label->setText(QApplication::translate("MainWindow", "Devices List:", Q_NULLPTR));
+        btnRefresh->setText(QApplication::translate("MainWindow", "Refresh", Q_NULLPTR));
         label_2->setText(QApplication::translate("MainWindow", "Date and Time:", Q_NULLPTR));
         label_8->setText(QApplication::translate("MainWindow", "Username:", Q_NULLPTR));
         txtUserName->setText(QApplication::translate("MainWindow", "admin", Q_NULLPTR));
         label_10->setText(QApplication::translate("MainWindow", "Password:", Q_NULLPTR));
         txtPassword->setText(QApplication::translate("MainWindow", "admin", Q_NULLPTR));
         setUsernamePass->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
-        label_7->setText(QApplication::translate("MainWindow", "Local:", Q_NULLPTR));
-        btsSetDateAndTime->setText(QApplication::translate("MainWindow", "Set date and time", Q_NULLPTR));
+        label_3->setText(QApplication::translate("MainWindow", "Put a break point in pointed place in btn  \"on refresh data\" slot to see device data.", Q_NULLPTR));
+        btnRefreshData->setText(QApplication::translate("MainWindow", "Refresh Data", Q_NULLPTR));
         label_12->setText(QApplication::translate("MainWindow", "Name:", Q_NULLPTR));
         label_11->setText(QApplication::translate("MainWindow", "Location:", Q_NULLPTR));
         label_13->setText(QApplication::translate("MainWindow", "hardware:", Q_NULLPTR));
         txtHardware->setText(QApplication::translate("MainWindow", "Unknown", Q_NULLPTR));
         btnSetScopes->setText(QApplication::translate("MainWindow", "setScopes", Q_NULLPTR));
         label_9->setText(QApplication::translate("MainWindow", "Login:", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("MainWindow", "zoomIn", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("MainWindow", "up", Q_NULLPTR));
-        pushButton_6->setText(QApplication::translate("MainWindow", "zoomOut", Q_NULLPTR));
-        pushButton_4->setText(QApplication::translate("MainWindow", "right", Q_NULLPTR));
-        pushButton_3->setText(QApplication::translate("MainWindow", "left", Q_NULLPTR));
-        pushButton_5->setText(QApplication::translate("MainWindow", "down", Q_NULLPTR));
-        label_6->setText(QApplication::translate("MainWindow", "Control:", Q_NULLPTR));
         label_4->setText(QApplication::translate("MainWindow", "Local:", Q_NULLPTR));
         label_5->setText(QApplication::translate("MainWindow", "Utc:", Q_NULLPTR));
         btnGetDataAndTime->setText(QApplication::translate("MainWindow", "Get data and time", Q_NULLPTR));
-        label->setText(QApplication::translate("MainWindow", "Devices List:", Q_NULLPTR));
-        btnRefresh->setText(QApplication::translate("MainWindow", "Refresh", Q_NULLPTR));
-        label_3->setText(QApplication::translate("MainWindow", "Put a break point in pointed place in btn  \"on refresh data\" slot to see device data.", Q_NULLPTR));
-        btnRefreshData->setText(QApplication::translate("MainWindow", "Refresh Data", Q_NULLPTR));
+        label_7->setText(QApplication::translate("MainWindow", "Local:", Q_NULLPTR));
+        btsSetDateAndTime->setText(QApplication::translate("MainWindow", "Set date and time", Q_NULLPTR));
+        btnsetHome->setText(QApplication::translate("MainWindow", "setHome", Q_NULLPTR));
+        btngoHome->setText(QApplication::translate("MainWindow", "goHome", Q_NULLPTR));
+        btnLeft->setText(QApplication::translate("MainWindow", "left", Q_NULLPTR));
+        btnDown->setText(QApplication::translate("MainWindow", "down", Q_NULLPTR));
+        btnzoomIn->setText(QApplication::translate("MainWindow", "zoomIn", Q_NULLPTR));
+        btnUp->setText(QApplication::translate("MainWindow", "up", Q_NULLPTR));
+        btnzoomOut->setText(QApplication::translate("MainWindow", "zoomOut", Q_NULLPTR));
+        btnRight->setText(QApplication::translate("MainWindow", "right", Q_NULLPTR));
+        btnrefreshPresents->setText(QApplication::translate("MainWindow", "refres presents", Q_NULLPTR));
+        btnsetPresent->setText(QApplication::translate("MainWindow", "set present", Q_NULLPTR));
+        btngoPresent->setText(QApplication::translate("MainWindow", "go present", Q_NULLPTR));
+        label_6->setText(QApplication::translate("MainWindow", "Control:", Q_NULLPTR));
+        label_14->setText(QApplication::translate("MainWindow", "ptz:", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", Q_NULLPTR));
     } // retranslateUi
 

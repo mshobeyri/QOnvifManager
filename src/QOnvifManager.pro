@@ -72,7 +72,8 @@ SOURCES += \
     messageparser.cpp \
     ptzmanagement.cpp \
     service.cpp \
-    device_management/systemscopes.cpp
+    device_management/systemscopes.cpp \
+    ptz_management/homeposition.cpp
 
 HEADERS += \
     ../include/qonvifdevice.hpp \
@@ -118,7 +119,8 @@ HEADERS += \
     ../include/QOnvifManager/ptzmanagement.h \
     ../include/QOnvifManager/qringbuffer_p.h \
     ../include/QOnvifManager/service.h \
-    ../include/QOnvifManager/device_management/systemscopes.h
+    ../include/QOnvifManager/device_management/systemscopes.h \
+    ../include/QOnvifManager/ptz_management/homeposition.h
 
 #unix {
 #    TEMPDIR         = $$PRJDIR/tmp/unix/$$TARGET

@@ -63,11 +63,14 @@ public:
         QString                                 _deviceEndPointAddress,
         Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
+    bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
+
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
 
     QOnvifDevice* device(QString _deviceEndPointAddress);
     QMap<QString, QOnvifDevice*>& devicesMap();
+
 
 protected:
     Q_DECLARE_PRIVATE(QOnvifManager)

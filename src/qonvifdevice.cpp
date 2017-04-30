@@ -615,7 +615,7 @@ public:
         des.name                  = config->name();
         des.useCount              = config->useCount();
         des.nodeToken             = config->nodeToken();
-        des.panTiltY              = config->panTiltX();
+        des.panTiltX              = config->panTiltX();
         des.panTiltY              = config->panTiltY();
         des.zoomSpace             = config->zoomSpace();
         des.defaultPTZTimeout     = config->defaultPTZTimeout();
@@ -643,6 +643,18 @@ public:
             config->defaultContinuousPanTiltVelocitySpace();
 
         delete config;
+        return true;
+    }
+
+    //ptz
+    bool goHomePosition(){
+        ONVIF::GotoHomePosition *goHomePose = new ONVIF::GotoHomePosition;
+        goHomePose->setProfileToken("MediaProfile000");
+        iptzManagement->gotoHomePosition(goHomePose);
+        return true;
+    }
+    bool setHomePosition(){
+
         return true;
     }
 };
@@ -755,6 +767,16 @@ QOnvifDevice::refreshUsers() {
 bool
 QOnvifDevice::refreshPtzConfiguration() {
     return d_ptr->refreshPtzConfiguration();
+}
+
+bool QOnvifDevice::goHomePosition()
+{
+    return d_ptr->goHomePosition();
+}
+
+bool QOnvifDevice::setHomePosition()
+{
+    return d_ptr->setHomePosition();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[15];
-    char stringdata0[304];
+    char stringdata0[303];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -45,7 +45,7 @@ QT_MOC_LITERAL(10, 173, 28), // "on_btnGetDataAndTime_clicked"
 QT_MOC_LITERAL(11, 202, 28), // "on_btsSetDateAndTime_clicked"
 QT_MOC_LITERAL(12, 231, 26), // "on_setUsernamePass_clicked"
 QT_MOC_LITERAL(13, 258, 23), // "on_btnSetScopes_clicked"
-QT_MOC_LITERAL(14, 282, 21) // "on_pushButton_clicked"
+QT_MOC_LITERAL(14, 282, 20) // "on_btngoHome_clicked"
 
     },
     "MainWindow\0onNewDeviceFinded\0\0"
@@ -56,7 +56,7 @@ QT_MOC_LITERAL(14, 282, 21) // "on_pushButton_clicked"
     "on_btnGetDataAndTime_clicked\0"
     "on_btsSetDateAndTime_clicked\0"
     "on_setUsernamePass_clicked\0"
-    "on_btnSetScopes_clicked\0on_pushButton_clicked"
+    "on_btnSetScopes_clicked\0on_btngoHome_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -115,7 +115,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 6: _t->on_btsSetDateAndTime_clicked(); break;
         case 7: _t->on_setUsernamePass_clicked(); break;
         case 8: _t->on_btnSetScopes_clicked(); break;
-        case 9: _t->on_pushButton_clicked(); break;
+        case 9: _t->on_btngoHome_clicked(); break;
         default: ;
         }
     }

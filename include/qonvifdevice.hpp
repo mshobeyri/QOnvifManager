@@ -23,7 +23,9 @@ public:
         QString  _userName,
         QString  _password,
         QObject* _parent);
+
     ~QOnvifDevice();
+
     Data& data();
     // date time
     bool deviceDateAndTime(Data::DateTime& _datetime);
@@ -55,6 +57,8 @@ public:
 
     //ptz management
     bool refreshPtzConfiguration();
+    bool goHomePosition();
+    bool setHomePosition();
 
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
