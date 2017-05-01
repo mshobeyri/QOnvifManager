@@ -216,17 +216,15 @@ Configurations *PtzManagement::getConfigurations()
     return configurations;
 }
 
-Presets *PtzManagement::getPresets()
+void PtzManagement::getPresets(Presets *presets)
 {
-    Presets *presets = NULL;
     Message *msg = newMessage();
     QDomElement getPresets = newElement("wsdl:GetPresets");
-    QDomElement profileToken = newElement("wsdl:ProfileToken","profile_CIF");
+    QDomElement profileToken = newElement("wsdl:ProfileToken",presets->getProfileToken());
     getPresets.appendChild(profileToken);
     msg->appendToBody(getPresets);
     MessageParser *result = sendMessage(msg);
     if(result != NULL) {
-        presets = new Presets();
         QXmlQuery *query = result->query();
         QXmlResultItems items;
         QXmlItem item;
@@ -256,7 +254,6 @@ Presets *PtzManagement::getPresets()
     }
     delete msg;
     delete result;
-    return presets;
 }
 
 void PtzManagement::removePreset(RemovePreset *removePreset)

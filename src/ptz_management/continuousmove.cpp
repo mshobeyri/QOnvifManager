@@ -20,16 +20,16 @@ QDomElement ContinuousMove::toxml()
     QDomElement panTilt = newElement("sch:PanTilt");
     panTilt.setAttribute("x",this->panTiltX());
     panTilt.setAttribute("y",this->panTiltY());
-    panTilt.setAttribute("space",this->panTiltSpace());
+//    panTilt.setAttribute("space",this->panTiltSpace());
     QDomElement zoom = newElement("sch:Zoom");
     zoom.setAttribute("x",this->zoomX());
-    zoom.setAttribute("space",this->zoomSpace());
+//    zoom.setAttribute("space",this->zoomSpace());
     QDomElement timeout = newElement("wsdl:Timeout",this->timeout());
     continuousMove.appendChild(profileToken);
     continuousMove.appendChild(velocity);
-    continuousMove.appendChild(timeout);
+//    continuousMove.appendChild(timeout);
     velocity.appendChild(panTilt);
-    velocity.appendChild(zoom);
+//    velocity.appendChild(zoom);
     return continuousMove;
 }
 

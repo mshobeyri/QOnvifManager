@@ -32,12 +32,13 @@ private slots:
     void on_btnGetDataAndTime_clicked();
     void on_btsSetDateAndTime_clicked();
     void on_setUsernamePass_clicked();
-
     void on_btnSetScopes_clicked();
-
     void on_btngoHome_clicked();
-
     void on_btnsetHome_clicked();
+    void on_btnrefreshPresents_clicked();
+    void on_btnRight_pressed();
+    void on_btnRight_released();
+
 
 private:
     Ui::MainWindow *ui;

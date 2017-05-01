@@ -24,7 +24,7 @@ namespace ONVIF {
         Configurations *getConfigurations();
         void getConfiguration(Configuration *configuration);
         void getNode(Node *node);
-        Presets *getPresets();
+        void getPresets(Presets *presets);
         Nodes *getNodes();
 
         void removePreset(RemovePreset *removePreset);

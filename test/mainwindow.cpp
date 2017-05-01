@@ -132,3 +132,19 @@ void MainWindow::on_btnsetHome_clicked()
 {
     ionvifManager->device(currentDevice())->setHomePosition();
 }
+
+void MainWindow::on_btnrefreshPresents_clicked()
+{
+    ionvifManager->device(currentDevice())->refreshPresets();
+}
+
+void MainWindow::on_btnRight_pressed()
+{
+
+    ionvifManager->device(currentDevice())->continuousMove(0.5,0);
+}
+
+void MainWindow::on_btnRight_released()
+{
+    ionvifManager->device(currentDevice())->stopMovement();
+}

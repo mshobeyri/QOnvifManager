@@ -646,19 +646,44 @@ public:
         return true;
     }
 
-    //ptz
-    bool goHomePosition(){
-        ONVIF::GotoHomePosition *goHomePose = new ONVIF::GotoHomePosition;
+    // ptz //todo remove profile tokens hardcode
+    bool refreshPresets() {
+        ONVIF::Presets* presets = new ONVIF::Presets;
+        presets->setProfileToken("MediaProfile000");
+        iptzManagement->getPresets(presets);
+        delete presets;
+        return true;
+    }
+    bool goHomePosition() {
+        ONVIF::GotoHomePosition* goHomePose = new ONVIF::GotoHomePosition;
         goHomePose->setProfileToken("MediaProfile000");
         iptzManagement->gotoHomePosition(goHomePose);
         delete goHomePose;
         return true;
     }
-    bool setHomePosition(){
-        ONVIF::HomePosition *homePosition = new ONVIF::HomePosition;
+    bool setHomePosition() {
+        ONVIF::HomePosition* homePosition = new ONVIF::HomePosition;
         homePosition->setProfileToken("MediaProfile000");
         iptzManagement->setHomePosition(homePosition);
         delete homePosition;
+        return true;
+    }
+    bool continuousMove(const float x, const float y) {
+        ONVIF::ContinuousMove* continuousMove = new ONVIF::ContinuousMove;
+        continuousMove->setProfileToken("MediaProfile000");
+        continuousMove->setPanTiltX(x);
+        continuousMove->setPanTiltY(y);
+        iptzManagement->continuousMove(continuousMove);
+        delete continuousMove;
+        return true;
+    }
+    bool stopMovement(){
+        ONVIF::Stop *stop = new ONVIF::Stop;
+        stop->setProfileToken("MediaProfile000");
+        stop->setPanTilt(true);
+        stop->setZoom(true);
+        iptzManagement->stop(stop);
+        delete stop;
         return true;
     }
 };
@@ -773,14 +798,29 @@ QOnvifDevice::refreshPtzConfiguration() {
     return d_ptr->refreshPtzConfiguration();
 }
 
-bool QOnvifDevice::goHomePosition()
-{
+bool
+QOnvifDevice::refreshPresets() {
+    return d_ptr->refreshPresets();
+}
+
+bool
+QOnvifDevice::goHomePosition() {
     return d_ptr->goHomePosition();
 }
 
-bool QOnvifDevice::setHomePosition()
-{
+bool
+QOnvifDevice::setHomePosition() {
     return d_ptr->setHomePosition();
+}
+
+bool
+QOnvifDevice::continuousMove(const float x,const float y) {
+    return d_ptr->continuousMove(x, y);
+}
+
+bool QOnvifDevice::stopMovement()
+{
+    return d_ptr->stopMovement();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

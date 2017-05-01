@@ -57,8 +57,11 @@ public:
 
     //ptz management
     bool refreshPtzConfiguration();
+    bool refreshPresets();
     bool goHomePosition();
     bool setHomePosition();
+    bool continuousMove(const float x, const float y);
+    bool stopMovement();
 
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
