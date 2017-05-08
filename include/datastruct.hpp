@@ -114,72 +114,6 @@ struct Data {
             bool    result;
         } interfaces;
     } network;
-    struct Profiles {
-        QList<QString> toKenPro;
-        QList<bool>    fixed;
-        QList<QString> namePro;
-        QList<QString> nameVsc;
-        QList<int>     useCountVsc;
-        QList<QString> sourceTokenVsc;
-        QList<QRect>   boundsVsc;
-        QList<QString> nameVec;
-        QList<int>     useCountVec;
-        QList<QString> encodingVec;
-        QList<int>     widthVec;
-        QList<int>     heightVec;
-        QList<int>     qualityVec;
-        QList<int>     frameRateLimitVec;
-        QList<int>     encodingIntervalVec;
-        QList<int>     bitrateLimitVec;
-        QList<int>     govLengthVec;
-        QList<QString> h264ProfileVec;
-        QList<QString> typeVec;
-        QList<QString> ipv4AddressVec;
-        QList<QString> ipv6AddressVec;
-        QList<int>     portVec;
-        QList<int>     ttlVec;
-        QList<bool>    autoStartVec;
-        QList<QString> sessionTimeoutVec;
-        QList<QString> namePtz;
-        QList<int>     useCountPtz;
-        QList<QString> nodeToken;
-        QList<QString> defaultAbsolutePantTiltPositionSpace;
-        QList<QString> defaultAbsoluteZoomPositionSpace;
-        QList<QString> defaultRelativePantTiltTranslationSpace;
-        QList<QString> defaultRelativeZoomTranslationSpace;
-        QList<QString> defaultContinuousPantTiltVelocitySpace;
-        QList<QString> defaultContinuousZoomVelocitySpace;
-        QList<QString> panTiltSpace;
-        QList<int>     panTiltX;
-        QList<int>     panTiltY;
-        QList<QString> zoomSpace;
-        QList<int>     zoomX;
-        QList<QString> defaultPTZTimeout;
-        QList<QString> panTiltUri;
-        QList<int>     xRangeMinPt;
-        QList<int>     xRangeMaxPt;
-        QList<int>     yRangeMinPt;
-        QList<int>     yRangeMaxPt;
-
-        QList<QString> zoomUri;
-        QList<int>     xRangeMinZm;
-        QList<int>     xRangeMaxZm;
-
-        QList<QString> nameMc;
-        QList<int>     useCountMc;
-        QList<bool>    status;
-        QList<bool>    position;
-        QList<QString> filter;
-        QList<QString> subscriptionPolicy;
-        QList<bool>    analytics;
-        QList<QString> typeMc;
-        QList<QString> ipv4AddressMc;
-        QList<QString> ipv6AddressMc;
-        QList<int>     portMc;
-        QList<int>     ttlMc;
-        QList<bool>    autoStartMc;
-        QList<QString> sessionTimeoutMc;
-    } profiles, profile720p, profileD1;
 
     struct DateTime {
         QDateTime utcTime;
@@ -316,7 +250,7 @@ struct Data {
     } mediaConfig;
 
     struct Ptz {
-        struct Config{
+        struct Config {
             QString profileToken;
             QString name;
             int     useCount;
@@ -342,7 +276,74 @@ struct Data {
             QString ptzConfigurationToken;
             QString panTiltSpace;
             float   zoomX;
-        }config;
+        } config;
     } ptz;
+    struct Profiles {
+        QList<QString>                             toKenPro;
+        QList<Data::MediaConfig::Video::StreamUri> streamUris;
+        QList<bool>                                fixed;
+        QList<QString>                             namePro;
+        QList<QString>                             nameVsc;
+        QList<int>                                 useCountVsc;
+        QList<QString>                             sourceTokenVsc;
+        QList<QRect>                               boundsVsc;
+        QList<QString>                             nameVec;
+        QList<int>                                 useCountVec;
+        QList<QString>                             encodingVec;
+        QList<int>                                 widthVec;
+        QList<int>                                 heightVec;
+        QList<int>                                 qualityVec;
+        QList<int>                                 frameRateLimitVec;
+        QList<int>                                 encodingIntervalVec;
+        QList<int>                                 bitrateLimitVec;
+        QList<int>                                 govLengthVec;
+        QList<QString>                             h264ProfileVec;
+        QList<QString>                             typeVec;
+        QList<QString>                             ipv4AddressVec;
+        QList<QString>                             ipv6AddressVec;
+        QList<int>                                 portVec;
+        QList<int>                                 ttlVec;
+        QList<bool>                                autoStartVec;
+        QList<QString>                             sessionTimeoutVec;
+        QList<QString>                             namePtz;
+        QList<int>                                 useCountPtz;
+        QList<QString>                             nodeToken;
+        QList<QString> defaultAbsolutePantTiltPositionSpace;
+        QList<QString> defaultAbsoluteZoomPositionSpace;
+        QList<QString> defaultRelativePantTiltTranslationSpace;
+        QList<QString> defaultRelativeZoomTranslationSpace;
+        QList<QString> defaultContinuousPantTiltVelocitySpace;
+        QList<QString> defaultContinuousZoomVelocitySpace;
+        QList<QString> panTiltSpace;
+        QList<int>     panTiltX;
+        QList<int>     panTiltY;
+        QList<QString> zoomSpace;
+        QList<int>     zoomX;
+        QList<QString> defaultPTZTimeout;
+        QList<QString> panTiltUri;
+        QList<int>     xRangeMinPt;
+        QList<int>     xRangeMaxPt;
+        QList<int>     yRangeMinPt;
+        QList<int>     yRangeMaxPt;
+
+        QList<QString> zoomUri;
+        QList<int>     xRangeMinZm;
+        QList<int>     xRangeMaxZm;
+
+        QList<QString> nameMc;
+        QList<int>     useCountMc;
+        QList<bool>    status;
+        QList<bool>    position;
+        QList<QString> filter;
+        QList<QString> subscriptionPolicy;
+        QList<bool>    analytics;
+        QList<QString> typeMc;
+        QList<QString> ipv4AddressMc;
+        QList<QString> ipv6AddressMc;
+        QList<int>     portMc;
+        QList<int>     ttlMc;
+        QList<bool>    autoStartMc;
+        QList<QString> sessionTimeoutMc;
+    } profiles, profile720p, profileD1;
 };
 #endif // DATASTRUCT_HPP

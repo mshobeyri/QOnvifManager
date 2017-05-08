@@ -55,17 +55,17 @@ void
 MainWindow::on_btnRefreshData_clicked() {
     ui->txtLocation->setText("");
     ui->txtName->setText("");
-//    ionvifManager->refreshDeviceCapabilities(currentDevice());
+    //    ionvifManager->refreshDeviceCapabilities(currentDevice());
     ionvifManager->refreshDeviceInformations(currentDevice());
     ionvifManager->refreshDeviceProfiles(currentDevice());
     ionvifManager->refreshDeviceVideoConfigs(currentDevice());
     ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
-    ionvifManager->refreshDeviceStreamUri(currentDevice());
+    ionvifManager->refreshDeviceStreamUris(currentDevice());
 
-//    ionvifManager->refreshDeviceUsers(currentDevice());
+    //    ionvifManager->refreshDeviceUsers(currentDevice());
     ionvifManager->refreshDeviceScopes(currentDevice());
-//    ionvifManager->refreshDeviceInterfaces(currentDevice());
-ionvifManager->refreshDevicePtzConfigs(currentDevice());
+    //    ionvifManager->refreshDeviceInterfaces(currentDevice());
+    ionvifManager->refreshDevicePtzConfigs(currentDevice());
 
     // setScopes
     ui->txtLocation->setText(
@@ -123,28 +123,27 @@ MainWindow::on_btnSetScopes_clicked() {
         currentDevice(), ui->txtName->text(), ui->txtLocation->text());
 }
 
-void MainWindow::on_btngoHome_clicked()
-{
+void
+MainWindow::on_btngoHome_clicked() {
     ionvifManager->device(currentDevice())->goHomePosition();
 }
 
-void MainWindow::on_btnsetHome_clicked()
-{
+void
+MainWindow::on_btnsetHome_clicked() {
     ionvifManager->device(currentDevice())->setHomePosition();
 }
 
-void MainWindow::on_btnrefreshPresents_clicked()
-{
+void
+MainWindow::on_btnrefreshPresents_clicked() {
     ionvifManager->device(currentDevice())->refreshPresets();
 }
 
-void MainWindow::on_btnRight_pressed()
-{
-
-    ionvifManager->device(currentDevice())->continuousMove(0.5,0);
+void
+MainWindow::on_btnRight_pressed() {
+    ionvifManager->device(currentDevice())->continuousMove(0.5, 0, 0);
 }
 
-void MainWindow::on_btnRight_released()
-{
+void
+MainWindow::on_btnRight_released() {
     ionvifManager->device(currentDevice())->stopMovement();
 }

@@ -46,7 +46,7 @@ public:
     // media management
     bool refreshVideoConfigs();
     bool refreshVideoConfigsOptions();
-    bool refreshStreamUri();
+    bool refreshStreamUris();
     bool refreshAudioConfigs();
 
 
@@ -60,7 +60,7 @@ public:
     bool refreshPresets();
     bool goHomePosition();
     bool setHomePosition();
-    bool continuousMove(const float x, const float y);
+    bool continuousMove(const float x, const float y, const float z);
     bool stopMovement();
 
 private:

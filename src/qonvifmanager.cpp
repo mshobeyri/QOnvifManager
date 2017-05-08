@@ -84,10 +84,10 @@ QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
 }
 
 bool
-QOnvifManager::refreshDeviceStreamUri(QString _deviceEndPointAddress) {
+QOnvifManager::refreshDeviceStreamUris(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshStreamUri();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshStreamUris();
 }
 
 bool
@@ -192,6 +192,21 @@ QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress) {
 bool
 QOnvifManager::rebootDevice(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->rebootDevice();
+}
+
+bool
+QOnvifManager::continuousMove(
+    QString     _deviceEndPointAddress,
+    const float _x,
+    const float _y,
+    const float _z) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->continuousMove(_x, _y, _z);
+}
+
+bool
+QOnvifManager::stopMovement(QString _deviceEndPointAddress) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->stopMovement();
 }
 
 void

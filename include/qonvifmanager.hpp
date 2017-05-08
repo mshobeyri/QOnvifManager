@@ -41,6 +41,7 @@ public:
     bool refreshDeviceInformations(QString _deviceEndPointAddress);
 
     bool refreshDeviceVideoConfigs(QString _deviceEndPointAddress);
+    bool refreshDeviceStreamUris(QString _deviceEndPointAddress);
     bool refreshDeviceStreamUri(QString _deviceEndPointAddress);
     bool refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress);
 
@@ -68,6 +69,17 @@ public:
     bool resetFactoryDevice(QString _deviceEndPointAddress);
     bool rebootDevice(QString _deviceEndPointAddress);
 
+    // ptz
+
+    bool continuousMove(
+        QString     _deviceEndPointAddress,
+        const float _x,
+        const float _y,
+        const float _z);
+
+    bool stopMovement(QString _deviceEndPointAddress);
+
+    // public
     QOnvifDevice* device(QString _deviceEndPointAddress);
     QMap<QString, QOnvifDevice*>& devicesMap();
 

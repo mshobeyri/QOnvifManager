@@ -2,6 +2,7 @@
 #include "devicemanagement.h"
 #include "mediamanagement.h"
 #include "ptzmanagement.h"
+#include <QString>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace device {
@@ -246,22 +247,25 @@ public:
         return true;
     }
 
-    bool refreshStreamUri() {
+    bool refreshStreamUris() {
         // get video stream uri
-        QScopedPointer<ONVIF::StreamUri> streamUri(
-            imediaManagement->getStreamUri(
-                idata.profiles.toKenPro.value(0))); // todo: whats this input
-        // exactly? meld retrun value
-        // and value of odm
-        if (!streamUri)
-            return false;
+        idata.profiles.streamUris.clear();
+        for (int i = 0; i < idata.profiles.toKenPro.length(); i++) {
+            QScopedPointer<ONVIF::StreamUri> streamUri(
+                imediaManagement->getStreamUri(
+                    idata.profiles.toKenPro.value(i)));
+            Data::MediaConfig::Video::StreamUri streamUriTemp;
+            streamUriTemp.uri = streamUri->uri();
+            streamUriTemp.invalidAfterConnect =
+                streamUri->invalidAfterConnect();
+            streamUriTemp.invalidAfterReboot = streamUri->invalidAfterReboot();
+            streamUriTemp.timeout            = streamUri->timeout();
 
-        idata.mediaConfig.video.streamUri.uri = streamUri->uri();
-        idata.mediaConfig.video.streamUri.invalidAfterConnect =
-            streamUri->invalidAfterConnect();
-        idata.mediaConfig.video.streamUri.invalidAfterReboot =
-            streamUri->invalidAfterReboot();
-        idata.mediaConfig.video.streamUri.timeout = streamUri->timeout();
+            if (i == 0) {
+                idata.mediaConfig.video.streamUri = streamUriTemp;
+            }
+            idata.profiles.streamUris.append(streamUriTemp);
+        }
         return true;
     }
 
@@ -415,6 +419,8 @@ public:
             des.defaultContinuousZoomVelocitySpace =
                 profiles->m_defaultContinuousZoomVelocitySpace;
         }
+        return true;
+        // todo whats this other profiles (cameras never filled them in tests yet)
         QScopedPointer<ONVIF::Profile> profile720p(
             imediaManagement->getProfile720P());
         if (!profile720p)
@@ -668,17 +674,18 @@ public:
         delete homePosition;
         return true;
     }
-    bool continuousMove(const float x, const float y) {
+    bool continuousMove(const float x, const float y, const float z) {
         ONVIF::ContinuousMove* continuousMove = new ONVIF::ContinuousMove;
         continuousMove->setProfileToken("MediaProfile000");
         continuousMove->setPanTiltX(x);
         continuousMove->setPanTiltY(y);
+        continuousMove->setZoomX(z);
         iptzManagement->continuousMove(continuousMove);
         delete continuousMove;
         return true;
     }
-    bool stopMovement(){
-        ONVIF::Stop *stop = new ONVIF::Stop;
+    bool stopMovement() {
+        ONVIF::Stop* stop = new ONVIF::Stop;
         stop->setProfileToken("MediaProfile000");
         stop->setPanTilt(true);
         stop->setZoom(true);
@@ -769,8 +776,8 @@ QOnvifDevice::refreshVideoConfigsOptions() {
 }
 
 bool
-QOnvifDevice::refreshStreamUri() {
-    return d_ptr->refreshStreamUri();
+QOnvifDevice::refreshStreamUris() {
+    return d_ptr->refreshStreamUris();
 }
 
 bool
@@ -814,12 +821,12 @@ QOnvifDevice::setHomePosition() {
 }
 
 bool
-QOnvifDevice::continuousMove(const float x,const float y) {
-    return d_ptr->continuousMove(x, y);
+QOnvifDevice::continuousMove(const float x, const float y, const float z) {
+    return d_ptr->continuousMove(x, y, z);
 }
 
-bool QOnvifDevice::stopMovement()
-{
+bool
+QOnvifDevice::stopMovement() {
     return d_ptr->stopMovement();
 }
 
