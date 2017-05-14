@@ -28,6 +28,7 @@ namespace ONVIF {
         NetworkInterfaces *getNetworkInterfaces();
         NetworkProtocols *getNetworkProtocols();
         void setNetworkInterfaces(NetworkInterfaces *networkInterfaces);
+        void setNetworkProtocols(NetworkProtocols *networkProtocols);
         Capabilities *getCapabilitiesPtz();
         Capabilities *getCapabilitiesImaging();
         Capabilities *getCapabilitiesMedia();

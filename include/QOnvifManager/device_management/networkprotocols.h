@@ -2,10 +2,12 @@
 #define NETWORKPROTOCOLS_H
 #include <QObject>
 #include <QList>
+#include <QDomElement>
 namespace ONVIF {
     class NetworkProtocols : public QObject {
         Q_OBJECT
     public:
+        QDomElement toxml();
         explicit NetworkProtocols(QObject *parent = NULL);
         virtual ~NetworkProtocols();
 
@@ -39,10 +41,20 @@ namespace ONVIF {
             m_networkProtocolsPort.push_back(networkProtocolsPort);
         }
 
+        bool getResult() const
+        {
+            return m_result;
+        }
+        void setResult(bool result)
+        {
+            m_result = result;
+        }
+
     private:
         QList<QString> m_networkProtocolsName;
         QList<bool> m_networkProtocolsEnabled;
         QList<int> m_networkProtocolsPort;
+        bool m_result;
     };
 }
 #endif // NETWORKPROTOCOLS_H

@@ -62,7 +62,7 @@ public:
         ONVIF::SystemDateAndTime systemDateAndTime;
         systemDateAndTime.setlocalTime(_dateAndTime);
         ideviceManagement->setSystemDateAndTime(&systemDateAndTime);
-        return true;
+        return systemDateAndTime.result();
     }
 
     bool setScopes(QString _name, QString _location) {
@@ -70,11 +70,10 @@ public:
         systemScopes.setScopes(_name, _location);
 
         ideviceManagement->setDeviceScopes(&systemScopes);
-        return true;
+        return systemScopes.result();
     }
     bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig) {
         ONVIF::VideoEncoderConfiguration videoConfiguration;
-
         videoConfiguration.setToken(_videoConfig.token);
         videoConfiguration.setName(_videoConfig.name);
         videoConfiguration.setUseCount(_videoConfig.useCount);
@@ -93,9 +92,45 @@ public:
         videoConfiguration.setTtl(_videoConfig.ttl);
         videoConfiguration.setAutoStart(_videoConfig.autoStart);
         videoConfiguration.setSessionTimeout(_videoConfig.sessionTimeout);
-
         imediaManagement->setVideoEncoderConfiguration(&videoConfiguration);
-        return true;
+        return videoConfiguration.result();
+    }
+    bool setInterfaces(Data::Network::Interfaces _interface) {
+        ONVIF::NetworkInterfaces networkInterface;
+        auto&                    des = networkInterface;
+        des.setAutoNegotiation(_interface.autoNegotiation);
+        des.setDuplex(
+            _interface.duplexFull ? ONVIF::NetworkInterfaces::Duplex::Full
+                                  : ONVIF::NetworkInterfaces::Duplex::Half);
+
+        des.setHwAaddress(_interface.hwAaddress);
+        des.setIpv4DHCP(_interface.ipv4DHCP);
+        des.setIpv4Enabled(_interface.ipv4Enabled);
+        des.setIpv4FromDHCPAddress(_interface.ipv4FromDHCPAddress);
+        des.setIpv4FromDHCPPrefixLength(_interface.ipv4FromDHCPPrefixLength);
+        des.setIpv4LinkLocalAddress(_interface.ipv4LinkLocalAddress);
+        des.setIpv4ManualAddress(_interface.ipv4ManualAddress);
+        des.setIpv4ManualPrefixLength(_interface.ipv4ManualPrefixLength);
+        des.setIpvLinkLocalPrefixLength(_interface.ipvLinkLocalPrefixLength);
+        des.setMtu(_interface.mtu);
+        des.setNetworkInfacesEnabled(_interface.networkInfacesEnabled);
+        des.setNetworkInfacesName(_interface.networkInfacesName);
+        des.setSpeed(_interface.speed);
+        ideviceManagement->setNetworkInterfaces(&networkInterface);
+        return networkInterface.result();
+    }
+    bool setProtocols(Data::Network::Protocols _protocols) {
+        ONVIF::NetworkProtocols networkProtocols;
+        auto&                   des = networkProtocols;
+        for (int i = 0; i < _protocols.networkProtocolsName.length(); i++) {
+            des.setNetworkProtocolsEnabled(
+                _protocols.networkProtocolsEnabled[i]);
+            des.setNetworkProtocolsPort(_protocols.networkProtocolsPort[i]);
+            des.setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
+        }
+        ideviceManagement->setNetworkProtocols(&networkProtocols);
+        //        return networkProtocols.result();
+        return false;
     }
 
     bool refreshDeviceCapabilities() {
@@ -420,7 +455,8 @@ public:
                 profiles->m_defaultContinuousZoomVelocitySpace;
         }
         return true;
-        // todo whats this other profiles (cameras never filled them in tests yet)
+        // todo whats this other profiles (cameras never filled them in tests
+        // yet)
         QScopedPointer<ONVIF::Profile> profile720p(
             imediaManagement->getProfile720P());
         if (!profile720p)
@@ -597,8 +633,23 @@ public:
         des.ipv4FromDHCPAddress      = src->ipv4FromDHCPAddress();
         des.ipv4FromDHCPPrefixLength = src->ipv4FromDHCPPrefixLength();
         des.result                   = src->result();
-        des.duplex = static_cast<Data::Network::Interfaces::Duplex>(
-            static_cast<int>(src->duplex()));
+        des.duplexFull = src->duplex() == ONVIF::NetworkInterfaces::Duplex::Full
+                             ? true
+                             : false;
+        return true;
+    }
+    bool refreshProtocols() {
+        QScopedPointer<ONVIF::NetworkProtocols> networkProtocols(
+            ideviceManagement->getNetworkProtocols());
+        if (!networkProtocols)
+            return false;
+
+        auto& des = idata.network.protocols;
+        auto& src = networkProtocols;
+
+        des.networkProtocolsEnabled = src->getNetworkProtocolsEnabled();
+        des.networkProtocolsName    = src->getNetworkProtocolsName();
+        des.networkProtocolsPort    = src->getNetworkProtocolsPort();
 
         return true;
     }
@@ -607,10 +658,13 @@ public:
         QScopedPointer<ONVIF::Users> users(ideviceManagement->getUsers());
         if (!users)
             return false;
-        idata.users.username  = users->userName();
-        idata.users.password  = users->passWord();
-        idata.users.userLevel = static_cast<Data::Users::UserLevelType>(
-            static_cast<int>(users->userLevel()));
+        for (int i = 0; i < users->userNames().length(); i++) {
+            Data::User user;
+            user.username  = users->userNames().value(i);
+            user.userLevel = static_cast<Data::User::UserLevelType>(
+                users->userLevel().value(i));
+            idata.users.append(user);
+        }
         return true;
     }
     bool refreshPtzConfiguration() {
@@ -734,6 +788,16 @@ QOnvifDevice::setVideoConfig(
 }
 
 bool
+QOnvifDevice::setInterfaces(Data::Network::Interfaces _interfaces) {
+    return d_ptr->setInterfaces(_interfaces);
+}
+
+bool
+QOnvifDevice::setProtocols(Data::Network::Protocols _protocols) {
+    return d_ptr->setProtocols(_protocols);
+}
+
+bool
 QOnvifDevice::setDateAndTime(QDateTime _dateAndTime) {
     return d_ptr->setDeviceDateAndTime(_dateAndTime);
 }
@@ -793,6 +857,11 @@ QOnvifDevice::refreshProfiles() {
 bool
 QOnvifDevice::refreshInterfaces() {
     return d_ptr->refreshInterfaces();
+}
+
+bool
+QOnvifDevice::refreshProtocols() {
+    return d_ptr->refreshProtocols();
 }
 
 bool

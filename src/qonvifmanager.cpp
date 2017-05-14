@@ -67,6 +67,7 @@ QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshDeviceInformation();
 }
+
 bool
 QOnvifManager::refreshDeviceScopes(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
@@ -87,7 +88,8 @@ bool
 QOnvifManager::refreshDeviceStreamUris(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshStreamUris();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshStreamUris();
 }
 
 bool
@@ -112,6 +114,13 @@ QOnvifManager::refreshDeviceInterfaces(QString _deviceEndPointAddress) {
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshInterfaces();
+}
+
+bool
+QOnvifManager::refreshDeviceProtocols(QString _deviceEndPointAddress) {
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProtocols();
 }
 
 bool
@@ -175,6 +184,20 @@ QOnvifManager::setDeviceVideoConfig(
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->setVideoConfig(_videoConfig);
+}
+
+bool
+QOnvifManager::setDeviceNetworkInterfaces(
+    QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setInterfaces(_interfaces);
+}
+
+bool
+QOnvifManager::setDeviceNetworkProtocols(
+    QString _deviceEndPointAddress, Data::Network::Protocols _protocols) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setProtocols(_protocols);
 }
 
 bool

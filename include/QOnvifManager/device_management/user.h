@@ -2,52 +2,56 @@
 #define USER_H
 #include <QObject>
 namespace ONVIF {
-    class Users : public QObject {
-        Q_OBJECT
-        Q_ENUMS(UserLevelType)
-        Q_PROPERTY(QString userName READ userName WRITE setUserName)
-        Q_PROPERTY(QString passWord READ passWord WRITE setPassWord)
-        Q_PROPERTY(UserLevelType userLevel READ userLevel WRITE setUserLevel)
-    public:
-        explicit Users(QObject *parent = NULL);
-        virtual ~Users();
-        enum UserLevelType {Administrator,Operator,User,Anonymous,Extended};
+class Users : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(UserLevelType)
 
-        QString userName() const
-        {
-            return m_userName;
-        }
+public:
+    explicit Users(QObject* parent = NULL);
+    virtual ~Users();
+    enum UserLevelType { Administrator, Operator, User, Anonymous, Extended };
 
-        QString passWord() const
-        {
-            return m_passWord;
-        }
+    QStringList userNames() const {
+        return m_userNames;
+    }
 
-        UserLevelType userLevel() const
-        {
-            return m_userLevel;
-        }
+    QStringList passWord() const {
+        return m_passWords;
+    }
 
-    public slots:
-        void setUserName(QString arg)
-        {
-            m_userName = arg;
-        }
+    QList<UserLevelType> userLevel() const {
+        return m_userLevel;
+    }
 
-        void setPassWord(QString arg)
-        {
-            m_passWord = arg;
-        }
+public slots:
+    void setUserNames(QString arg) {
+        m_userNames.push_back(arg);
+    }
 
-        void setUserLevel(UserLevelType arg)
-        {
-            m_userLevel = arg;
-        }
+    void setPassWords(QString arg) {
+        m_passWords.push_back(arg);
+    }
 
-    private:
-        QString m_userName;
-        QString m_passWord;
-        UserLevelType m_userLevel;
-    };
+    void setUserLevel(QString arg) {
+        int levelInt = 0;
+        if (arg == "Administrator")
+            levelInt = 0;
+        else if (arg == "Operator")
+            levelInt = 1;
+        else if (arg == "User")
+            levelInt = 2;
+        else if (arg == "Anonynos")
+            levelInt = 3;
+        else if (arg == "Extended")
+            levelInt = 4;
+        m_userLevel.push_back(static_cast<UserLevelType>(levelInt));
+    }
+
+private:
+    QStringList          m_userNames;
+    QStringList          m_passWords;
+    QList<UserLevelType> m_userLevel;
+};
 }
 #endif // USER_H

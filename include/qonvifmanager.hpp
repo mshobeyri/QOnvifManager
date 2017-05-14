@@ -45,9 +45,9 @@ public:
     bool refreshDeviceStreamUri(QString _deviceEndPointAddress);
     bool refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress);
 
-
     bool refreshDeviceProfiles(QString _deviceEndPointAddress);
     bool refreshDeviceInterfaces(QString _deviceEndPointAddress);
+    bool refreshDeviceProtocols(QString _deviceEndPointAddress);
     bool refreshDeviceScopes(QString _deviceEndPointAddress);
 
     bool refreshDeviceUsers(QString _deviceEndPointAddress);
@@ -64,6 +64,11 @@ public:
         QString                                 _deviceEndPointAddress,
         Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
+    bool setDeviceNetworkInterfaces(
+        QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces);
+
+    bool setDeviceNetworkProtocols(
+        QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
     bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
 
     bool resetFactoryDevice(QString _deviceEndPointAddress);

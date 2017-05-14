@@ -75,10 +75,10 @@ struct Data {
         bool    discoveryBye;
         bool    remoteDiscovery;
     } capabilities;
-    struct Users {
+    struct User {
         QString username;
         QString password;
-        enum UserLevelType {
+        enum class UserLevelType {
             Administrator,
             Operator,
             User,
@@ -86,33 +86,34 @@ struct Data {
             Extended
         };
         UserLevelType userLevel;
-    } users;
+    };
+    QList<User> users;
     struct Network {
-        struct Prtocols {
+        struct Protocols {
             QList<QString> networkProtocolsName;
             QList<bool>    networkProtocolsEnabled;
             QList<int>     networkProtocolsPort;
         } protocols;
 
         struct Interfaces {
-            bool networkInfacesEnabled;
-            bool autoNegotiation;
-            int  speed;
-            enum Duplex { Full, Half };
-            Duplex  duplex;
+            bool    networkInfacesEnabled;
+            bool    autoNegotiation;
+            int     speed;
+            bool    duplexFull;
             int     mtu;
             bool    ipv4Enabled;
             QString ipv4ManualAddress;
             int     ipv4ManualPrefixLength;
             bool    ipv4DHCP;
-            QString networkInfacesName;
-            QString hwAaddress;
             QString ipv4LinkLocalAddress;
             int     ipvLinkLocalPrefixLength;
             QString ipv4FromDHCPAddress;
             int     ipv4FromDHCPPrefixLength;
+            QString networkInfacesName;
+            QString hwAaddress;
             bool    result;
         } interfaces;
+
     } network;
 
     struct DateTime {
@@ -123,9 +124,7 @@ struct Data {
     // media management
 
     struct MediaConfig {
-
         struct Audio {
-
             struct EncodingOptions {
                 QList<QList<int>> bitratList;
                 QList<QList<int>> sampleRateList;

@@ -35,10 +35,16 @@ public:
     bool setDateAndTime(QDateTime _dateAndTime);
     bool setScopes(QString _name, QString _location);
     bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig);
+    bool setInterfaces(Data::Network::Interfaces _interfaces);
+    bool setProtocols(Data::Network::Protocols _protocols);
 
     bool refreshDeviceCapabilities();
     bool refreshDeviceInformation();
     bool refreshDeviceScopes();
+    bool refreshInterfaces();
+    bool refreshProtocols();
+    bool refreshProfiles();
+    bool refreshUsers();
 
     bool resetFactoryDevice();
     bool rebootDevice();
@@ -49,13 +55,7 @@ public:
     bool refreshStreamUris();
     bool refreshAudioConfigs();
 
-
-    bool refreshProfiles();
-    bool refreshInterfaces();
-
-    bool refreshUsers();
-
-    //ptz management
+    // ptz management
     bool refreshPtzConfiguration();
     bool refreshPresets();
     bool goHomePosition();

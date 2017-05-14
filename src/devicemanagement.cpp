@@ -139,11 +139,13 @@ DeviceManagement::getDeviceScopes() {
 
         device_scopes.insert(
             "hardware",
-            result->getValue(
-                "//tds:GetScopesResponse/tds:Scopes[./"
-                "tt:ScopeDef[./text()='Fixed']]/"
-                "/tt:ScopeItem[starts-with(text(),'odm:hardware:') or "
-                "starts-with(text(),'onvif://www.onvif.org/hardware/')]").remove(0,31));
+            result
+                ->getValue(
+                    "//tds:GetScopesResponse/tds:Scopes[./"
+                    "tt:ScopeDef[./text()='Fixed']]/"
+                    "/tt:ScopeItem[starts-with(text(),'odm:hardware:') or "
+                    "starts-with(text(),'onvif://www.onvif.org/hardware/')]")
+                .remove(0, 31));
     }
 
     delete result;
@@ -262,9 +264,32 @@ DeviceManagement::getUsers() {
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         user = new Users();
-        user->setProperty("userName", result->getValue("//tt:Username"));
-        user->setProperty("passWord", result->getValue("//tt:Password"));
-        user->setProperty("userLevel", result->getValue("//tt:UserLevel"));
+
+        //        user->setProperty("userName",
+        //        result->getValue("//tt:Username"));
+        //        user->setProperty("passWord",
+        //        result->getValue("//tt:Password"));
+        //        user->setProperty("userLevel",
+        //        result->getValue("//tt:UserLevel"));
+        QXmlQuery* query = result->query();
+        query->setQuery(result->nameSpace() + "doc($inputDocument)//tds:User");
+        QXmlResultItems items;
+        query->evaluateTo(&items);
+        QXmlItem item = items.next();
+        QString  username, userLevel;
+        while (!item.isNull()) {
+            query->setFocus(item);
+            query->setQuery(result->nameSpace() + "./tt:Username/string()");
+            query->evaluateTo(&username);
+            user->setUserNames(username.trimmed());
+
+            query->setQuery(result->nameSpace() + "./tt:UserLevel/string()");
+            query->evaluateTo(&userLevel);
+            QString levelStr = userLevel.trimmed();
+
+            user->setUserLevel(userLevel.trimmed());
+            item = items.next();
+        }
     }
     delete result;
     delete msg;
@@ -457,7 +482,8 @@ DeviceManagement::getNetworkInterfaces() {
         networkInterfaces->setProperty(
             "mtu", result->getValue("//tt:MTU").toInt());
         networkInterfaces->setProperty(
-            "ipv4esult != NULL)Enabled", result->getValue("//tt:IPv4/tt:Enabled"));
+            "ipv4esult != NULL)Enabled",
+            result->getValue("//tt:IPv4/tt:Enabled"));
         networkInterfaces->setProperty(
             "ipv4ManualAddress", result->getValue("//tt:Manual/tt:Address"));
         networkInterfaces->setProperty(
@@ -498,6 +524,20 @@ DeviceManagement::setNetworkInterfaces(NetworkInterfaces* networkInterfaces) {
     }
 }
 
+void
+DeviceManagement::setNetworkProtocols(NetworkProtocols* networkProtocols) {
+    Message* msg = newMessage();
+    msg->appendToBody(networkProtocols->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetNetworkInterfacesResponse"))
+            networkProtocols->setResult(true);
+        else
+            networkProtocols->setResult(false);
+        delete result;
+        delete msg;
+    }
+}
 
 NetworkProtocols*
 DeviceManagement::getNetworkProtocols() {
@@ -507,6 +547,8 @@ DeviceManagement::getNetworkProtocols() {
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         networkProtocols = new NetworkProtocols();
+
+
         QXmlQuery* query = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//tds:NetworkProtocols");
