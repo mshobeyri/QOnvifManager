@@ -220,7 +220,8 @@ public:
     }
 
     bool resetFactoryDevice(bool isHard) {
-        QScopedPointer<ONVIF::SystemFactoryDefault> systemFactoryDefault{};
+        QScopedPointer<ONVIF::SystemFactoryDefault> systemFactoryDefault{
+            new ONVIF::SystemFactoryDefault{}};
         systemFactoryDefault->setFactoryDefault(
             isHard ? ONVIF::SystemFactoryDefault::Hard
                    : ONVIF::SystemFactoryDefault::Soft);
@@ -228,10 +229,12 @@ public:
         return systemFactoryDefault->result();
     }
 
+
     bool rebootDevice() {
-        QScopedPointer<ONVIF::SystemReboot> systemReboot{};
+        QScopedPointer<ONVIF::SystemReboot> systemReboot{
+            new ONVIF::SystemReboot{}};
         ideviceManagement->systemReboot(systemReboot.data());
-        return systemReboot.data();
+        return systemReboot->result();
     }
 
     bool refreshVideoConfigs() {
