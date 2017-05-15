@@ -46,7 +46,7 @@ public:
     bool refreshProfiles();
     bool refreshUsers();
 
-    bool resetFactoryDevice();
+    bool resetFactoryDevice(bool isHard);
     bool rebootDevice();
 
     // media management
@@ -62,7 +62,6 @@ public:
     bool setHomePosition();
     bool continuousMove(const float x, const float y, const float z);
     bool stopMovement();
-
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
     QScopedPointer<QOnvifDevicePrivate> d_ptr;

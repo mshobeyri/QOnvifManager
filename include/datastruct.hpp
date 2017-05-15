@@ -87,7 +87,8 @@ struct Data {
         };
         UserLevelType userLevel;
     };
-    QList<User> users;
+    typedef QList<User> Users;
+    Users               users;
     struct Network {
         struct Protocols {
             QList<QString> networkProtocolsName;

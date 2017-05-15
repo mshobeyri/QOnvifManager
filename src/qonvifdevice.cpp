@@ -219,14 +219,19 @@ public:
         return true;
     }
 
-    bool resetFactoryDevice() {
-        // todo: reset factory device
-        return true;
+    bool resetFactoryDevice(bool isHard) {
+        QScopedPointer<ONVIF::SystemFactoryDefault> systemFactoryDefault{};
+        systemFactoryDefault->setFactoryDefault(
+            isHard ? ONVIF::SystemFactoryDefault::Hard
+                   : ONVIF::SystemFactoryDefault::Soft);
+        ideviceManagement->setSystemFactoryDefault(systemFactoryDefault.data());
+        return systemFactoryDefault->result();
     }
 
     bool rebootDevice() {
-        // todo: reboot device
-        return true;
+        QScopedPointer<ONVIF::SystemReboot> systemReboot{};
+        ideviceManagement->systemReboot(systemReboot.data());
+        return systemReboot.data();
     }
 
     bool refreshVideoConfigs() {
@@ -658,6 +663,7 @@ public:
         QScopedPointer<ONVIF::Users> users(ideviceManagement->getUsers());
         if (!users)
             return false;
+        idata.users.clear();
         for (int i = 0; i < users->userNames().length(); i++) {
             Data::User user;
             user.username  = users->userNames().value(i);
@@ -818,8 +824,8 @@ QOnvifDevice::refreshDeviceScopes() {
 }
 
 bool
-QOnvifDevice::resetFactoryDevice() {
-    return d_ptr->resetFactoryDevice();
+QOnvifDevice::resetFactoryDevice(bool isHard) {
+    return d_ptr->resetFactoryDevice(isHard);
 }
 
 bool

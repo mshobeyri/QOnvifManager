@@ -71,7 +71,7 @@ public:
         QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
     bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
 
-    bool resetFactoryDevice(QString _deviceEndPointAddress);
+    bool resetFactoryDevice(QString _deviceEndPointAddress, bool isHard);
     bool rebootDevice(QString _deviceEndPointAddress);
 
     // ptz

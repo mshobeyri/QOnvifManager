@@ -14,5 +14,3 @@ QDomElement SystemFactoryDefault::toxml(){
     setSystemFactoryDefault.appendChild(factoryDefault);
     return setSystemFactoryDefault;
 }
-
-

@@ -207,9 +207,9 @@ QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
 }
 
 bool
-QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress) {
+QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress,bool isHard) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->resetFactoryDevice();
+        ->resetFactoryDevice(isHard);
 }
 
 bool
