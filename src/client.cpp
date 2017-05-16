@@ -6,7 +6,6 @@
 #include <QThread>
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
-
 using namespace ONVIF;
 
 Client::Client(const QString &url)
