@@ -25,6 +25,7 @@ VideoEncoderConfiguration::toxml() {
     rateControl = newElement("tt:RateControl");
     frameRateLimit = newElement(
         "tt:FrameRateLimit", QString::number(this->frameRateLimit()));
+    setVideoConfiguration = newElement("SetVideoEncoderConfiguration");
     encodingInterval = newElement(
         "tt:EncodingInterval", QString::number(this->encodingInterval()));
     bitrateLimit =
