@@ -203,9 +203,9 @@ Message::Message(const QHash<QString, QString>& namespaces, QObject* parent)
     mDoc.appendChild(mDoc.createProcessingInstruction(
         "xml", "version=\"1.0\" encoding=\"UTF-8\""));
     mEnv = mDoc.createElementNS(
-        "http://www.w3.org/2003/05/soap-envelope", "soap:Envelope");
-    mHeader = mDoc.createElement("soap:Header");
-    mBody   = mDoc.createElement("soap:Body");
+        "http://www.w3.org/2003/05/soap-envelope", "Envelope");
+    mHeader = mDoc.createElement("Header");
+    mBody   = mDoc.createElement("Body");
 }
 
 QString

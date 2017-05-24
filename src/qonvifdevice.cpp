@@ -177,16 +177,24 @@ public:
         // ptz capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesPtz(
             ideviceManagement->getCapabilitiesDevice());
+        if (!capabilitiesPtz)
+            return false;
+
         des.ptzAddress = capabilitiesPtz->ptzXAddr();
 
         // image capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesImage(
             ideviceManagement->getCapabilitiesDevice());
+        if (!capabilitiesImage)
+            return false;
+
         des.imagingXAddress = capabilitiesImage->imagingXAddr();
 
         // media capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesMedia(
             ideviceManagement->getCapabilitiesDevice());
+        if (!capabilitiesMedia)
+            return false;
 
         des.mediaXAddress = capabilitiesMedia->mediaXAddr();
         des.rtpMulticast  = capabilitiesMedia->rtpMulticast();
@@ -222,6 +230,8 @@ public:
     bool resetFactoryDevice(bool isHard) {
         QScopedPointer<ONVIF::SystemFactoryDefault> systemFactoryDefault{
             new ONVIF::SystemFactoryDefault{}};
+        if (!systemFactoryDefault)
+            return false;
         systemFactoryDefault->setFactoryDefault(
             isHard ? ONVIF::SystemFactoryDefault::Hard
                    : ONVIF::SystemFactoryDefault::Soft);
@@ -233,6 +243,8 @@ public:
     bool rebootDevice() {
         QScopedPointer<ONVIF::SystemReboot> systemReboot{
             new ONVIF::SystemReboot{}};
+        if (!systemReboot)
+            return false;
         ideviceManagement->systemReboot(systemReboot.data());
         return systemReboot->result();
     }
@@ -242,9 +254,9 @@ public:
         QScopedPointer<ONVIF::VideoEncoderConfigurations>
             videoEncoderConfigurations(
                 imediaManagement->getVideoEncoderConfigurations());
-
         if (!videoEncoderConfigurations)
             return false;
+
         {
             auto& des = idata.mediaConfig.video.encodingConfigs;
             auto& src = videoEncoderConfigurations;
@@ -297,6 +309,8 @@ public:
             QScopedPointer<ONVIF::StreamUri> streamUri(
                 imediaManagement->getStreamUri(
                     idata.profiles.toKenPro.value(i)));
+            if (!streamUri)
+                return false;
             Data::MediaConfig::Video::StreamUri streamUriTemp;
             streamUriTemp.uri = streamUri->uri();
             streamUriTemp.invalidAfterConnect =
