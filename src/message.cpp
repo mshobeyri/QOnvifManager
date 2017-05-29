@@ -146,7 +146,7 @@ Message::getMessageWithUserInfo(
     QHash<QString, QString>& namespaces,
     const QString& name,
     const QString& passwd) {
-    namespaces.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
+      namespaces.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
                               "oasis-200401-wss-wssecurity-secext-1.0.xsd");
     namespaces.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/"
                              "oasis-200401-wss-wssecurity-utility-1.0.xsd");
@@ -166,7 +166,8 @@ Message::getMessageWithUserInfo(
     usernameToken.appendChild(password);
     usernameToken.appendChild(newElement("wsu:Created", current.toTimeSpec(Qt::UTC).toString("yyyy-MM-ddThh:mm:ss")));
 #else /* PasswordDigest  */
-    QDomElement username = newElement("wsse:Username", name);
+//    QDomElement username = newElement("wsse:Username", name);todo: i remove this line and add next line to handle not respond cams proble,
+    QDomElement username = newElement("Username", name);
     QString     passwdDigest;
     QString     nonceBase64;
     /* calc passwd Digest and nonce */
@@ -215,7 +216,6 @@ Message::toXmlStr() {
         i.next();
         mEnv.setAttribute("xmlns:" + i.key(), i.value());
     }
-
     mEnv.appendChild(mHeader);
     mEnv.appendChild(mBody);
     mDoc.appendChild(mEnv);
