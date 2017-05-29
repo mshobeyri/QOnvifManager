@@ -3,6 +3,8 @@
 #include "devicesearcher.h"
 #include "systemdateandtime.h"
 
+using namespace device;
+
 class QOnvifManagerPrivate
 {
 public:

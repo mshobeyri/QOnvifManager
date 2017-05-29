@@ -7,28 +7,28 @@
 #include <QMap>
 #include <QScopedPointer>
 
-#ifndef QONVIFMANAGER_GLOBAL_HPP
-#define QONVIFMANAGER_GLOBAL_HPP
+//#ifndef QONVIFMANAGER_GLOBAL_HPP
+//#define QONVIFMANAGER_GLOBAL_HPP
 
-#include <QtCore/qglobal.h>
+//#include <QtCore/qglobal.h>
 
-#if defined(QONVIFMANAGER_LIBRARY)
-#define QONVIFMANAGERSHARED_EXPORT Q_DECL_EXPORT
-#else
-#define QONVIFMANAGERSHARED_EXPORT Q_DECL_IMPORT
-#endif
+//#if defined(QONVIFMANAGER_LIBRARY)
+//#define QONVIFMANAGERSHARED_EXPORT Q_DECL_EXPORT
+//#else
+//#define QONVIFMANAGERSHARED_EXPORT Q_DECL_IMPORT
+//#endif
 
-#endif
+//#endif
 
 
 namespace ONVIF {
 class DeviceSearcher;
 }
 
-using namespace device;
+//using namespace device;
 class QOnvifManagerPrivate;
 
-class QONVIFMANAGERSHARED_EXPORT QOnvifManager : public QObject
+class /*QONVIFMANAGERSHARED_EXPORT*/ QOnvifManager : public QObject
 {
     Q_OBJECT
 public:
@@ -85,8 +85,8 @@ public:
     bool stopMovement(QString _deviceEndPointAddress);
 
     // public
-    QOnvifDevice* device(QString _deviceEndPointAddress);
-    QMap<QString, QOnvifDevice*>& devicesMap();
+    device::QOnvifDevice* device(QString _deviceEndPointAddress);
+    QMap<QString, device::QOnvifDevice*>& devicesMap();
 
 
 protected:
@@ -98,7 +98,7 @@ public slots:
     void onReciveData(QHash<QString, QString> _deviceHash);
 
 signals:
-    void newDeviceFinded(QOnvifDevice* _device);
+    void newDeviceFinded(device::QOnvifDevice* _device);
     void deviceSearchingEnded();
 };
 
