@@ -4,20 +4,21 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network xml xmlpatterns
+QT       += core network xml xmlpatterns
 
 CONFIG += c++11
 CONFIG += staticlib
 
 #DEFINES += QT_DLL QT_NETWORK_LIB QT_HELP_LIB QT_SCRIPT_LIB QT_WIDGETS_LIB QT_XML_LIB QT_XMLPATTERNS_LIB ONVIFC_LIB
 
-DESTDIR  = ../../../../bin/
+unix:DESTDIR  = ../../../../bin/
+win32: DESTDIR  = ../../../bin/
 
 TARGET = QOnvifManager
 
 TEMPLATE = lib
 
-DEFINES += QONVIFMANAGER_LIBRARY
+#DEFINES += QONVIFMANAGER_LIBRARY
 
 unix {
     target.path = /usr/lib

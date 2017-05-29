@@ -7,7 +7,7 @@
 #include <QNetworkInterface>
 
 #ifdef WIN32
-#include <ws2tcpip.h>
+#include <WS2tcpip.h>
 #else
 #include <sys/socket.h>
 #endif
@@ -55,10 +55,11 @@ DeviceSearcher::DeviceSearcher(QHostAddress &addr, QObject *parent) : QObject(pa
     //mUdpSocket->bind(QHostAddress::Any, 0, QUdpSocket::ShareAddress);
     mUdpSocket->bind(addr, 0, QUdpSocket::ShareAddress);
     int opt=4 * 1024 * 1024;
-    if (setsockopt(mUdpSocket->socketDescriptor(), SOL_SOCKET,
-                   SO_RCVBUF, (char *)&opt, sizeof(int)) < 0) {
-        printf("Set ----> SO_RCVBUF error\n");
-    }
+
+//    if (setsockopt(mUdpSocket->socketDescriptor(), SOL_SOCKET,
+//                   SO_RCVBUF, (char *)&opt, sizeof(int)) < 0) {
+//        printf("Set ----> SO_RCVBUF error\n");
+//    }
 
     connect(mUdpSocket, SIGNAL(readyRead()),
             this, SLOT(readPendingDatagrams()));
