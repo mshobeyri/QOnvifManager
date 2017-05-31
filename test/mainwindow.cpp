@@ -105,7 +105,7 @@ MainWindow::on_btnGetDataAndTime_clicked() {
 void
 MainWindow::on_btsSetDateAndTime_clicked() {
     ionvifManager->setDeviceDateAndTime(
-        currentDevice(), ui->dateTimeEditSet->dateTime());
+        currentDevice(), ui->dateTimeEditSet->dateTime(),"GMT-3:30",true);
 }
 
 QString

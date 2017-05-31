@@ -50,6 +50,14 @@ public:
     bool result() const {
         return m_result;
     }
+    bool isLocal() const
+    {
+        return m_isLocal;
+    }
+    void setIsLocal(bool isLocal)
+    {
+        m_isLocal = isLocal;
+    }
 
 public slots:
     void setDaylightSavings(bool arg) {
@@ -82,6 +90,7 @@ private:
     QDateTime    m_localTime;
     QString      m_tz;
     QString      m_width;
+    bool         m_isLocal;
     bool         m_result;
 };
 }

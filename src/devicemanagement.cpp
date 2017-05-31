@@ -173,6 +173,7 @@ DeviceManagement::getSystemDateAndTime() {
             "dateTimeType", result->getValue("//tt:DateTimeType"));
         systemDateAndTime->setDaylightSavings(
             result->getValue("//tt:DaylightSavings") == "true");
+        systemDateAndTime->setTz(result->getValue("//tt:TimeZone/tt:TZ"));
         systemDateAndTime->setUtcTime(
             result->getValue("//tt:UTCDateTime/tt:Date/tt:Year").toInt(),
             result->getValue("//tt:UTCDateTime/tt:Date/tt:Month").toInt(),

@@ -120,6 +120,8 @@ struct Data {
     struct DateTime {
         QDateTime utcTime;
         QDateTime localTime;
+        QString timeZone;
+        bool daylightSaving;
     } dateTime;
 
     // media management

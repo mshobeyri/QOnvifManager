@@ -141,6 +141,12 @@ QOnvifManager::deviceDateAndTime(
         ->deviceDateAndTime(_datetime);
 }
 
+bool QOnvifManager::setDeviceDateAndTime(QString _deviceEndPointAddress,
+                                         QDateTime _dateTime, QString _zone, bool _daylightSaving, bool _isLocal) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+            ->setDateAndTime(_dateTime,_zone,_daylightSaving,_isLocal);
+}
+
 QOnvifDevice*
 QOnvifManager::device(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress);
@@ -158,12 +164,7 @@ QOnvifManager::cameraExist(const QString& endpoinAddress) {
     return false;
 }
 
-bool
-QOnvifManager::setDeviceDateAndTime(
-    QString _deviceEndPointAddress, QDateTime _dateTime) {
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setDateAndTime(_dateTime);
-}
+
 
 void
 QOnvifManager::setDefaulUsernameAndPassword(

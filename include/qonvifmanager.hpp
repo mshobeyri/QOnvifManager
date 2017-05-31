@@ -56,7 +56,8 @@ public:
         QString _deviceEndPointAddress, Data::DateTime& _datetime);
 
     bool
-    setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime);
+    setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime,
+                         QString _zone, bool _daylightSaving, bool _isLocal);
     void setDefaulUsernameAndPassword(QString _username, QString _password);
     bool setDeviceScopes(
         QString _deviceEndPointAddress, QString _name, QString _location);

@@ -32,7 +32,7 @@ public:
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 
-    bool setDateAndTime(QDateTime _dateAndTime);
+    bool setDateAndTime(QDateTime _dateAndTime, QString _zone, bool _daylightSaving, bool _isLocal);
     bool setScopes(QString _name, QString _location);
     bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig);
     bool setInterfaces(Data::Network::Interfaces _interfaces);

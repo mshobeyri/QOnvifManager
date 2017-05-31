@@ -11,18 +11,18 @@ class QOnvifDevicePrivate
 {
 public:
     QOnvifDevicePrivate(
-        const QString _serviceAddress,
-        const QString _username,
-        const QString _password)
+            const QString _serviceAddress,
+            const QString _username,
+            const QString _password)
         : iuserName(_username), ipassword(_password) {
         ideviceManagement =
-            new ONVIF::DeviceManagement{_serviceAddress, iuserName, ipassword};
+                new ONVIF::DeviceManagement{_serviceAddress, iuserName, ipassword};
 
         imediaManagement =
-            new ONVIF::MediaManagement{_serviceAddress, iuserName, ipassword};
+                new ONVIF::MediaManagement{_serviceAddress, iuserName, ipassword};
 
         iptzManagement =
-            new ONVIF::PtzManagement{_serviceAddress, iuserName, ipassword};
+                new ONVIF::PtzManagement{_serviceAddress, iuserName, ipassword};
     }
     ~QOnvifDevicePrivate() {
         delete ideviceManagement;
@@ -49,18 +49,27 @@ public:
 
     bool deviceDateAndTime(Data::DateTime& _datetime) {
         QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(
-            ideviceManagement->getSystemDateAndTime());
+                    ideviceManagement->getSystemDateAndTime());
         if (!systemDateAndTime)
             return false;
         idata.dateTime.localTime = systemDateAndTime->localTime();
         idata.dateTime.utcTime   = systemDateAndTime->utcTime();
+        idata.dateTime.timeZone   = systemDateAndTime->tz();
+        idata.dateTime.daylightSaving   = systemDateAndTime->daylightSavings();
         _datetime                = idata.dateTime;
-        return true;
+        return systemDateAndTime->result();
     }
 
-    bool setDeviceDateAndTime(QDateTime _dateAndTime) {
+    bool setDeviceDateAndTime(QDateTime _dateAndTime, QString _zone, bool _daylightSaving, bool _isLocal) {
         ONVIF::SystemDateAndTime systemDateAndTime;
-        systemDateAndTime.setlocalTime(_dateAndTime);
+        systemDateAndTime.setIsLocal(_isLocal);
+        if(_isLocal){
+            systemDateAndTime.setlocalTime(_dateAndTime);
+        }else{
+            systemDateAndTime.setutcTime(_dateAndTime);
+        }
+        systemDateAndTime.setTz(_zone);
+        systemDateAndTime.setDaylightSavings(_daylightSaving);
         ideviceManagement->setSystemDateAndTime(&systemDateAndTime);
         return systemDateAndTime.result();
     }
@@ -68,7 +77,6 @@ public:
     bool setScopes(QString _name, QString _location) {
         ONVIF::SystemScopes systemScopes;
         systemScopes.setScopes(_name, _location);
-
         ideviceManagement->setDeviceScopes(&systemScopes);
         return systemScopes.result();
     }
@@ -100,8 +108,8 @@ public:
         auto&                    des = networkInterface;
         des.setAutoNegotiation(_interface.autoNegotiation);
         des.setDuplex(
-            _interface.duplexFull ? ONVIF::NetworkInterfaces::Duplex::Full
-                                  : ONVIF::NetworkInterfaces::Duplex::Half);
+                    _interface.duplexFull ? ONVIF::NetworkInterfaces::Duplex::Full
+                                          : ONVIF::NetworkInterfaces::Duplex::Half);
 
         des.setHwAaddress(_interface.hwAaddress);
         des.setIpv4DHCP(_interface.ipv4DHCP);
@@ -124,7 +132,7 @@ public:
         auto&                   des = networkProtocols;
         for (int i = 0; i < _protocols.networkProtocolsName.length(); i++) {
             des.setNetworkProtocolsEnabled(
-                _protocols.networkProtocolsEnabled[i]);
+                        _protocols.networkProtocolsEnabled[i]);
             des.setNetworkProtocolsPort(_protocols.networkProtocolsPort[i]);
             des.setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
         }
@@ -135,7 +143,7 @@ public:
 
     bool refreshDeviceCapabilities() {
         QScopedPointer<ONVIF::Capabilities> capabilitiesDevice(
-            ideviceManagement->getCapabilitiesDevice());
+                    ideviceManagement->getCapabilitiesDevice());
         if (!capabilitiesDevice)
             return false;
 
@@ -176,7 +184,7 @@ public:
 
         // ptz capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesPtz(
-            ideviceManagement->getCapabilitiesDevice());
+                    ideviceManagement->getCapabilitiesDevice());
         if (!capabilitiesPtz)
             return false;
 
@@ -184,7 +192,7 @@ public:
 
         // image capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesImage(
-            ideviceManagement->getCapabilitiesDevice());
+                    ideviceManagement->getCapabilitiesDevice());
         if (!capabilitiesImage)
             return false;
 
@@ -192,7 +200,7 @@ public:
 
         // media capabilities
         QScopedPointer<ONVIF::Capabilities> capabilitiesMedia(
-            ideviceManagement->getCapabilitiesDevice());
+                    ideviceManagement->getCapabilitiesDevice());
         if (!capabilitiesMedia)
             return false;
 
@@ -206,21 +214,21 @@ public:
 
     bool refreshDeviceInformation() { // todo
         QHash<QString, QString> deviceInformationHash =
-            ideviceManagement->getDeviceInformation();
+                ideviceManagement->getDeviceInformation();
         idata.information.manufacturer = deviceInformationHash.value("mf");
         idata.information.model        = deviceInformationHash.value("model");
         idata.information.firmwareVersion =
-            deviceInformationHash.value("firmware_version");
+                deviceInformationHash.value("firmware_version");
         idata.information.serialNumber =
-            deviceInformationHash.value("serial_number");
+                deviceInformationHash.value("serial_number");
         idata.information.hardwareId =
-            deviceInformationHash.value("hardware_id");
+                deviceInformationHash.value("hardware_id");
         return true;
     }
 
     bool refreshDeviceScopes() {
         QHash<QString, QString> deviceScopesHash =
-            ideviceManagement->getDeviceScopes();
+                ideviceManagement->getDeviceScopes();
         idata.scopes.name     = deviceScopesHash.value("name");
         idata.scopes.location = deviceScopesHash.value("location");
         idata.scopes.hardware = deviceScopesHash.value("hardware");
@@ -233,8 +241,8 @@ public:
         if (!systemFactoryDefault)
             return false;
         systemFactoryDefault->setFactoryDefault(
-            isHard ? ONVIF::SystemFactoryDefault::Hard
-                   : ONVIF::SystemFactoryDefault::Soft);
+                    isHard ? ONVIF::SystemFactoryDefault::Hard
+                           : ONVIF::SystemFactoryDefault::Soft);
         ideviceManagement->setSystemFactoryDefault(systemFactoryDefault.data());
         return systemFactoryDefault->result();
     }
@@ -252,8 +260,8 @@ public:
     bool refreshVideoConfigs() {
         // get video encoder config
         QScopedPointer<ONVIF::VideoEncoderConfigurations>
-            videoEncoderConfigurations(
-                imediaManagement->getVideoEncoderConfigurations());
+                videoEncoderConfigurations(
+                    imediaManagement->getVideoEncoderConfigurations());
         if (!videoEncoderConfigurations)
             return false;
 
@@ -284,8 +292,8 @@ public:
 
         // get video source config
         QScopedPointer<ONVIF::VideoSourceConfigurations>
-            videoSourceConfigurations(
-                imediaManagement->getVideoSourceConfigurations());
+                videoSourceConfigurations(
+                    imediaManagement->getVideoSourceConfigurations());
 
         if (!videoSourceConfigurations)
             return false;
@@ -307,14 +315,14 @@ public:
         idata.profiles.streamUris.clear();
         for (int i = 0; i < idata.profiles.toKenPro.length(); i++) {
             QScopedPointer<ONVIF::StreamUri> streamUri(
-                imediaManagement->getStreamUri(
-                    idata.profiles.toKenPro.value(i)));
+                        imediaManagement->getStreamUri(
+                            idata.profiles.toKenPro.value(i)));
             if (!streamUri)
                 return false;
             Data::MediaConfig::Video::StreamUri streamUriTemp;
             streamUriTemp.uri = streamUri->uri();
             streamUriTemp.invalidAfterConnect =
-                streamUri->invalidAfterConnect();
+                    streamUri->invalidAfterConnect();
             streamUriTemp.invalidAfterReboot = streamUri->invalidAfterReboot();
             streamUriTemp.timeout            = streamUri->timeout();
 
@@ -331,13 +339,13 @@ public:
 
         // get video encoder options
         foreach (
-            QString _configToken,
-            idata.mediaConfig.video.encodingConfigs.token) {
+                 QString _configToken,
+                 idata.mediaConfig.video.encodingConfigs.token) {
 
             QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
-                videoEncoderConfigurationOptions(
-                    imediaManagement->getVideoEncoderConfigurationOptions(
-                        _configToken, ""));
+                    videoEncoderConfigurationOptions(
+                        imediaManagement->getVideoEncoderConfigurationOptions(
+                            _configToken, ""));
 
             if (!videoEncoderConfigurationOptions)
                 return false;
@@ -348,9 +356,9 @@ public:
             auto& src = videoEncoderConfigurationOptions;
 
             des.encodingIntervalRangeMaxH264 =
-                src->encodingIntervalRangeMaxH264();
+                    src->encodingIntervalRangeMaxH264();
             des.encodingIntervalRangeMinH264 =
-                src->encodingIntervalRangeMinH264();
+                    src->encodingIntervalRangeMinH264();
             des.frameRateRangeMaxH264  = src->frameRateRangeMaxH264();
             des.frameRateRangeMinH264  = src->frameRateRangeMinH264();
             des.bitRateRangeMax        = src->bitRateRangeMax();
@@ -362,24 +370,24 @@ public:
             des.resAvailableHeightH264 = src->resAvailableHeightH264();
             des.resAvailableWidthH264  = src->resAvailableWidthH264();
             des.encodingIntervalRangeMaxJpeg =
-                src->encodingIntervalRangeMaxJpeg();
+                    src->encodingIntervalRangeMaxJpeg();
             des.encodingIntervalRangeMinJpeg =
-                src->encodingIntervalRangeMinJpeg();
+                    src->encodingIntervalRangeMinJpeg();
             des.frameRateRangeMaxJpeg  = src->frameRateRangeMaxJpeg();
             des.frameRateRangeMinJpeg  = src->frameRateRangeMinJpeg();
             des.resAvailableHeightJpeg = src->resAvailableHeightJpeg();
             des.resAvailableWidthJpeg  = src->resAvailableWidthJpeg();
 
             foreach (
-                ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported
-                    h264ProfilesSupporte,
-                src->getH264ProfilesSupported()) {
+                     ONVIF::VideoEncoderConfigurationOptions::H264ProfilesSupported
+                     h264ProfilesSupporte,
+                     src->getH264ProfilesSupported()) {
                 int intCastTemp = static_cast<int>(h264ProfilesSupporte);
 
                 Data::MediaConfig::Video::EncoderConfigs::Option::
-                    H264ProfilesSupported enumCastTemp =
+                        H264ProfilesSupported enumCastTemp =
                         static_cast<Data::MediaConfig::Video::EncoderConfigs::
-                                        Option::H264ProfilesSupported>(
+                        Option::H264ProfilesSupported>(
                             intCastTemp);
 
                 des.h264ProfilesSupported.append(enumCastTemp);
@@ -400,7 +408,7 @@ public:
 
     bool refreshProfiles() {
         QScopedPointer<ONVIF::Profiles> profiles(
-            imediaManagement->getProfiles());
+                    imediaManagement->getProfiles());
         if (!profiles)
             return false;
         {
@@ -464,23 +472,23 @@ public:
             des.autoStartMc         = profiles->m_autoStartMc;
             des.sessionTimeoutMc    = profiles->m_sessionTimeoutMc;
             des.defaultAbsolutePantTiltPositionSpace =
-                profiles->m_defaultAbsolutePantTiltPositionSpace;
+                    profiles->m_defaultAbsolutePantTiltPositionSpace;
             des.defaultAbsoluteZoomPositionSpace =
-                profiles->m_defaultAbsoluteZoomPositionSpace;
+                    profiles->m_defaultAbsoluteZoomPositionSpace;
             des.defaultRelativePantTiltTranslationSpace =
-                profiles->m_defaultRelativePantTiltTranslationSpace;
+                    profiles->m_defaultRelativePantTiltTranslationSpace;
             des.defaultRelativeZoomTranslationSpace =
-                profiles->m_defaultRelativeZoomTranslationSpace;
+                    profiles->m_defaultRelativeZoomTranslationSpace;
             des.defaultContinuousPantTiltVelocitySpace =
-                profiles->m_defaultContinuousPantTiltVelocitySpace;
+                    profiles->m_defaultContinuousPantTiltVelocitySpace;
             des.defaultContinuousZoomVelocitySpace =
-                profiles->m_defaultContinuousZoomVelocitySpace;
+                    profiles->m_defaultContinuousZoomVelocitySpace;
         }
         return true;
         // todo whats this other profiles (cameras never filled them in tests
         // yet)
         QScopedPointer<ONVIF::Profile> profile720p(
-            imediaManagement->getProfile720P());
+                    imediaManagement->getProfile720P());
         if (!profile720p)
             return false;
         auto& des = idata.profile720p;
@@ -543,20 +551,20 @@ public:
         des.autoStartMc         = profile720p->m_autoStartMc;
         des.sessionTimeoutMc    = profile720p->m_sessionTimeoutMc;
         des.defaultAbsolutePantTiltPositionSpace =
-            profile720p->m_defaultAbsolutePantTiltPositionSpace;
+                profile720p->m_defaultAbsolutePantTiltPositionSpace;
         des.defaultAbsoluteZoomPositionSpace =
-            profile720p->m_defaultAbsoluteZoomPositionSpace;
+                profile720p->m_defaultAbsoluteZoomPositionSpace;
         des.defaultRelativePantTiltTranslationSpace =
-            profile720p->m_defaultRelativePantTiltTranslationSpace;
+                profile720p->m_defaultRelativePantTiltTranslationSpace;
         des.defaultRelativeZoomTranslationSpace =
-            profile720p->m_defaultRelativeZoomTranslationSpace;
+                profile720p->m_defaultRelativeZoomTranslationSpace;
         des.defaultContinuousPantTiltVelocitySpace =
-            profile720p->m_defaultContinuousPantTiltVelocitySpace;
+                profile720p->m_defaultContinuousPantTiltVelocitySpace;
         des.defaultContinuousZoomVelocitySpace =
-            profile720p->m_defaultContinuousZoomVelocitySpace;
+                profile720p->m_defaultContinuousZoomVelocitySpace;
 
         QScopedPointer<ONVIF::Profile> profileD1(
-            imediaManagement->getProfileD1());
+                    imediaManagement->getProfileD1());
         if (!profileD1)
             return false;
         idata.profileD1.analytics           = profileD1->m_analytics;
@@ -617,23 +625,23 @@ public:
         idata.profileD1.autoStartMc         = profileD1->m_autoStartMc;
         idata.profileD1.sessionTimeoutMc    = profileD1->m_sessionTimeoutMc;
         idata.profileD1.defaultAbsolutePantTiltPositionSpace =
-            profileD1->m_defaultAbsolutePantTiltPositionSpace;
+                profileD1->m_defaultAbsolutePantTiltPositionSpace;
         idata.profileD1.defaultAbsoluteZoomPositionSpace =
-            profileD1->m_defaultAbsoluteZoomPositionSpace;
+                profileD1->m_defaultAbsoluteZoomPositionSpace;
         idata.profileD1.defaultRelativePantTiltTranslationSpace =
-            profileD1->m_defaultRelativePantTiltTranslationSpace;
+                profileD1->m_defaultRelativePantTiltTranslationSpace;
         idata.profileD1.defaultRelativeZoomTranslationSpace =
-            profileD1->m_defaultRelativeZoomTranslationSpace;
+                profileD1->m_defaultRelativeZoomTranslationSpace;
         idata.profileD1.defaultContinuousPantTiltVelocitySpace =
-            profileD1->m_defaultContinuousPantTiltVelocitySpace;
+                profileD1->m_defaultContinuousPantTiltVelocitySpace;
         idata.profileD1.defaultContinuousZoomVelocitySpace =
-            profileD1->m_defaultContinuousZoomVelocitySpace;
+                profileD1->m_defaultContinuousZoomVelocitySpace;
         return true;
     }
 
     bool refreshInterfaces() {
         QScopedPointer<ONVIF::NetworkInterfaces> networkInterfaces(
-            ideviceManagement->getNetworkInterfaces());
+                    ideviceManagement->getNetworkInterfaces());
         if (!networkInterfaces)
             return false;
 
@@ -656,13 +664,13 @@ public:
         des.ipv4FromDHCPPrefixLength = src->ipv4FromDHCPPrefixLength();
         des.result                   = src->result();
         des.duplexFull = src->duplex() == ONVIF::NetworkInterfaces::Duplex::Full
-                             ? true
-                             : false;
+                ? true
+                : false;
         return true;
     }
     bool refreshProtocols() {
         QScopedPointer<ONVIF::NetworkProtocols> networkProtocols(
-            ideviceManagement->getNetworkProtocols());
+                    ideviceManagement->getNetworkProtocols());
         if (!networkProtocols)
             return false;
 
@@ -685,7 +693,7 @@ public:
             Data::User user;
             user.username  = users->userNames().value(i);
             user.userLevel = static_cast<Data::User::UserLevelType>(
-                users->userLevel().value(i));
+                        users->userLevel().value(i));
             idata.users.append(user);
         }
         return true;
@@ -715,15 +723,15 @@ public:
         des.zoomX                 = config->zoomX();
 
         des.defaultAbsolutePantTiltPositionSpace =
-            config->defaultAbsolutePantTiltPositionSpace();
+                config->defaultAbsolutePantTiltPositionSpace();
         des.defaultAbsoluteZoomPositionSpace =
-            config->defaultAbsoluteZoomPositionSpace();
+                config->defaultAbsoluteZoomPositionSpace();
         des.defaultRelativePanTiltTranslationSpace =
-            config->defaultRelativePanTiltTranslationSpace();
+                config->defaultRelativePanTiltTranslationSpace();
         des.defaultRelativeZoomTranslationSpace =
-            config->defaultRelativeZoomTranslationSpace();
+                config->defaultRelativeZoomTranslationSpace();
         des.defaultContinuousPanTiltVelocitySpace =
-            config->defaultContinuousPanTiltVelocitySpace();
+                config->defaultContinuousPanTiltVelocitySpace();
 
         delete config;
         return true;
@@ -775,10 +783,10 @@ public:
 // QOnvifDevice::QOnvifDevice() {}
 
 QOnvifDevice::QOnvifDevice(
-    QString  _serviceAddress,
-    QString  _userName,
-    QString  _password,
-    QObject* _parent)
+        QString  _serviceAddress,
+        QString  _userName,
+        QString  _password,
+        QObject* _parent)
     : d_ptr{new QOnvifDevicePrivate{_serviceAddress, _userName, _password}},
       QObject(_parent) {}
 
@@ -806,7 +814,7 @@ QOnvifDevice::setScopes(QString _name, QString _location) {
 
 bool
 QOnvifDevice::setVideoConfig(
-    Data::MediaConfig::Video::EncoderConfig _videoConfig) {
+        Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->setVideoConfig(_videoConfig);
 }
 
@@ -821,8 +829,8 @@ QOnvifDevice::setProtocols(Data::Network::Protocols _protocols) {
 }
 
 bool
-QOnvifDevice::setDateAndTime(QDateTime _dateAndTime) {
-    return d_ptr->setDeviceDateAndTime(_dateAndTime);
+QOnvifDevice::setDateAndTime(QDateTime _dateAndTime,QString _zone, bool _daylightSaving, bool _isLocal) {
+    return d_ptr->setDeviceDateAndTime(_dateAndTime,_zone,_daylightSaving,_isLocal);
 }
 
 bool
