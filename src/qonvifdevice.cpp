@@ -137,8 +137,7 @@ public:
             des.setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
         }
         ideviceManagement->setNetworkProtocols(&networkProtocols);
-        //        return networkProtocols.result();
-        return false;
+        return networkProtocols.result();
     }
 
     bool refreshDeviceCapabilities() {
