@@ -43,6 +43,11 @@ public:
     bool refreshDeviceScopes();
     bool refreshInterfaces();
     bool refreshProtocols();
+    bool refreshDefaultGateway();
+    bool refreshDiscoveryMode();
+    bool refreshDNS();
+    bool refreshHostname();
+    bool refreshNTP();
     bool refreshProfiles();
     bool refreshUsers();
 

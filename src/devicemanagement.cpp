@@ -531,7 +531,7 @@ DeviceManagement::setNetworkProtocols(NetworkProtocols* networkProtocols) {
     msg->appendToBody(networkProtocols->toxml());
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
-        if (result->find("//tds:SetNetworkInterfacesResponse"))
+        if (result->find("//tds:SetNetworkInterfacesProtocols"))
             networkProtocols->setResult(true);
         else
             networkProtocols->setResult(false);
@@ -548,7 +548,6 @@ DeviceManagement::getNetworkProtocols() {
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         networkProtocols = new NetworkProtocols();
-
 
         QXmlQuery* query = result->query();
         query->setQuery(
@@ -589,9 +588,10 @@ DeviceManagement::getNetworkDefaultGateway() {
         networkDefaultGateway = new NetworkDefaultGateway();
         networkDefaultGateway->setProperty(
             "ipv4Address",
-            result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
+            result->getValue("//tds:NetworkGateway/tt:IPv4Address"));
         networkDefaultGateway->setProperty(
-            "ipv6Address", result->getValue("//tt:Name"));
+            "ipv6Address",
+            result->getValue("//tds:NetworkGateway/tt:IPv6Address"));
     }
     delete result;
     delete msg;
@@ -609,7 +609,7 @@ DeviceManagement::getNetworkDiscoverMode() {
         networkDiscoveryMode = new NetworkDiscoveryMode();
         networkDiscoveryMode->setProperty(
             "discoveryMode",
-            result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
+            result->getValue("//tds:DiscoveryMode"));
     }
     delete result;
     delete msg;
@@ -620,13 +620,37 @@ NetworkDNS*
 DeviceManagement::getNetworkDNS() {
 
     NetworkDNS* networkDNS = NULL;
-    Message*    msg                  = newMessage();
-    msg->appendToBody(newElement("wsdl:GetDiscoveryMode"));
+    Message*    msg        = newMessage();
+    msg->appendToBody(newElement("wsdl:GetDNS"));
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         networkDNS = new NetworkDNS();
         networkDNS->setProperty(
-            "dhcp", result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
+            "dhcp", result->getValue("//tds:DNSInformation/tt:FromDHCP"));
+        networkDNS->setProperty(
+            "searchDomain",
+            result->getValue("//tds:DNSInformation/tt:SearchDomain"));
+
+        QXmlQuery* query = result->query();
+        query->setQuery(
+            result->nameSpace() +
+            "doc($inputDocument)//tds:DNSInformation/tt:DNSManual");
+
+        QXmlResultItems items;
+        query->evaluateTo(&items);
+        QXmlItem item = items.next();
+        QString  dnsType, dnsIPv4Address;
+        while (!item.isNull()) {
+            query->setFocus(item);
+            query->setQuery(result->nameSpace() + "./tt:Type/string()");
+            query->evaluateTo(&dnsType);
+            networkDNS->setManualType(dnsType.trimmed());
+
+            query->setQuery(result->nameSpace() + "./tt:IPv4Address/string()");
+            query->evaluateTo(&dnsIPv4Address);
+            networkDNS->setIpv4Address(dnsIPv4Address.trimmed());
+            item = items.next();
+        }
     }
     delete result;
     delete msg;
@@ -637,13 +661,15 @@ NetworkHostname*
 DeviceManagement::getNetworkHostname() {
 
     NetworkHostname* networkHostname = NULL;
-    Message*    msg                  = newMessage();
-    msg->appendToBody(newElement("wsdl:GetDiscoveryMode"));
+    Message*         msg             = newMessage();
+    msg->appendToBody(newElement("wsdl:GetHostname"));
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         networkHostname = new NetworkHostname();
         networkHostname->setProperty(
-            "dhcp", result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
+            "dhcp", result->getValue("//tds:HostnameInformation/tt:FromDHCP"));
+        networkHostname->setProperty(
+            "name", result->getValue("//tds:HostnameInformation/tt:Name"));
     }
     delete result;
     delete msg;
@@ -654,13 +680,24 @@ NetworkNTP*
 DeviceManagement::getNetworkNTP() {
 
     NetworkNTP* networkNTP = NULL;
-    Message*    msg                  = newMessage();
-    msg->appendToBody(newElement("wsdl:GetDiscoveryMode"));
+    Message*    msg        = newMessage();
+    msg->appendToBody(newElement("wsdl:GetNTP"));
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
         networkNTP = new NetworkNTP();
         networkNTP->setProperty(
-            "dhcp", result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
+            "dhcp", result->getValue("//tds:NTPInformation/tt:fromDHCP"));
+        networkNTP->setProperty(
+            "manualType",
+            result->getValue("//tds:NTPInformation/tt:NTPManual/tt:Type"));
+        networkNTP->setProperty(
+            "ipv4Address",
+            result->getValue(
+                "//tds:NTPInformation/tt:NTPManual/tt:IPv4Address"));
+        networkNTP->setProperty(
+            "ipv6Address",
+            result->getValue(
+                "//tds:NTPInformation/tt:NTPManual/tt:IPv6Address"));
     }
     delete result;
     delete msg;

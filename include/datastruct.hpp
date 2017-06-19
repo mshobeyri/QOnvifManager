@@ -115,13 +115,40 @@ struct Data {
             bool    result;
         } interfaces;
 
+        struct DefaultGateway {
+            QString ipv4Address;
+            QString ipv6Address;
+        } defaultGateway;
+
+        struct DiscoveryMode {
+            QString discoveryMode;
+        } discoveryMode;
+
+        struct DNS {
+            bool        dhcp;
+            QString     searchDomain;
+            QStringList manualType;
+            QStringList ipv4Address;
+        } dns;
+
+        struct Hostname {
+            bool    dhcp;
+            QString name;
+        } hostname;
+
+        struct NTP {
+            bool    dhcp;
+            QString manualType;
+            QString ipv4Address;
+            QString ipv6Address;
+        } ntp;
     } network;
 
     struct DateTime {
         QDateTime utcTime;
         QDateTime localTime;
-        QString timeZone;
-        bool daylightSaving;
+        QString   timeZone;
+        bool      daylightSaving;
     } dateTime;
 
     // media management

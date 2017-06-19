@@ -48,6 +48,11 @@ public:
     bool refreshDeviceProfiles(QString _deviceEndPointAddress);
     bool refreshDeviceInterfaces(QString _deviceEndPointAddress);
     bool refreshDeviceProtocols(QString _deviceEndPointAddress);
+    bool refreshDeviceDefaultGateway(QString _deviceEndPointAddress);
+    bool refreshDeviceDiscoveryMode(QString _deviceEndPointAddress);
+    bool refreshDeviceDNS(QString _deviceEndPointAddress);
+    bool refreshDeviceHostname(QString _deviceEndPointAddress);
+    bool refreshDeviceNTP(QString _deviceEndPointAddress);
     bool refreshDeviceScopes(QString _deviceEndPointAddress);
 
     bool refreshDeviceUsers(QString _deviceEndPointAddress);

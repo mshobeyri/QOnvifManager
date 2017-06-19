@@ -4,11 +4,12 @@
 #include <QObject>
 
 namespace ONVIF {
-Q_PROPERTY(QString ipv4Address READ ipv4Address WRITE setIpv4Address)
-Q_PROPERTY(QString ipv6Address READ ipv6Address WRITE setIpv6Address)
+
 class NetworkDefaultGateway: public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString ipv4Address READ ipv4Address WRITE setIpv4Address)
+    Q_PROPERTY(QString ipv6Address READ ipv6Address WRITE setIpv6Address)
 public:
     NetworkDefaultGateway();
     QDomElement toxml();

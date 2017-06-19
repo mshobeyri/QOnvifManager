@@ -9,6 +9,8 @@ NetworkDNS::NetworkDNS()
 QDomElement NetworkDNS::toxml()
 {
 
+    QDomElement setNetworkDNS;
+    return setNetworkDNS;
 }
 
 

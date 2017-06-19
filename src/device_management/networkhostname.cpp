@@ -8,7 +8,10 @@ NetworkHostname::NetworkHostname()
 
 QDomElement NetworkHostname::toxml()
 {
+    QDomElement setNetworkHostname;
 
+
+    return setNetworkHostname;
 }
 
 

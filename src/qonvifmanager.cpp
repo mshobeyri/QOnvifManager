@@ -125,6 +125,41 @@ QOnvifManager::refreshDeviceProtocols(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProtocols();
 }
 
+bool QOnvifManager::refreshDeviceDefaultGateway(QString _deviceEndPointAddress)
+{
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDefaultGateway();
+}
+
+bool QOnvifManager::refreshDeviceDiscoveryMode(QString _deviceEndPointAddress)
+{
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDiscoveryMode();
+}
+
+bool QOnvifManager::refreshDeviceDNS(QString _deviceEndPointAddress)
+{
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDNS();
+}
+
+bool QOnvifManager::refreshDeviceHostname(QString _deviceEndPointAddress)
+{
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshHostname();
+}
+
+bool QOnvifManager::refreshDeviceNTP(QString _deviceEndPointAddress)
+{
+    if (!cameraExist(_deviceEndPointAddress))
+        return false;
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshNTP();
+}
+
 bool
 QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))

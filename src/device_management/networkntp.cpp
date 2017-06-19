@@ -5,5 +5,8 @@ NetworkNTP::NetworkNTP() {}
 
 QDomElement NetworkNTP::toxml()
 {
+    QDomElement setNetworkNTP;
 
+
+    return setNetworkNTP;
 }

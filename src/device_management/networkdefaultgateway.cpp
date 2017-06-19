@@ -9,6 +9,9 @@ NetworkDefaultGateway::NetworkDefaultGateway()
 QDomElement NetworkDefaultGateway::toxml()
 {
 
+    QDomElement setNetworkDNS;
+
+    return setNetworkDNS;
 }
 
 
