@@ -6,5 +6,10 @@ NetworkDefaultGateway::NetworkDefaultGateway()
 
 }
 
+QDomElement NetworkDefaultGateway::toxml()
+{
+
+}
+
 
 

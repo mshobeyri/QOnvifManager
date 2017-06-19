@@ -6,6 +6,11 @@ NetworkDiscoveryMode::NetworkDiscoveryMode()
 
 }
 
+QDomElement NetworkDiscoveryMode::toxml()
+{
+
+}
+
 
 
 

@@ -6,6 +6,11 @@ NetworkDNS::NetworkDNS()
 
 }
 
+QDomElement NetworkDNS::toxml()
+{
+
+}
+
 
 
 

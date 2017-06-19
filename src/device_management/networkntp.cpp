@@ -2,3 +2,8 @@
 
 using namespace ONVIF;
 NetworkNTP::NetworkNTP() {}
+
+QDomElement NetworkNTP::toxml()
+{
+
+}

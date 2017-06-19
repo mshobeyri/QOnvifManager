@@ -5,10 +5,14 @@
 #include <QObject>
 
 namespace ONVIF {
-class NetworkHostname
+class NetworkHostname: public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(bool dhcp READ dhcp WRITE setDhcp)
+    Q_PROPERTY(QString name READ name WRITE setName)
 public:
     NetworkHostname();
+    QDomElement toxml();
     bool dhcp() const
     {
         return m_dhcp;

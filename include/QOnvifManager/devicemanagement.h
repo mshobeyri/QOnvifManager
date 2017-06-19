@@ -36,11 +36,11 @@ public:
     Users*             getUsers();
     NetworkInterfaces* getNetworkInterfaces();
     NetworkProtocols*  getNetworkProtocols();
+    NetworkDefaultGateway* getNetworkDefaultGateway();
     NetworkDiscoveryMode*  getNetworkDiscoverMode();
     NetworkDNS*            getNetworkDNS();
     NetworkHostname*       getNetworkHostname();
     NetworkNTP*            getNetworkNTP();
-    NetworkDefaultGateway* getNetworkDefaultGateway();
 
     void setNetworkInterfaces(NetworkInterfaces* networkInterfaces);
     void setNetworkProtocols(NetworkProtocols* networkProtocols);

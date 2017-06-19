@@ -6,6 +6,11 @@ NetworkHostname::NetworkHostname()
 
 }
 
+QDomElement NetworkHostname::toxml()
+{
+
+}
+
 
 
 

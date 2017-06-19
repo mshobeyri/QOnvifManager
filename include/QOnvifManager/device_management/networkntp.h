@@ -5,10 +5,15 @@
 #include <QObject>
 
 namespace ONVIF {
-class NetworkNTP
+class NetworkNTP: public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(bool dhcp READ dhcp WRITE setDhcp)
+    Q_PROPERTY(QString manualType READ manualType WRITE setManualType)
+    Q_PROPERTY(QString ipv4Address READ ipv4Address WRITE setIpv4Address)
 public:
     NetworkNTP();
+    QDomElement toxml();
     bool dhcp() const
     {
         return m_dhcp;
