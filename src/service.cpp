@@ -20,7 +20,6 @@ Service::~Service() {
 
 MessageParser*
 Service::sendMessage(Message& message, const QString& namespaceKey) {
-
     return sendMessage(&message, namespaceKey);
 }
 

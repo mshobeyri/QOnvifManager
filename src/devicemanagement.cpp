@@ -579,3 +579,61 @@ DeviceManagement::getNetworkProtocols() {
     delete msg;
     return networkProtocols;
 }
+
+NetworkDiscoveryMode*
+DeviceManagement::getNetworkDiscoverMode() {
+
+    NetworkDiscoveryMode* networkDiscoveryMode = NULL;
+    Message*           msg               = newMessage();
+    msg->appendToBody(newElement("wsdl:GetNetworkInterfaces"));
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        networkDiscoveryMode = new NetworkDiscoveryMode();
+//        networkDiscoveryMode->setProperty(
+//            "networkInfacesEnabled",
+//            result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
+//        networkDiscoveryMode->setProperty(
+//            "networkInfacesName", result->getValue("//tt:Name"));
+//        networkDiscoveryMode->setProperty(
+//            "hwAaddress", result->getValue("//tt:HwAddress"));
+//        networkDiscoveryMode->setProperty(
+//            "mtu", result->getValue("//tt:MTU").toInt());
+//        networkDiscoveryMode->setProperty(
+//            "ipv4esult != NULL)Enabled",
+//            result->getValue("//tt:IPv4/tt:Enabled"));
+//        networkDiscoveryMode->setProperty(
+//            "ipv4ManualAddress", result->getValue("//tt:Manual/tt:Address"));
+//        networkDiscoveryMode->setProperty(
+//            "ipv4ManualPrefixLength",
+//            result->getValue("//tt:Manual/tt:PrefixLength").toInt());
+//        networkDiscoveryMode->setProperty(
+//            "ipv4LinkLocalAddress",
+//            result->getValue("//tt:LinkLocal/tt:Address"));
+//        networkDiscoveryMode->setProperty(
+//            "ipvLinkLocalPrefixLength",
+//            result->getValue("//tt:LinkLocal/tt:PrefixLength").toInt());
+//        networkDiscoveryMode->setProperty(
+//            "ipv4FromDHCPAddress",
+//            result->getValue("//tt:FromDHCP/tt:Address"));
+//        networkDiscoveryMode->setProperty(
+//            "ipv4FromDHCPPrefixLength",
+//            result->getValue("//tt:FromDHCP/tt:PrefixLength").toInt());
+//        networkDiscoveryMode->setProperty(
+//            "ivp4DHCP", result->getValue("//tt:DHCP"));
+    }
+    delete result;
+    delete msg;
+    return networkDiscoveryMode;
+}
+
+NetworkDNS*
+DeviceManagement::getNetworkDNS() {}
+
+NetworkHostname*
+DeviceManagement::getNetworkHostname() {}
+
+NetworkNTP*
+DeviceManagement::getNetworkNTP() {}
+
+NetworkDefaultGateway*
+DeviceManagement::getNetworkDefaultGateway() {}

@@ -141,10 +141,15 @@ QOnvifManager::deviceDateAndTime(
         ->deviceDateAndTime(_datetime);
 }
 
-bool QOnvifManager::setDeviceDateAndTime(QString _deviceEndPointAddress,
-                                         QDateTime _dateTime, QString _zone, bool _daylightSaving, bool _isLocal) {
+bool
+QOnvifManager::setDeviceDateAndTime(
+    QString   _deviceEndPointAddress,
+    QDateTime _dateTime,
+    QString   _zone,
+    bool      _daylightSaving,
+    bool      _isLocal) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->setDateAndTime(_dateTime,_zone,_daylightSaving,_isLocal);
+        ->setDateAndTime(_dateTime, _zone, _daylightSaving, _isLocal);
 }
 
 QOnvifDevice*
@@ -163,8 +168,6 @@ QOnvifManager::cameraExist(const QString& endpoinAddress) {
         return true;
     return false;
 }
-
-
 
 void
 QOnvifManager::setDefaulUsernameAndPassword(
@@ -210,7 +213,7 @@ QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
 }
 
 bool
-QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress,bool isHard) {
+QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress, bool isHard) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->resetFactoryDevice(isHard);
 }
@@ -251,7 +254,6 @@ QOnvifManager::onReciveData(QHash<QString, QString> _deviceHash) {
         _deviceHash.value("device_service_address");
     probeData.scopes          = _deviceHash.value("scopes");
     probeData.metadataVersion = _deviceHash.value("metadata_version");
-
     QOnvifDevice* device = new QOnvifDevice(
         probeData.deviceServiceAddress, d->iuserName, d->ipassword, this);
     device->setDeviceProbeData(probeData);

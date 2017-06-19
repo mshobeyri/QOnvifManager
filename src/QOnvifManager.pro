@@ -43,6 +43,10 @@ SOURCES += \
     device_management/systemfactorydefault.cpp \
     device_management/systemreboot.cpp \
     device_management/user.cpp \
+    device_management/networkntp.cpp \
+    device_management/networkhostname.cpp \
+    device_management/networkdiscoverymode.cpp \
+    device_management/networkdns.cpp \
     media_management/audioencoderconfiguration.cpp \
     media_management/audioencoderconfigurationoptions.cpp \
     media_management/audioencoderconfigurations.cpp \
@@ -75,7 +79,9 @@ SOURCES += \
     ptzmanagement.cpp \
     service.cpp \
     device_management/systemscopes.cpp \
-    ptz_management/homeposition.cpp
+    ptz_management/homeposition.cpp \
+    device_management/networkdefaultgateway.cpp
+
 
 HEADERS += \
     ../include/qonvifdevice.hpp \
@@ -89,6 +95,10 @@ HEADERS += \
     ../include/QOnvifManager/device_management/systemfactorydefault.h \
     ../include/QOnvifManager/device_management/systemreboot.h \
     ../include/QOnvifManager/device_management/user.h \
+    ../include/QOnvifManager/device_management/networkdiscoverymode.h \
+    ../include/QOnvifManager/device_management/networkhostname.h \
+    ../include/QOnvifManager/device_management/networkntp.h \
+    ../include/QOnvifManager/device_management/networkdns.h \
     ../include/QOnvifManager/media_management/audioencoderconfiguration.h \
     ../include/QOnvifManager/media_management/audioencoderconfigurationoptions.h \
     ../include/QOnvifManager/media_management/audioencoderconfigurations.h \
@@ -122,7 +132,9 @@ HEADERS += \
     ../include/QOnvifManager/qringbuffer_p.h \
     ../include/QOnvifManager/service.h \
     ../include/QOnvifManager/device_management/systemscopes.h \
-    ../include/QOnvifManager/ptz_management/homeposition.h
+    ../include/QOnvifManager/ptz_management/homeposition.h \
+    ../include/QOnvifManager/device_management/networkdefaultgateway.h
+
 
 #unix {
 #    TEMPDIR         = $$PRJDIR/tmp/unix/$$TARGET
