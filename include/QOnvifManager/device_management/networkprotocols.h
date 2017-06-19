@@ -41,7 +41,7 @@ namespace ONVIF {
             m_networkProtocolsPort.push_back(networkProtocolsPort);
         }
 
-        bool getResult() const
+        bool result() const
         {
             return m_result;
         }
