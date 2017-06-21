@@ -5,7 +5,7 @@
 #include <QObject>
 
 namespace ONVIF {
-class NetworkHostname: public QObject
+class NetworkHostname : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool dhcp READ dhcp WRITE setDhcp)
@@ -13,27 +13,31 @@ class NetworkHostname: public QObject
 public:
     NetworkHostname();
     QDomElement toxml();
-    bool dhcp() const
-    {
+    bool        dhcp() const {
         return m_dhcp;
     }
-    void setDhcp(bool dhcp)
-    {
+    void setDhcp(bool dhcp) {
         m_dhcp = dhcp;
     }
 
-    QString name() const
-    {
+    QString name() const {
         return m_name;
     }
-    void setName(const QString &name)
-    {
+    void setName(const QString& name) {
         m_name = name;
     }
 
+    bool result() const {
+        return m_result;
+    }
+    void setResult(bool result) {
+        m_result = result;
+    }
+
 private:
-    bool m_dhcp;
+    bool    m_dhcp;
     QString m_name;
+    bool    m_result;
 };
 }
 #endif // NETWORKHOSTNAME_H

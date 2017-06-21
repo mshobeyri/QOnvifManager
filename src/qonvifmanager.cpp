@@ -125,36 +125,38 @@ QOnvifManager::refreshDeviceProtocols(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProtocols();
 }
 
-bool QOnvifManager::refreshDeviceDefaultGateway(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceDefaultGateway(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDefaultGateway();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshDefaultGateway();
 }
 
-bool QOnvifManager::refreshDeviceDiscoveryMode(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceDiscoveryMode(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDiscoveryMode();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->refreshDiscoveryMode();
 }
 
-bool QOnvifManager::refreshDeviceDNS(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceDNS(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDNS();
 }
 
-bool QOnvifManager::refreshDeviceHostname(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceHostname(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshHostname();
 }
 
-bool QOnvifManager::refreshDeviceNTP(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceNTP(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshNTP();
@@ -242,6 +244,41 @@ QOnvifManager::setDeviceNetworkProtocols(
 }
 
 bool
+QOnvifManager::setDeviceNetworkDefaultGateway(
+    QString                       _deviceEndPointAddress,
+    Data::Network::DefaultGateway _defaultGateway) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setDefaultGateway(_defaultGateway);
+}
+
+bool
+QOnvifManager::setDeviceNetworkDiscoveryMode(
+    QString                      _deviceEndPointAddress,
+    Data::Network::DiscoveryMode _discoveryMode) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setDiscoveryMode(_discoveryMode);
+}
+
+bool
+QOnvifManager::setDeviceNetworkDNS(
+    QString _deviceEndPointAddress, Data::Network::DNS _dns) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setDNS(_dns);
+}
+
+bool
+QOnvifManager::setDeviceNetworkHostname(
+    QString _deviceEndPointAddress, Data::Network::Hostname _hostname) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setHostname(_hostname);
+}
+
+bool
+QOnvifManager::setDeviceNetworkNTP(
+    QString _deviceEndPointAddress, Data::Network::NTP _ntp) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setNTP(_ntp);
+}
+
+bool
 QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
         ->refreshPtzConfiguration();
@@ -289,7 +326,7 @@ QOnvifManager::onReciveData(QHash<QString, QString> _deviceHash) {
         _deviceHash.value("device_service_address");
     probeData.scopes          = _deviceHash.value("scopes");
     probeData.metadataVersion = _deviceHash.value("metadata_version");
-    QOnvifDevice* device = new QOnvifDevice(
+    QOnvifDevice* device      = new QOnvifDevice(
         probeData.deviceServiceAddress, d->iuserName, d->ipassword, this);
     device->setDeviceProbeData(probeData);
     d->idevicesMap.insert(probeData.endPointAddress, device);

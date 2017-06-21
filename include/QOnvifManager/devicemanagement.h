@@ -33,9 +33,9 @@ public:
     void setDeviceScopes(SystemScopes* systemScopes);
     void setSystemFactoryDefault(SystemFactoryDefault* systemFactoryDefault);
     void systemReboot(SystemReboot* systemReboot);
-    Users*             getUsers();
-    NetworkInterfaces* getNetworkInterfaces();
-    NetworkProtocols*  getNetworkProtocols();
+    Users*                 getUsers();
+    NetworkInterfaces*     getNetworkInterfaces();
+    NetworkProtocols*      getNetworkProtocols();
     NetworkDefaultGateway* getNetworkDefaultGateway();
     NetworkDiscoveryMode*  getNetworkDiscoverMode();
     NetworkDNS*            getNetworkDNS();
@@ -44,6 +44,11 @@ public:
 
     void setNetworkInterfaces(NetworkInterfaces* networkInterfaces);
     void setNetworkProtocols(NetworkProtocols* networkProtocols);
+    void setDefaultGateway(NetworkDefaultGateway* networkDefaultGateway);
+    void setDiscoveryMode(NetworkDiscoveryMode* networkDiscoveryMode);
+    void setDNS(NetworkDNS* networkDns);
+    void setHostname(NetworkHostname* networkHostname);
+    void setNTP(NetworkNTP* networkNtp);
     Capabilities* getCapabilitiesPtz();
     Capabilities* getCapabilitiesImaging();
     Capabilities* getCapabilitiesMedia();

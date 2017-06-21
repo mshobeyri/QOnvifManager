@@ -531,7 +531,7 @@ DeviceManagement::setNetworkProtocols(NetworkProtocols* networkProtocols) {
     msg->appendToBody(networkProtocols->toxml());
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
-        if (result->find("//tds:SetNetworkInterfacesProtocols"))
+        if (result->find("//tds:SetNetworkProtocolsResponse"))
             networkProtocols->setResult(true);
         else
             networkProtocols->setResult(false);
@@ -539,6 +539,58 @@ DeviceManagement::setNetworkProtocols(NetworkProtocols* networkProtocols) {
         delete msg;
     }
 }
+
+void
+DeviceManagement::setDefaultGateway(
+    NetworkDefaultGateway* networkDefaultGateway) {
+    Message* msg = newMessage();
+    msg->appendToBody(networkDefaultGateway->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetNetworkDefaultGatewayResponse"))
+            networkDefaultGateway->setResult(true);
+        else
+            networkDefaultGateway->setResult(false);
+        delete result;
+        delete msg;
+    }
+}
+
+void
+DeviceManagement::setDiscoveryMode(NetworkDiscoveryMode* networkDiscoveryMode) {
+    Message* msg = newMessage();
+    msg->appendToBody(networkDiscoveryMode->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetNetworkDiscoveryResponse"))
+            networkDiscoveryMode->setResult(true);
+        else
+            networkDiscoveryMode->setResult(false);
+        delete result;
+        delete msg;
+    }
+}
+
+void
+DeviceManagement::setDNS(NetworkDNS* networkDns) {
+    Message* msg = newMessage();
+    msg->appendToBody(networkDns->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetNetworkDiscoveryResponse"))
+            networkDns->setResult(true);
+        else
+            networkDns->setResult(false);
+        delete result;
+        delete msg;
+    }
+}
+
+void
+DeviceManagement::setHostname(NetworkHostname* networkHostname) {}
+
+void
+DeviceManagement::setNTP(NetworkNTP* networkNtp) {}
 
 NetworkProtocols*
 DeviceManagement::getNetworkProtocols() {
@@ -608,8 +660,7 @@ DeviceManagement::getNetworkDiscoverMode() {
     if (result != NULL) {
         networkDiscoveryMode = new NetworkDiscoveryMode();
         networkDiscoveryMode->setProperty(
-            "discoveryMode",
-            result->getValue("//tds:DiscoveryMode"));
+            "discoveryMode", result->getValue("//tds:DiscoveryMode"));
     }
     delete result;
     delete msg;

@@ -32,11 +32,20 @@ public:
     // device management
     void setDeviceProbeData(Data::ProbeData _probeData);
 
-    bool setDateAndTime(QDateTime _dateAndTime, QString _zone, bool _daylightSaving, bool _isLocal);
+    bool setDateAndTime(
+        QDateTime _dateAndTime,
+        QString   _zone,
+        bool      _daylightSaving,
+        bool      _isLocal);
     bool setScopes(QString _name, QString _location);
     bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig);
     bool setInterfaces(Data::Network::Interfaces _interfaces);
     bool setProtocols(Data::Network::Protocols _protocols);
+    bool setDefaultGateway(Data::Network::DefaultGateway _defaultGateway);
+    bool setDiscoveryMode(Data::Network::DiscoveryMode _discoveryMode);
+    bool setDNS(Data::Network::DNS _dns);
+    bool setHostname(Data::Network::Hostname _hostname);
+    bool setNTP(Data::Network::NTP _ntp);
 
     bool refreshDeviceCapabilities();
     bool refreshDeviceInformation();
@@ -67,6 +76,7 @@ public:
     bool setHomePosition();
     bool continuousMove(const float x, const float y, const float z);
     bool stopMovement();
+
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
     QScopedPointer<QOnvifDevicePrivate> d_ptr;

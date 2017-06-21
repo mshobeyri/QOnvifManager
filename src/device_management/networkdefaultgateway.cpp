@@ -1,4 +1,5 @@
 #include "networkdefaultgateway.h"
+#include "message.h"
 
 using namespace ONVIF;
 NetworkDefaultGateway::NetworkDefaultGateway()
@@ -8,11 +9,16 @@ NetworkDefaultGateway::NetworkDefaultGateway()
 
 QDomElement NetworkDefaultGateway::toxml()
 {
-
-    QDomElement setNetworkDNS;
-
-    return setNetworkDNS;
+    QDomElement setNetworkDefaltGateway,ipv4Address;
+    setNetworkDefaltGateway = newElement("wsdl:SetNetworkDefaultGateway");
+    ipv4Address = newElement("sch:IPv4Address",this->ipv4Address());
+    setNetworkDefaltGateway.appendChild(ipv4Address);
+    return setNetworkDefaltGateway;
 }
+
+
+
+
 
 
 

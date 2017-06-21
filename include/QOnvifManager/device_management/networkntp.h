@@ -43,11 +43,21 @@ public:
         m_ipv6Address = ipv6Address;
     }
 
+    bool result() const
+    {
+        return m_result;
+    }
+    void setResult(bool result)
+    {
+        m_result = result;
+    }
+
 private:
     bool    m_dhcp;
     QString m_manualType;
     QString m_ipv4Address;
     QString m_ipv6Address;
+    bool    m_result;
 };
 }
 #endif // NETWORKNTP_H

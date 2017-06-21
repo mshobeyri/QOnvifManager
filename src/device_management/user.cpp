@@ -6,4 +6,3 @@ Users::Users(QObject *parent) : QObject(parent) {
 }
 Users::~Users(){
 }
-

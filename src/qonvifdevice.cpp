@@ -144,6 +144,49 @@ public:
         return networkProtocols.result();
     }
 
+    bool setDefaultGateway(Data::Network::DefaultGateway _defaultGateway) {
+        ONVIF::NetworkDefaultGateway networkDefaultGateway;
+        networkDefaultGateway.setIpv4Address(_defaultGateway.ipv4Address);
+        ideviceManagement->setDefaultGateway(&networkDefaultGateway);
+        return networkDefaultGateway.result();
+    }
+
+    bool setDiscoveryMode(Data::Network::DiscoveryMode _discoveryMode) {
+        ONVIF::NetworkDiscoveryMode networkDiscoveryMode;
+        networkDiscoveryMode.setDiscoveryMode(_discoveryMode.discoveryMode);
+        ideviceManagement->setDiscoveryMode(&networkDiscoveryMode);
+        return networkDiscoveryMode.result();
+    }
+
+    bool setDNS(Data::Network::DNS _dns) {
+        ONVIF::NetworkDNS networkDNS;
+        networkDNS.setDhcp(_dns.dhcp);
+        foreach (QString ipAddress, _dns.ipv4Address)
+            networkDNS.setIpv4Address(ipAddress);
+        foreach (QString manualType, _dns.manualType)
+            networkDNS.setManualType(manualType);
+        networkDNS.setSearchDomain(_dns.searchDomain);
+        ideviceManagement->setDNS(&networkDNS);
+        return networkDNS.result();
+    }
+
+    bool setHostname(Data::Network::Hostname _hostname) {
+        ONVIF::NetworkHostname networkHostname;
+        networkHostname.setDhcp(_hostname.dhcp);
+        networkHostname.setName(_hostname.name);
+        ideviceManagement->setHostname(&networkHostname);
+        return networkHostname.result();
+    }
+
+    bool setNTP(Data::Network::NTP _ntp) {
+        ONVIF::NetworkNTP networkNTP;
+        networkNTP.setDhcp(_ntp.dhcp);
+        networkNTP.setIpv4Address(_ntp.ipv4Address);
+        networkNTP.setManualType(_ntp.ipv6Address);
+        ideviceManagement->setNTP(&networkNTP);
+        return networkNTP.result();
+    }
+
     bool refreshDeviceCapabilities() {
         QScopedPointer<ONVIF::Capabilities> capabilitiesDevice(
             ideviceManagement->getCapabilitiesDevice());
@@ -903,6 +946,30 @@ QOnvifDevice::setProtocols(Data::Network::Protocols _protocols) {
     return d_ptr->setProtocols(_protocols);
 }
 
+bool
+QOnvifDevice::setDefaultGateway(Data::Network::DefaultGateway _defaultGateway) {
+    return d_ptr->setDefaultGateway(_defaultGateway);
+}
+
+bool
+QOnvifDevice::setDiscoveryMode(Data::Network::DiscoveryMode _discoveryMode) {
+    return d_ptr->setDiscoveryMode(_discoveryMode);
+}
+
+bool
+QOnvifDevice::setDNS(Data::Network::DNS _dns) {
+    return d_ptr->setDNS(_dns);
+}
+
+bool
+QOnvifDevice::setHostname(Data::Network::Hostname _hostname) {
+    return d_ptr->setHostname(_hostname);
+}
+
+bool
+QOnvifDevice::setNTP(Data::Network::NTP _ntp) {
+    return d_ptr->setNTP(_ntp);
+}
 bool
 QOnvifDevice::setDateAndTime(
     QDateTime _dateAndTime,

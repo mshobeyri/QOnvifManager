@@ -75,6 +75,22 @@ public:
 
     bool setDeviceNetworkProtocols(
         QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
+
+    bool setDeviceNetworkDefaultGateway(
+        QString _deviceEndPointAddress, Data::Network::DefaultGateway _defaultGateway);
+
+    bool setDeviceNetworkDiscoveryMode(
+        QString _deviceEndPointAddress, Data::Network::DiscoveryMode _discoveryMode);
+
+    bool setDeviceNetworkDNS(
+        QString _deviceEndPointAddress, Data::Network::DNS _dns);
+
+    bool setDeviceNetworkHostname(
+        QString _deviceEndPointAddress, Data::Network::Hostname _hostname);
+
+    bool setDeviceNetworkNTP(
+        QString _deviceEndPointAddress, Data::Network::NTP _ntp);
+
     bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
 
     bool resetFactoryDevice(QString _deviceEndPointAddress, bool isHard);

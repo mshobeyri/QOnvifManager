@@ -87,7 +87,7 @@ struct Data {
         };
         UserLevelType userLevel;
     };
-    typedef QList<User> Users;
+    using  Users = QList<User>;
     Users               users;
     struct Network {
         struct Protocols {
@@ -115,6 +115,13 @@ struct Data {
             bool    result;
         } interfaces;
 
+        struct DNS {
+            bool        dhcp;
+            QString     searchDomain;
+            QStringList manualType;
+            QStringList ipv4Address;
+        } dns;
+
         struct DefaultGateway {
             QString ipv4Address;
             QString ipv6Address;
@@ -123,13 +130,6 @@ struct Data {
         struct DiscoveryMode {
             QString discoveryMode;
         } discoveryMode;
-
-        struct DNS {
-            bool        dhcp;
-            QString     searchDomain;
-            QStringList manualType;
-            QStringList ipv4Address;
-        } dns;
 
         struct Hostname {
             bool    dhcp;

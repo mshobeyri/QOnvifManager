@@ -12,15 +12,23 @@ class NetworkDiscoveryMode : public QObject
 public:
     NetworkDiscoveryMode();
     QDomElement toxml();
-    QString discoveryMode() const {
+    QString     discoveryMode() const {
         return m_discoveryMode;
     }
     void setDiscoveryMode(const QString& discoveryMode) {
         m_discoveryMode = discoveryMode;
     }
 
+    bool result() const {
+        return m_result;
+    }
+    void setResult(bool result) {
+        m_result = result;
+    }
+
 private:
     QString m_discoveryMode;
+    bool    m_result;
 };
 }
 #endif // NETWORKDISCOVERYMODE_H
