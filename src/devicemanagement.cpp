@@ -562,7 +562,7 @@ DeviceManagement::setDiscoveryMode(NetworkDiscoveryMode* networkDiscoveryMode) {
     msg->appendToBody(networkDiscoveryMode->toxml());
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
-        if (result->find("//tds:SetNetworkDiscoveryResponse"))
+        if (result->find("//tds:SetDiscoveryModeResponse"))
             networkDiscoveryMode->setResult(true);
         else
             networkDiscoveryMode->setResult(false);
@@ -577,7 +577,7 @@ DeviceManagement::setDNS(NetworkDNS* networkDns) {
     msg->appendToBody(networkDns->toxml());
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
-        if (result->find("//tds:SetNetworkDiscoveryResponse"))
+        if (result->find("//tds:SetDNSResponse"))
             networkDns->setResult(true);
         else
             networkDns->setResult(false);
@@ -587,10 +587,34 @@ DeviceManagement::setDNS(NetworkDNS* networkDns) {
 }
 
 void
-DeviceManagement::setHostname(NetworkHostname* networkHostname) {}
+DeviceManagement::setHostname(NetworkHostname* networkHostname) {
+    Message* msg = newMessage();
+    msg->appendToBody(networkHostname->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetHostnameResponse"))
+            networkHostname->setResult(true);
+        else
+            networkHostname->setResult(false);
+        delete result;
+        delete msg;
+    }
+}
 
 void
-DeviceManagement::setNTP(NetworkNTP* networkNtp) {}
+DeviceManagement::setNTP(NetworkNTP* networkNtp) {
+    Message* msg = newMessage();
+    msg->appendToBody(networkNtp->toxml());
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        if (result->find("//tds:SetNTPResponse"))
+            networkNtp->setResult(true);
+        else
+            networkNtp->setResult(false);
+        delete result;
+        delete msg;
+    }
+}
 
 NetworkProtocols*
 DeviceManagement::getNetworkProtocols() {

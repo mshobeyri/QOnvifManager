@@ -15,10 +15,3 @@ QDomElement NetworkDefaultGateway::toxml()
     setNetworkDefaltGateway.appendChild(ipv4Address);
     return setNetworkDefaltGateway;
 }
-
-
-
-
-
-
-
