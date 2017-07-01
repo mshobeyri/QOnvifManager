@@ -15,15 +15,25 @@ VideoEncoderConfiguration::toxml() {
         sessionTimeout, forcePresistence;
 
     setVideoConfiguration = newElement("SetVideoEncoderConfiguration");
+    setVideoConfiguration.setAttribute(
+        "xmlns", "http://www.onvif.org/ver10/media/wsdl");
+
     configuration = newElement("Configuration");
+    configuration.setAttribute("token", this->token());
     name          = newElement("Name", this->name());
+    name.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     useCount      = newElement("UseCount", QString::number(this->useCount()));
+    useCount.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     encoding      = newElement("Encoding", this->encoding());
+    encoding.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     resolution    = newElement("Resolution");
+    resolution.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     width         = newElement("Width", QString::number(this->width()));
     height        = newElement("Height", QString::number(this->height()));
     quality       = newElement("Quality", QString::number(this->quality()));
+    quality.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     rateControl   = newElement("RateControl");
+    rateControl.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     frameRateLimit =
         newElement("FrameRateLimit", QString::number(this->frameRateLimit()));
     encodingInterval = newElement(
@@ -31,9 +41,11 @@ VideoEncoderConfiguration::toxml() {
     bitrateLimit =
         newElement("BitrateLimit", QString::number(this->bitrateLimit()));
     h264        = newElement("H264");
+    h264.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     govLength   = newElement("GovLength", QString::number(this->govLength()));
     h264profile = newElement("H264Profile", this->h264Profile());
     multicast   = newElement("Multicast");
+    multicast.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     address     = newElement("Address");
     type        = newElement("Type", this->type());
     ipv4Address = newElement("IPv4Address", this->ipv4Address());
@@ -42,20 +54,9 @@ VideoEncoderConfiguration::toxml() {
     autoStart =
         newElement("AutoStart", this->autoStart() == true ? "true" : "false");
     sessionTimeout   = newElement("SessionTimeout", this->sessionTimeout());
+    sessionTimeout.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     forcePresistence = newElement("ForcePersistence", "true");
 
-    setVideoConfiguration.setAttribute(
-        "xmlns", "http://www.onvif.org/ver10/media/wsdl");
-    configuration.setAttribute("token", this->token());
-    name.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    useCount.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    encoding.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    resolution.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    quality.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    rateControl.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    h264.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    multicast.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    sessionTimeout.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
 
     resolution.appendChild(width);
     resolution.appendChild(height);
