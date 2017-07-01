@@ -11,38 +11,34 @@ NetworkInterfaces::toxml() {
     QDomElement setNetworkInterfaces, interfaceToken, networkInterface,
         networkInterfaceEnabled, link, autoNegotiation, speed, duplex, mtu,
         ipv4, ipv4Enabled, manual, address, prefixLength, dhcp;
-    setNetworkInterfaces = newElement("wsdl:SetNetworkInterfaces");
+    setNetworkInterfaces = newElement("SetNetworkInterfaces");
     setNetworkInterfaces.setAttribute(
         "xmlns", "http://www.onvif.org/ver10/device/wsdl");
-    interfaceToken   = newElement("sch:InterfaceToken", this->interfaceToken());
-    networkInterface = newElement("sch:NetworkInterface");
+    interfaceToken   = newElement("InterfaceToken", this->interfaceToken());
+    networkInterface = newElement("NetworkInterface");
     networkInterfaceEnabled = newElement(
-        "sch:Enabled",
-        this->networkInfacesEnabled() == true ? "true" : "false");
+        "Enabled", this->networkInfacesEnabled() == true ? "true" : "false");
     networkInterfaceEnabled.setAttribute(
         "xmlns", "http://www.onvif.org/ver10/schema");
-    link            = newElement("sch:Link");
+    link            = newElement("Link");
     autoNegotiation = newElement(
-        "sch:AutoNegotiation",
-        this->autoNegotiation() == true ? "true" : "false");
-    speed  = newElement("sch:Speed", QString::number(this->speed()));
+        "AutoNegotiation", this->autoNegotiation() == true ? "true" : "false");
+    speed  = newElement("Speed", QString::number(this->speed()));
     duplex = newElement(
-        "sch:Duplex",
-        this->duplex() == NetworkInterfaces::Full ? "Full" : "Half");
+        "Duplex", this->duplex() == NetworkInterfaces::Full ? "Full" : "Half");
 
-    mtu = newElement("sch:MTU", QString::number(this->mtu()));
+    mtu = newElement("MTU", QString::number(this->mtu()));
     mtu.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    ipv4 = newElement("sch:IPv4");
+    ipv4 = newElement("IPv4");
     ipv4.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
 
-    ipv4Enabled = newElement(
-        "sch:Enabled", this->ipv4Enabled() == true ? "true" : "false");
-    manual       = newElement("sch:Manual");
-    address      = newElement("sch:Address", this->ipv4ManualAddress());
+    ipv4Enabled =
+        newElement("Enabled", this->ipv4Enabled() == true ? "true" : "false");
+    manual       = newElement("Manual");
+    address      = newElement("Address", this->ipv4ManualAddress());
     prefixLength = newElement(
-        "sch:PrefixLength", QString::number(this->ipv4ManualPrefixLength()));
-    dhcp =
-        newElement("sch:DHCP", this->ipv4Enabled() == true ? "true" : "false");
+        "PrefixLength", QString::number(this->ipv4ManualPrefixLength()));
+    dhcp = newElement("DHCP", this->ipv4Enabled() == true ? "true" : "false");
     setNetworkInterfaces.appendChild(interfaceToken);
     setNetworkInterfaces.appendChild(networkInterface);
     networkInterface.appendChild(networkInterfaceEnabled);
