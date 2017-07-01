@@ -2207,8 +2207,10 @@ MediaManagement::setVideoEncoderConfiguration(VideoEncoderConfiguration *videoCo
     Message* msg = newMessage();
     msg->appendToBody(videoConfigurations->toxml());
     MessageParser* result = sendMessage(msg);
+    videoConfigurations->setResult(false);
     if (result != NULL) {
-        if (result->find("//tds:SetVideoEncoderConfigurationResponse"))
+        if (result->find("//tds:SetVideoEncoderConfigurationResponse")||
+             result->find("//*[local-name() = 'SetVideoEncoderConfigurationResponse']"))
             videoConfigurations->setResult(true);
         else
             videoConfigurations->setResult(false);
