@@ -6,13 +6,18 @@ NetworkDNS::NetworkDNS() {}
 QDomElement
 NetworkDNS::toxml() {
     QDomElement setDNS, fromDhcp;
-    setDNS   = newElement("wsdl:SetDNS");
+    setDNS = newElement("SetDNS");
+    setDNS.setAttribute("xmlns", "http://www.onvif.org/ver10/device/wsdl");
     fromDhcp = newElement("FromDHCP", this->dhcp() ? "true" : "false");
     setDNS.appendChild(fromDhcp);
-    for(int i = 0;i < this->manualType().length();i++){
+    for (int i = 0; i < this->manualType().length(); i++) {
         QDomElement dnsManual = newElement("DNSManual");
-        QDomElement type = newElement("Type",this->manualType()[i]);
-        QDomElement ipv4Address = newElement("IPv4Address", this->ipv4Address()[i]);
+        QDomElement type      = newElement("Type", this->manualType()[i]);
+        type.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+        QDomElement ipv4Address =
+            newElement("IPv4Address", this->ipv4Address()[i]);
+        ipv4Address.setAttribute(
+            "xmlns", "http://www.onvif.org/ver10/schema");
         dnsManual.appendChild(type);
         dnsManual.appendChild(ipv4Address);
         setDNS.appendChild(dnsManual);

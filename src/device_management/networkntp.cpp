@@ -6,7 +6,8 @@ NetworkNTP::NetworkNTP() {}
 QDomElement
 NetworkNTP::toxml() {
     QDomElement setNTP, fromDhcp, ntpManual, type, ipv4Address;
-    setNTP   = newElement("SetNTP");
+    setNTP = newElement("SetNTP");
+    setNTP.setAttribute("xmlns", "http://www.onvif.org/ver10/device/wsdl");
     fromDhcp = newElement("FromDHCP", this->dhcp() ? "true" : "false");
     setNTP.appendChild(fromDhcp);
     ntpManual   = newElement("NTPManual");
