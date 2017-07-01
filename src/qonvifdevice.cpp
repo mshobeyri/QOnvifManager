@@ -128,6 +128,7 @@ public:
         des.setNetworkInfacesEnabled(_interface.networkInfacesEnabled);
         des.setNetworkInfacesName(_interface.networkInfacesName);
         des.setSpeed(_interface.speed);
+        des.setInterfaceToken(_interface.interfaceToken);
         ideviceManagement->setNetworkInterfaces(&networkInterface);
         return networkInterface.result();
     }
@@ -708,6 +709,7 @@ public:
         des.ipvLinkLocalPrefixLength = src->ipvLinkLocalPrefixLength();
         des.ipv4FromDHCPAddress      = src->ipv4FromDHCPAddress();
         des.ipv4FromDHCPPrefixLength = src->ipv4FromDHCPPrefixLength();
+        des.interfaceToken           = src->interfaceToken();
         des.result                   = src->result();
         des.duplexFull = src->duplex() == ONVIF::NetworkInterfaces::Duplex::Full
                              ? true

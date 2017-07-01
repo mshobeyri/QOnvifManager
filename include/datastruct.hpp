@@ -112,6 +112,7 @@ struct Data {
             int     ipv4FromDHCPPrefixLength;
             QString networkInfacesName;
             QString hwAaddress;
+            QString interfaceToken;
             bool    result;
         } interfaces;
 

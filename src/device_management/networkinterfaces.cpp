@@ -12,11 +12,15 @@ NetworkInterfaces::toxml() {
         networkInterfaceEnabled, link, autoNegotiation, speed, duplex, mtu,
         ipv4, ipv4Enabled, manual, address, prefixLength, dhcp;
     setNetworkInterfaces = newElement("wsdl:SetNetworkInterfaces");
-    interfaceToken = newElement("wsdl:InterfaceToken", this->interfaceToken());
-    networkInterface        = newElement("wsdl:NetworkInterface");
+    setNetworkInterfaces.setAttribute(
+        "xmlns", "http://www.onvif.org/ver10/device/wsdl");
+    interfaceToken   = newElement("sch:InterfaceToken", this->interfaceToken());
+    networkInterface = newElement("sch:NetworkInterface");
     networkInterfaceEnabled = newElement(
         "sch:Enabled",
         this->networkInfacesEnabled() == true ? "true" : "false");
+    networkInterfaceEnabled.setAttribute(
+        "xmlns", "http://www.onvif.org/ver10/schema");
     link            = newElement("sch:Link");
     autoNegotiation = newElement(
         "sch:AutoNegotiation",
@@ -26,8 +30,11 @@ NetworkInterfaces::toxml() {
         "sch:Duplex",
         this->duplex() == NetworkInterfaces::Full ? "Full" : "Half");
 
-    mtu         = newElement("sch:MTU", QString::number(this->mtu()));
-    ipv4        = newElement("sch:IPv4");
+    mtu = newElement("sch:MTU", QString::number(this->mtu()));
+    mtu.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+    ipv4 = newElement("sch:IPv4");
+    ipv4.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
+
     ipv4Enabled = newElement(
         "sch:Enabled", this->ipv4Enabled() == true ? "true" : "false");
     manual       = newElement("sch:Manual");

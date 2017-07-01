@@ -200,6 +200,7 @@ DeviceManagement::setSystemDateAndTime(SystemDateAndTime* systemDateAndTime) {
     Message* msg = newMessage();
     msg->appendToBody(systemDateAndTime->toxml());
     MessageParser* result = sendMessage(msg);
+    systemDateAndTime->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetSystemDateAndTimeResponse"))
             systemDateAndTime->setResult(true);
@@ -232,6 +233,7 @@ DeviceManagement::setSystemFactoryDefault(
     Message* msg = newMessage();
     msg->appendToBody(systemFactoryDefault->toxml());
     MessageParser* result = sendMessage(msg);
+    systemFactoryDefault->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetSystemFactoryDefaultResponse"))
             systemFactoryDefault->setResult(true);
@@ -474,7 +476,8 @@ DeviceManagement::getNetworkInterfaces() {
     if (result != NULL) {
         networkInterfaces = new NetworkInterfaces();
         networkInterfaces->setProperty(
-            "interfaceToken", "//tds:NetworkInterfaces/@token");
+            "interfaceToken",
+            result->getValue("//tds:NetworkInterfaces/@token"));
         networkInterfaces->setProperty(
             "networkInfacesEnabled",
             result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
@@ -517,6 +520,7 @@ DeviceManagement::setNetworkInterfaces(NetworkInterfaces* networkInterfaces) {
     Message* msg = newMessage();
     msg->appendToBody(networkInterfaces->toxml());
     MessageParser* result = sendMessage(msg);
+    networkInterfaces->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetNetworkInterfacesResponse"))
             networkInterfaces->setResult(true);
@@ -532,6 +536,7 @@ DeviceManagement::setNetworkProtocols(NetworkProtocols* networkProtocols) {
     Message* msg = newMessage();
     msg->appendToBody(networkProtocols->toxml());
     MessageParser* result = sendMessage(msg);
+    networkProtocols->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetNetworkProtocolsResponse"))
             networkProtocols->setResult(true);
@@ -548,6 +553,7 @@ DeviceManagement::setDefaultGateway(
     Message* msg = newMessage();
     msg->appendToBody(networkDefaultGateway->toxml());
     MessageParser* result = sendMessage(msg);
+    networkDefaultGateway->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetNetworkDefaultGatewayResponse"))
             networkDefaultGateway->setResult(true);
@@ -563,6 +569,7 @@ DeviceManagement::setDiscoveryMode(NetworkDiscoveryMode* networkDiscoveryMode) {
     Message* msg = newMessage();
     msg->appendToBody(networkDiscoveryMode->toxml());
     MessageParser* result = sendMessage(msg);
+    networkDiscoveryMode->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetDiscoveryModeResponse"))
             networkDiscoveryMode->setResult(true);
@@ -578,6 +585,7 @@ DeviceManagement::setDNS(NetworkDNS* networkDns) {
     Message* msg = newMessage();
     msg->appendToBody(networkDns->toxml());
     MessageParser* result = sendMessage(msg);
+    networkDns->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetDNSResponse"))
             networkDns->setResult(true);
@@ -593,6 +601,7 @@ DeviceManagement::setHostname(NetworkHostname* networkHostname) {
     Message* msg = newMessage();
     msg->appendToBody(networkHostname->toxml());
     MessageParser* result = sendMessage(msg);
+    networkHostname->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetHostnameResponse"))
             networkHostname->setResult(true);
@@ -608,6 +617,7 @@ DeviceManagement::setNTP(NetworkNTP* networkNtp) {
     Message* msg = newMessage();
     msg->appendToBody(networkNtp->toxml());
     MessageParser* result = sendMessage(msg);
+    networkNtp->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetNTPResponse"))
             networkNtp->setResult(true);
