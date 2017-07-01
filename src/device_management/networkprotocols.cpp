@@ -3,8 +3,8 @@
 using namespace ONVIF;
 QDomElement
 NetworkProtocols::toxml() {
-    QDomElement setNetworkProfiles;
-    setNetworkProfiles = newElement("SetNetworkProtocols");
+    QDomElement setNetworkProtocols;
+    setNetworkProtocols = newElement("SetNetworkProtocols");
     for (int i = 0; i < m_networkProtocolsName.length(); i++) {
         QDomElement networkprotocol = newElement("NetworkProtocols");
         QDomElement name = newElement("Name", m_networkProtocolsName[i]);
@@ -21,9 +21,9 @@ NetworkProtocols::toxml() {
         networkprotocol.appendChild(name);
         networkprotocol.appendChild(enabled);
         networkprotocol.appendChild(port);
-        setNetworkProfiles.appendChild(networkprotocol);
+        setNetworkProtocols.appendChild(networkprotocol);
     }
-    return setNetworkProfiles;
+    return setNetworkProtocols;
 }
 
 NetworkProtocols::NetworkProtocols(QObject* parent) : QObject(parent) {}
