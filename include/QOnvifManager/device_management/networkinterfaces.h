@@ -20,7 +20,7 @@ class NetworkInterfaces : public QObject
                                                                 setIpv4ManualAddress)
     Q_PROPERTY(int ipv4ManualPrefixLength READ ipv4ManualPrefixLength WRITE
                                                                       setIpv4ManualPrefixLength)
-    Q_PROPERTY(bool ipv4DHCP READ getIpv4DHCP WRITE setIpv4DHCP)
+    Q_PROPERTY(bool ipv4DHCP READ ipv4DHCP WRITE setIpv4DHCP)
     Q_PROPERTY(QString networkInfacesName READ networkInfacesName WRITE
                                                                   setNetworkInfacesName)
     Q_PROPERTY(QString hwAaddress READ hwAaddress WRITE setHwAaddress)
@@ -32,6 +32,9 @@ class NetworkInterfaces : public QObject
                                                                     setIpv4FromDHCPAddress)
     Q_PROPERTY(int ipv4FromDHCPPrefixLength READ ipv4FromDHCPPrefixLength WRITE
                                                                           setIpv4FromDHCPPrefixLength)
+
+    Q_PROPERTY(QString interfaceToken READ interfaceToken WRITE
+                                                                      setInterfaceToken)
 public:
     explicit NetworkInterfaces(QObject* parent = NULL);
     virtual ~NetworkInterfaces();
@@ -94,8 +97,12 @@ public:
         return m_ipv4FromDHCPPrefixLength;
     }
 
-    bool getIpv4DHCP() const {
+    bool ipv4DHCP() const {
         return m_ipv4DHCP;
+    }
+
+    QString interfaceToken() const {
+        return m_interfaceToken;
     }
 
     bool result() const {
@@ -162,7 +169,9 @@ public slots:
     void setIpv4DHCP(bool arg) {
         m_ipv4DHCP = arg;
     }
-
+    void setInterfaceToken(const QString& interfaceToken) {
+        m_interfaceToken = interfaceToken;
+    }
     void setResult(bool arg) {
         m_result = arg;
     }
@@ -183,6 +192,7 @@ private:
     int     m_ipvLinkLocalPrefixLength;
     QString m_ipv4FromDHCPAddress;
     int     m_ipv4FromDHCPPrefixLength;
+    QString m_interfaceToken;
     bool    m_result;
 };
 }

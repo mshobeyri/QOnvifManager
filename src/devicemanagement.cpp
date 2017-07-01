@@ -474,6 +474,8 @@ DeviceManagement::getNetworkInterfaces() {
     if (result != NULL) {
         networkInterfaces = new NetworkInterfaces();
         networkInterfaces->setProperty(
+            "interfaceToken", "//tds:NetworkInterfaces/@token");
+        networkInterfaces->setProperty(
             "networkInfacesEnabled",
             result->getValue("//tds:NetworkInterfaces/tt:Enabled"));
         networkInterfaces->setProperty(

@@ -701,7 +701,7 @@ public:
         des.ipv4Enabled              = src->ipv4Enabled();
         des.ipv4ManualAddress        = src->ipv4ManualAddress();
         des.ipv4ManualPrefixLength   = src->ipv4ManualPrefixLength();
-        des.ipv4DHCP                 = src->getIpv4DHCP();
+        des.ipv4DHCP                 = src->ipv4DHCP();
         des.networkInfacesName       = src->networkInfacesName();
         des.hwAaddress               = src->hwAaddress();
         des.ipv4LinkLocalAddress     = src->ipv4LinkLocalAddress();
