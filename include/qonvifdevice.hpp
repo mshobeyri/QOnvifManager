@@ -39,6 +39,7 @@ public:
         bool      _isLocal);
     bool setScopes(QString _name, QString _location);
     bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig);
+    bool setUsers(Data::Users _users);
     bool setInterfaces(Data::Network::Interfaces _interfaces);
     bool setProtocols(Data::Network::Protocols _protocols);
     bool setDefaultGateway(Data::Network::DefaultGateway _defaultGateway);

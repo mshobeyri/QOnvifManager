@@ -28,12 +28,12 @@ public:
         const QString& password);
     QHash<QString, QString> getDeviceInformation();
     QHash<QString, QString> getDeviceScopes();
-    SystemDateAndTime* getSystemDateAndTime();
-    void setSystemDateAndTime(SystemDateAndTime* systemDateAndTime);
-    void setDeviceScopes(SystemScopes* systemScopes);
-    void setSystemFactoryDefault(SystemFactoryDefault* systemFactoryDefault);
-    void systemReboot(SystemReboot* systemReboot);
+    SystemDateAndTime*     getSystemDateAndTime();
     Users*                 getUsers();
+    Capabilities*          getCapabilitiesPtz();
+    Capabilities*          getCapabilitiesImaging();
+    Capabilities*          getCapabilitiesMedia();
+    Capabilities*          getCapabilitiesDevice();
     NetworkInterfaces*     getNetworkInterfaces();
     NetworkProtocols*      getNetworkProtocols();
     NetworkDefaultGateway* getNetworkDefaultGateway();
@@ -42,6 +42,12 @@ public:
     NetworkHostname*       getNetworkHostname();
     NetworkNTP*            getNetworkNTP();
 
+    void setSystemDateAndTime(SystemDateAndTime* systemDateAndTime);
+    void setDeviceScopes(SystemScopes* systemScopes);
+    void setSystemFactoryDefault(SystemFactoryDefault* systemFactoryDefault);
+    void systemReboot(SystemReboot* systemReboot);
+    void setUsers(Users* users);
+    void createUsers(Users* users);
     void setNetworkInterfaces(NetworkInterfaces* networkInterfaces);
     void setNetworkProtocols(NetworkProtocols* networkProtocols);
     void setDefaultGateway(NetworkDefaultGateway* networkDefaultGateway);
@@ -49,10 +55,7 @@ public:
     void setDNS(NetworkDNS* networkDns);
     void setHostname(NetworkHostname* networkHostname);
     void setNTP(NetworkNTP* networkNtp);
-    Capabilities* getCapabilitiesPtz();
-    Capabilities* getCapabilitiesImaging();
-    Capabilities* getCapabilitiesMedia();
-    Capabilities* getCapabilitiesDevice();
+
 
 protected:
     Message* newMessage();

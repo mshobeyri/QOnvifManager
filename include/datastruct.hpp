@@ -78,14 +78,7 @@ struct Data {
     struct User {
         QString username;
         QString password;
-        enum class UserLevelType {
-            Administrator,
-            Operator,
-            User,
-            Anonymous,
-            Extended
-        };
-        UserLevelType userLevel;
+        QString userLevel;
     };
     using  Users = QList<User>;
     Users               users;

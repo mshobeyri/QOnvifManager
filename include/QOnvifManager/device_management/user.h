@@ -1,5 +1,6 @@
 #ifndef USER_H
 #define USER_H
+#include <QDomElement>
 #include <QObject>
 namespace ONVIF {
 class Users : public QObject
@@ -12,6 +13,9 @@ public:
     virtual ~Users();
     enum UserLevelType { Administrator, Operator, User, Anonymous, Extended };
 
+    QString toString(UserLevelType _userLevelType);
+    QDomElement toxml(QString mainTag);
+
     QStringList userNames() const {
         return m_userNames;
     }
@@ -22,6 +26,15 @@ public:
 
     QList<UserLevelType> userLevel() const {
         return m_userLevel;
+    }
+
+    bool result() const
+    {
+        return m_result;
+    }
+    void setResult(bool result)
+    {
+        m_result = result;
     }
 
 public slots:
@@ -52,6 +65,7 @@ private:
     QStringList          m_userNames;
     QStringList          m_passWords;
     QList<UserLevelType> m_userLevel;
+    bool m_result;
 };
 }
 #endif // USER_H

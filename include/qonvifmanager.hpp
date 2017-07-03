@@ -25,7 +25,7 @@ namespace ONVIF {
 class DeviceSearcher;
 }
 
-//using namespace device;
+// using namespace device;
 class QOnvifManagerPrivate;
 
 class /*QONVIFMANAGERSHARED_EXPORT*/ QOnvifManager : public QObject
@@ -60,15 +60,20 @@ public:
     bool deviceDateAndTime(
         QString _deviceEndPointAddress, Data::DateTime& _datetime);
 
-    bool
-    setDeviceDateAndTime(QString _deviceEndPointAddress, QDateTime _dateTime,
-                         QString _zone, bool _daylightSaving, bool _isLocal);
+    bool setDeviceDateAndTime(
+        QString   _deviceEndPointAddress,
+        QDateTime _dateTime,
+        QString   _zone,
+        bool      _daylightSaving,
+        bool      _isLocal);
     void setDefaulUsernameAndPassword(QString _username, QString _password);
     bool setDeviceScopes(
         QString _deviceEndPointAddress, QString _name, QString _location);
     bool setDeviceVideoConfig(
         QString                                 _deviceEndPointAddress,
         Data::MediaConfig::Video::EncoderConfig _videoConfig);
+
+    bool setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users);
 
     bool setDeviceNetworkInterfaces(
         QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces);
@@ -77,10 +82,12 @@ public:
         QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
 
     bool setDeviceNetworkDefaultGateway(
-        QString _deviceEndPointAddress, Data::Network::DefaultGateway _defaultGateway);
+        QString                       _deviceEndPointAddress,
+        Data::Network::DefaultGateway _defaultGateway);
 
     bool setDeviceNetworkDiscoveryMode(
-        QString _deviceEndPointAddress, Data::Network::DiscoveryMode _discoveryMode);
+        QString                      _deviceEndPointAddress,
+        Data::Network::DiscoveryMode _discoveryMode);
 
     bool setDeviceNetworkDNS(
         QString _deviceEndPointAddress, Data::Network::DNS _dns);
@@ -90,6 +97,7 @@ public:
 
     bool setDeviceNetworkNTP(
         QString _deviceEndPointAddress, Data::Network::NTP _ntp);
+
 
     bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
 

@@ -107,6 +107,20 @@ public:
         imediaManagement->setVideoEncoderConfiguration(&videoConfiguration);
         return videoConfiguration.result();
     }
+    bool setUsers(Data::Users _users) {
+
+        ONVIF::Users users;
+        auto&        des = users;
+        for (int i = 0; i < _users.length(); i++) {
+            des.setUserNames(_users[i].username);
+            des.setPassWords(_users[i].password);
+            des.setUserLevel(_users[i].userLevel);
+        }
+        ideviceManagement->setUsers(&users);
+        return users.result();
+        return true;
+    }
+
     bool setInterfaces(Data::Network::Interfaces _interface) {
         ONVIF::NetworkInterfaces networkInterface;
         auto&                    des = networkInterface;
@@ -812,8 +826,7 @@ public:
         for (int i = 0; i < users->userNames().length(); i++) {
             Data::User user;
             user.username  = users->userNames().value(i);
-            user.userLevel = static_cast<Data::User::UserLevelType>(
-                users->userLevel().value(i));
+            user.userLevel = users->toString(users->userLevel().value(i));
             idata.users.append(user);
         }
         return true;
@@ -936,6 +949,11 @@ bool
 QOnvifDevice::setVideoConfig(
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->setVideoConfig(_videoConfig);
+}
+
+bool
+QOnvifDevice::setUsers(Data::Users _users) {
+    return d_ptr->setUsers(_users);
 }
 
 bool
