@@ -628,10 +628,10 @@ DeviceManagement::setNTP(NetworkNTP* networkNtp) {
     }
 }
 
-void DeviceManagement::setUsers(Users* users)
+void DeviceManagement::setUsers(Users* users, bool isAddMode)
 {
     Message* msg = newMessage();
-    msg->appendToBody(users->toxml("SetUser"));
+    msg->appendToBody(users->toxml(isAddMode?"AddUsers":"SetUser"));
     MessageParser* result = sendMessage(msg);
     users->setResult(false);
     if (result != NULL) {

@@ -17,7 +17,7 @@ Users::toxml(QString mainTag) {
         username.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
         QDomElement password = newElement("Password", m_passWords[i]);
         password.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-        QDomElement level = newElement("Port", m_userLevel[i]);
+        QDomElement level = newElement("UserLevel", m_userLevel[i]);
         level.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
 
         user.appendChild(username);

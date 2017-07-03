@@ -226,13 +226,13 @@ QOnvifManager::setDeviceVideoConfig(
     QString                                 _deviceEndPointAddress,
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->setVideoConfig(_videoConfig);
+        ->setVideoConfig(_videoConfig);
 }
 
-bool QOnvifManager::setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users)
-{
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->setUsers(_users);
+bool
+QOnvifManager::setDeviceUsers(
+    QString _deviceEndPointAddress, Data::Users _users, bool isAddMode) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setUsers(_users,isAddMode);
 }
 
 bool

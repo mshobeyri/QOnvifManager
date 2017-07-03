@@ -73,7 +73,7 @@ public:
         QString                                 _deviceEndPointAddress,
         Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
-    bool setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users);
+    bool setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users, bool isAddMode);
 
     bool setDeviceNetworkInterfaces(
         QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces);
