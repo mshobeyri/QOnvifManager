@@ -826,7 +826,8 @@ public:
         for (int i = 0; i < users->userNames().length(); i++) {
             Data::User user;
             user.username  = users->userNames().value(i);
-            user.userLevel = users->toString(users->userLevel().value(i));
+            user.password  = users->passWord().value(i);
+            user.userLevel = users->userLevel().value(i);
             idata.users.append(user);
         }
         return true;

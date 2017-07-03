@@ -6,12 +6,10 @@ namespace ONVIF {
 class Users : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(UserLevelType)
 
 public:
     explicit Users(QObject* parent = NULL);
     virtual ~Users();
-    enum UserLevelType { Administrator, Operator, User, Anonymous, Extended };
 
     QString toString(UserLevelType _userLevelType);
     QDomElement toxml(QString mainTag);
@@ -24,7 +22,7 @@ public:
         return m_passWords;
     }
 
-    QList<UserLevelType> userLevel() const {
+    QStringList userLevel() const {
         return m_userLevel;
     }
 
@@ -47,25 +45,14 @@ public slots:
     }
 
     void setUserLevel(QString arg) {
-        int levelInt = 0;
-        if (arg == "Administrator")
-            levelInt = 0;
-        else if (arg == "Operator")
-            levelInt = 1;
-        else if (arg == "User")
-            levelInt = 2;
-        else if (arg == "Anonynos")
-            levelInt = 3;
-        else if (arg == "Extended")
-            levelInt = 4;
-        m_userLevel.push_back(static_cast<UserLevelType>(levelInt));
+        m_userLevel.push_back(arg);
     }
 
 private:
-    QStringList          m_userNames;
-    QStringList          m_passWords;
-    QList<UserLevelType> m_userLevel;
-    bool m_result;
+    QStringList m_userNames;
+    QStringList m_passWords;
+    //Administrator, Operator, User, Anonymous, Extended
+    QStringList m_userLevel;
 };
 }
 #endif // USER_H
