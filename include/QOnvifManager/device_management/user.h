@@ -11,7 +11,6 @@ public:
     explicit Users(QObject* parent = NULL);
     virtual ~Users();
 
-    QString toString(UserLevelType _userLevelType);
     QDomElement toxml(QString mainTag);
 
     QStringList userNames() const {
@@ -53,6 +52,7 @@ private:
     QStringList m_passWords;
     //Administrator, Operator, User, Anonymous, Extended
     QStringList m_userLevel;
+    bool m_result;
 };
 }
 #endif // USER_H
