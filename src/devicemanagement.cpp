@@ -628,30 +628,14 @@ DeviceManagement::setNTP(NetworkNTP* networkNtp) {
     }
 }
 
-void DeviceManagement::setUsers(Users* users, bool isAddMode)
+void DeviceManagement::setUsers(Users* users)
 {
     Message* msg = newMessage();
-    msg->appendToBody(users->toxml(isAddMode?"AddUsers":"SetUser"));
+    msg->appendToBody(users->toxml());
     MessageParser* result = sendMessage(msg);
     users->setResult(false);
     if (result != NULL) {
         if (result->find("//tds:SetUserResponse"))
-            users->setResult(true);
-        else
-            users->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void DeviceManagement::createUsers(Users* users)
-{
-    Message* msg = newMessage();
-    msg->appendToBody(users->toxml("CrateUsers"));
-    MessageParser* result = sendMessage(msg);
-    users->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:CreateUsersResponse"))
             users->setResult(true);
         else
             users->setResult(false);

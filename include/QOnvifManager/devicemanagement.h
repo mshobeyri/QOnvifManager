@@ -46,8 +46,7 @@ public:
     void setDeviceScopes(SystemScopes* systemScopes);
     void setSystemFactoryDefault(SystemFactoryDefault* systemFactoryDefault);
     void systemReboot(SystemReboot* systemReboot);
-    void setUsers(Users* users, bool isAddMode);
-    void createUsers(Users* users);
+    void setUsers(Users* users);
     void setNetworkInterfaces(NetworkInterfaces* networkInterfaces);
     void setNetworkProtocols(NetworkProtocols* networkProtocols);
     void setDefaultGateway(NetworkDefaultGateway* networkDefaultGateway);

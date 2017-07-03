@@ -11,7 +11,7 @@ public:
     explicit Users(QObject* parent = NULL);
     virtual ~Users();
 
-    QDomElement toxml(QString mainTag);
+    QDomElement toxml();
 
     QStringList userNames() const {
         return m_userNames;
@@ -34,6 +34,15 @@ public:
         m_result = result;
     }
 
+    bool isAddMode() const
+    {
+        return m_isAddMode;
+    }
+    void setIsAddMode(bool isAddMode)
+    {
+        m_isAddMode = isAddMode;
+    }
+
 public slots:
     void setUserNames(QString arg) {
         m_userNames.push_back(arg);
@@ -52,6 +61,7 @@ private:
     QStringList m_passWords;
     //Administrator, Operator, User, Anonymous, Extended
     QStringList m_userLevel;
+    bool m_isAddMode;
     bool m_result;
 };
 }

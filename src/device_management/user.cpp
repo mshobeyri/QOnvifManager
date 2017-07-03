@@ -7,9 +7,9 @@ Users::Users(QObject* parent) : QObject(parent) {}
 Users::~Users() {}
 
 QDomElement
-Users::toxml(QString mainTag) {
+Users::toxml() {
     QDomElement setUsers;
-    setUsers = newElement(mainTag);
+    setUsers = newElement(this->isAddMode()?"AddUsers":"SetUser");
     setUsers.setAttribute("xmlns", "http://www.onvif.org/ver10/device/wsdl");
     for (int i = 0; i < m_userNames.length(); i++) {
         QDomElement user = newElement("User");

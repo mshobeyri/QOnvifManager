@@ -80,7 +80,7 @@ struct Data {
         QString password;
         QString userLevel;
         // for set porpuse(add or edit)
-        bool addMode;
+        bool isAddMode;
     };
     using  Users = QList<User>;
     Users               users;

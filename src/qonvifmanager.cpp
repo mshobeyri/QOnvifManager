@@ -231,8 +231,8 @@ QOnvifManager::setDeviceVideoConfig(
 
 bool
 QOnvifManager::setDeviceUsers(
-    QString _deviceEndPointAddress, Data::Users _users, bool isAddMode) {
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setUsers(_users,isAddMode);
+    QString _deviceEndPointAddress, Data::Users _users) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setUsers(_users);
 }
 
 bool
