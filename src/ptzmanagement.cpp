@@ -291,6 +291,7 @@ void PtzManagement::continuousMove(ContinuousMove *continuousMove)
     Message *msg = newMessage();
     msg->appendToBody(continuousMove->toxml());
     MessageParser *result = sendMessage(msg);
+    continuousMove->setResult(false);
     if(result != NULL) {
         if(result->find("//tptz:ContinuousMoveResponse"))
             continuousMove->setResult(true);
@@ -336,6 +337,7 @@ void PtzManagement::stop(Stop *stop)
     Message *msg = newMessage();
     msg->appendToBody(stop->toxml());
     MessageParser *result = sendMessage(msg);
+    stop->setResult(false);
     if(result != NULL) {
         if(result->find("//tptz:StopResponse"))
             stop->setResult(true);
