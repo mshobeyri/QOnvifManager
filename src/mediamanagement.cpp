@@ -2166,20 +2166,28 @@ MediaManagement::getVideoEncoderConfigurationOptions(
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMinJpeg(
-            result->getValue("//trt:Options/tt:JPEG/tt:EncodingIntervalRange/tt:Min")
+            result
+                ->getValue(
+                    "//trt:Options/tt:JPEG/tt:EncodingIntervalRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMaxJpeg(
-            result->getValue("//trt:Options/tt:JPEG/tt:EncodingIntervalRange/tt:Max")
+            result
+                ->getValue(
+                    "//trt:Options/tt:JPEG/tt:EncodingIntervalRange/tt:Max")
                 .trimmed()
                 .toInt());
 
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMinH264(
-            result->getValue("//trt:Options/tt:H264/tt:EncodingIntervalRange/tt:Min")
+            result
+                ->getValue(
+                    "//trt:Options/tt:H264/tt:EncodingIntervalRange/tt:Min")
                 .trimmed()
                 .toInt());
         videoEncoderConfigurationOptions->setEncodingIntervalRangeMaxH264(
-            result->getValue("//trt:Options/tt:H264/tt:EncodingIntervalRange/tt:Max")
+            result
+                ->getValue(
+                    "//trt:Options/tt:H264/tt:EncodingIntervalRange/tt:Max")
                 .trimmed()
                 .toInt());
 
@@ -2203,14 +2211,16 @@ MediaManagement::getVideoEncoderConfigurationOptions(
 }
 
 void
-MediaManagement::setVideoEncoderConfiguration(VideoEncoderConfiguration *videoConfigurations) {
+MediaManagement::setVideoEncoderConfiguration(
+    VideoEncoderConfiguration* videoConfigurations) {
     Message* msg = newMessage();
     msg->appendToBody(videoConfigurations->toxml());
     MessageParser* result = sendMessage(msg);
     videoConfigurations->setResult(false);
     if (result != NULL) {
-        if (result->find("//tds:SetVideoEncoderConfigurationResponse")||
-             result->find("//*[local-name() = 'SetVideoEncoderConfigurationResponse']"))
+        if (result->find("//tds:SetVideoEncoderConfigurationResponse") ||
+            result->find(
+                "//*[local-name() = 'SetVideoEncoderConfigurationResponse']"))
             videoConfigurations->setResult(true);
         else
             videoConfigurations->setResult(false);
@@ -2230,9 +2240,9 @@ MediaManagement::getStreamUri(const QString& token) {
     QDomElement streamSetup  = newElement("wsdl:StreamSetup");
     QDomElement getStreamUri = newElement("wsdl:GetStreamUri");
     QDomElement profileToken = newElement("wsdl:ProfileToken", token);
-    getStreamUri.setAttribute("xmlns","http://www.onvif.org/ver10/media/wsdl");
-    transport.setAttribute("xmlns","http://www.onvif.org/ver10/media/wsdl");
-    stream.setAttribute("xmlns","http://www.onvif.org/ver10/media/wsdl");
+    getStreamUri.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
+    transport.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
+    stream.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
 
 
     getStreamUri.appendChild(streamSetup);
@@ -2259,4 +2269,55 @@ MediaManagement::getStreamUri(const QString& token) {
     delete msg;
     delete result;
     return streamUri;
+}
+
+ImageSetting*
+MediaManagement::getImageSetting(const QString& token) {
+    ImageSetting* imageSetting       = NULL;
+    Message*      msg                = newMessage();
+    QDomElement   getImagingSettings = newElement("GetImagingSettings");
+    getImagingSettings.setAttribute(
+        "xmlns", "http://www.onvif.org/ver20/imaging/wsdl");
+    QDomElement videoSourceToken = newElement("VideoSourceToken", token);
+    getImagingSettings.appendChild(videoSourceToken);
+
+    msg->appendToBody(getImagingSettings);
+    MessageParser* result = sendMessage(msg);
+    if (result != NULL) {
+        imageSetting = new ImageSetting();
+
+        imageSetting->setBrightness(
+            result->getValue("//timg:ImagingSettings/tt:Brightness").toInt());
+
+        imageSetting->setColorSaturation(
+            result->getValue("//timg:ImagingSettings/tt:ColorSaturation")
+                .toInt());
+
+        imageSetting->setContrast(
+            result->getValue("//timg:ImagingSettings/tt:Contrast").toInt());
+
+        imageSetting->setSharpness(
+            result->getValue("//timg:ImagingSettings/tt:Sharpness").toInt());
+
+        imageSetting->setExposureManual(
+            result->getValue("//timg:ImagingSettings/tt:Exposure/tt:Mode") ==
+                    "MANUAL"
+                ? true
+                : false);
+
+        imageSetting->setExposureIris(
+            result->getValue("//timg:ImagingSettings/tt:Exposure/tt:Iris")
+                .toInt());
+        imageSetting->setExposureManual(
+            result->getValue(
+                "//timg:ImagingSettings/tt:Focus/tt:AutoFocusMode") == "MANUAL"
+                ? true
+                : false);
+        imageSetting->setDefaultSpeed(
+            result->getValue("//timg:ImagingSettings/tt:Focus/tt:DefaultSpeed")
+                .toInt());
+    }
+    delete result;
+    delete msg;
+    return imageSetting;
 }

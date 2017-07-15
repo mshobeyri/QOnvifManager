@@ -101,6 +101,8 @@ public:
 
     bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
 
+    boot refreshDeviceImageSetting(QString _deviceEndPointAddress);
+
     bool resetFactoryDevice(QString _deviceEndPointAddress, bool isHard);
     bool rebootDevice(QString _deviceEndPointAddress);
 

@@ -869,6 +869,12 @@ public:
         delete config;
         return true;
     }
+    bool refreshImageSetting() {
+        ONVIF::ImageSetting* imageSetting = new ONVIF::ImageSetting;
+        imediaManagement->getImageSetting(idata.profiles.sourceTokenVsc[0]);//todo
+        delete imageSetting;
+        return true;
+    }
 
     // ptz //todo remove profile tokens hardcode
     bool refreshPresets() {
@@ -1095,6 +1101,11 @@ QOnvifDevice::refreshUsers() {
 bool
 QOnvifDevice::refreshPtzConfiguration() {
     return d_ptr->refreshPtzConfiguration();
+}
+
+bool
+QOnvifDevice::refreshImageSetting() {
+    return d_ptr->refreshImageSetting();
 }
 
 bool

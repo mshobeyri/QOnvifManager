@@ -12,6 +12,7 @@
 #include "media_management/videoencoderconfigurations.h"
 #include "media_management/videosourceconfiguration.h"
 #include "media_management/videosourceconfigurations.h"
+#include "media_management/imagesetting.h"
 #include "service.h"
 #include <QDateTime>
 
@@ -41,7 +42,7 @@ public:
     void
     setVideoEncoderConfiguration(VideoEncoderConfiguration* videoConfiguration);
     StreamUri* getStreamUri(const QString& token);
-
+    ImageSetting* getImageSetting(const QString& token);
 protected:
     Message* newMessage();
     QHash<QString, QString> namespaces(const QString& key);

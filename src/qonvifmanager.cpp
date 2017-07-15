@@ -287,7 +287,13 @@ QOnvifManager::setDeviceNetworkNTP(
 bool
 QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshPtzConfiguration();
+            ->refreshPtzConfiguration();
+}
+
+bool QOnvifManager::refreshDeviceImageSetting(QString _deviceEndPointAddress)
+{
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+            ->refreshImageSetting();
 }
 
 bool

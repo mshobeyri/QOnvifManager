@@ -57,9 +57,10 @@ MainWindow::on_btnRefreshData_clicked() {
     ui->txtName->setText("");
     //    ionvifManager->refreshDeviceCapabilities(currentDevice());
     //    ionvifManager->refreshDeviceInformations(currentDevice());
-    //    ionvifManager->refreshDeviceProfiles(currentDevice());
-        ionvifManager->refreshDeviceVideoConfigs(currentDevice());
-        ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
+        ionvifManager->refreshDeviceProfiles(currentDevice());
+        ionvifManager->refreshDeviceImageSetting(currentDevice());
+//        ionvifManager->refreshDeviceVideoConfigs(currentDevice());
+//        ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
     //    ionvifManager->refreshDeviceStreamUris(currentDevice());
 
     //    ionvifManager->refreshDeviceUsers(currentDevice());

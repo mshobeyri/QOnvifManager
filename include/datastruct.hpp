@@ -82,8 +82,8 @@ struct Data {
         // for set porpuse(add or edit)
         bool isAddMode;
     };
-    using  Users = QList<User>;
-    Users               users;
+    using Users = QList<User>;
+    Users users;
     struct Network {
         struct Protocols {
             QList<QString> networkProtocolsName;
@@ -180,8 +180,16 @@ struct Data {
                 QList<int>     useCount;
                 QList<QString> sourceToken;
             } sourceConfig;
-
         } audio;
+
+        struct ImageSetting {
+            int  brightness;
+            int  colorSaturation;
+            int  contrast;
+            int  sharpness;
+            bool autofocusManual;
+            int  defaultSpeed;
+        } imageSetting;
 
         struct Video {
             struct StreamUri {

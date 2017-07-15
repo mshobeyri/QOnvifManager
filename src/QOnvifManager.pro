@@ -79,7 +79,9 @@ SOURCES += \
     service.cpp \
     device_management/systemscopes.cpp \
     ptz_management/homeposition.cpp \
-    device_management/networkdefaultgateway.cpp
+    device_management/networkdefaultgateway.cpp \
+    media_management/imagesetting.cpp \
+    media_management/imagesettingoptions.cpp
 
 
 HEADERS += \
@@ -132,7 +134,10 @@ HEADERS += \
     ../include/QOnvifManager/service.h \
     ../include/QOnvifManager/device_management/systemscopes.h \
     ../include/QOnvifManager/ptz_management/homeposition.h \
-    ../include/QOnvifManager/device_management/networkdefaultgateway.h
+    ../include/QOnvifManager/device_management/networkdefaultgateway.h \
+    ../include/QOnvifManager/media_management/imagesetting.h \
+    media_management/imagesettingoptions.h \
+    ../include/QOnvifManager/media_management/imagesettingoptions.h
 
 
 #unix {
