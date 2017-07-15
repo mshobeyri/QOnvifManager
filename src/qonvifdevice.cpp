@@ -398,14 +398,15 @@ public:
         idata.mediaConfig.video.encodingConfigs.options.clear();
 
         // get video encoder options
-        foreach (
-            QString _configToken,
-            idata.mediaConfig.video.encodingConfigs.token) {
+        auto configToken = idata.mediaConfig.video.encodingConfigs.token;
+        auto profileToken = idata.profiles.toKenPro;
+        auto size = qMin(configToken.length(),profileToken.length());
+        for(int i = 0;i< size;i++){
 
             QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
                 videoEncoderConfigurationOptions(
                     imediaManagement->getVideoEncoderConfigurationOptions(
-                        _configToken, ""));
+                        configToken[i], profileToken[i]));
 
             if (!videoEncoderConfigurationOptions)
                 return false;
