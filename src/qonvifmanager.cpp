@@ -296,6 +296,12 @@ bool QOnvifManager::refreshDeviceImageSetting(QString _deviceEndPointAddress)
             ->refreshImageSetting();
 }
 
+bool QOnvifManager::refreshDeviceImageSettingOptions(QString _deviceEndPointAddress)
+{
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+            ->refreshImageSettingOptions();
+}
+
 bool
 QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress, bool isHard) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)

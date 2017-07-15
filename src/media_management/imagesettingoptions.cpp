@@ -1,6 +1,4 @@
 #include "imagesettingoptions.h"
+using namespace ONVIF;
 
-ImageSettingOptions::ImageSettingOptions()
-{
-
-}
+ImageSettingOptions::ImageSettingOptions(QObject* parent) : QObject(parent) {}

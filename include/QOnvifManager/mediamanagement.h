@@ -4,6 +4,8 @@
 #include "media_management/audioencoderconfigurationoptions.h"
 #include "media_management/audioencoderconfigurations.h"
 #include "media_management/audiosourceconfigurations.h"
+#include "media_management/imagesetting.h"
+#include "media_management/imagesettingoptions.h"
 #include "media_management/profile.h"
 #include "media_management/profiles.h"
 #include "media_management/streamuri.h"
@@ -12,7 +14,6 @@
 #include "media_management/videoencoderconfigurations.h"
 #include "media_management/videosourceconfiguration.h"
 #include "media_management/videosourceconfigurations.h"
-#include "media_management/imagesetting.h"
 #include "service.h"
 #include <QDateTime>
 
@@ -43,6 +44,8 @@ public:
     setVideoEncoderConfiguration(VideoEncoderConfiguration* videoConfiguration);
     StreamUri* getStreamUri(const QString& token);
     ImageSetting* getImageSetting(const QString& token);
+    ImageSettingOptions* getImageSettingOptions(const QString& token);
+
 protected:
     Message* newMessage();
     QHash<QString, QString> namespaces(const QString& key);

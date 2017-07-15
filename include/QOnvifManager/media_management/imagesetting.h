@@ -11,7 +11,6 @@ class ImageSetting : public QObject
     Q_PROPERTY(int colorSaturation READ colorSaturation WRITE setColorSaturation)
     Q_PROPERTY(int contrast READ contrast WRITE setContrast)
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness)
-    Q_PROPERTY(QString timeout READ timeout WRITE setTimeout)
 public:
     ImageSetting(QObject* parent = NULL);
     QDomElement toxml();

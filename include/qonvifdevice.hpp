@@ -79,6 +79,7 @@ public:
     bool stopMovement();
 
     bool refreshImageSetting();
+    bool refreshImageSettingOptions();
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
     QScopedPointer<QOnvifDevicePrivate> d_ptr;
