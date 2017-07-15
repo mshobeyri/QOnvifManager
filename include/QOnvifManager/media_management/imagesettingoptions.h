@@ -8,127 +8,127 @@ class ImageSettingOptions : public QObject
 public:
     ImageSettingOptions(QObject* parent = NULL);
 
-    int brightnessMax() const
+    double brightnessMax() const
     {
         return m_brightnessMax;
     }
-    void setBrightnessMax(int brightnessMax)
+    void setBrightnessMax(double brightnessMax)
     {
         m_brightnessMax = brightnessMax;
     }
 
-    int brightnessMin() const
+    double brightnessMin() const
     {
         return m_brightnessMin;
     }
-    void setBrightnessMin(int brightnessMin)
+    void setBrightnessMin(double brightnessMin)
     {
         m_brightnessMin = brightnessMin;
     }
 
-    int colorSaturationMax() const
+    double colorSaturationMax() const
     {
         return m_colorSaturationMax;
     }
-    void setColorSaturationMax(int colorSaturationMax)
+    void setColorSaturationMax(double colorSaturationMax)
     {
         m_colorSaturationMax = colorSaturationMax;
     }
 
-    int colorSaturationMin() const
+    double colorSaturationMin() const
     {
         return m_colorSaturationMin;
     }
-    void setColorSaturationMin(int colorSaturationMin)
+    void setColorSaturationMin(double colorSaturationMin)
     {
         m_colorSaturationMin = colorSaturationMin;
     }
 
-    int contrastMax() const
+    double contrastMax() const
     {
         return m_contrastMax;
     }
-    void setContrastMax(int contrastMax)
+    void setContrastMax(double contrastMax)
     {
         m_contrastMax = contrastMax;
     }
 
-    int contrastMin() const
+    double contrastMin() const
     {
         return m_contrastMin;
     }
-    void setContrastMin(int contrastMin)
+    void setContrastMin(double contrastMin)
     {
         m_contrastMin = contrastMin;
     }
 
-    int sharpnessMax() const
+    double sharpnessMax() const
     {
         return m_sharpnessMax;
     }
-    void setSharpnessMax(int sharpnessMax)
+    void setSharpnessMax(double sharpnessMax)
     {
         m_sharpnessMax = sharpnessMax;
     }
 
-    int sharpnessMin() const
+    double sharpnessMin() const
     {
         return m_sharpnessMin;
     }
-    void setSharpnessMin(int sharpnessMin)
+    void setSharpnessMin(double sharpnessMin)
     {
         m_sharpnessMin = sharpnessMin;
     }
 
-    int defaultSpeedMax() const
+    double defaultSpeedMax() const
     {
         return m_defaultSpeedMax;
     }
-    void setDefaultSpeedMax(int defaultSpeedMax)
+    void setDefaultSpeedMax(double defaultSpeedMax)
     {
         m_defaultSpeedMax = defaultSpeedMax;
     }
 
-    int defaultSpeedMin() const
+    double defaultSpeedMin() const
     {
         return m_defaultSpeedMin;
     }
-    void setDefaultSpeedMin(int defaultSpeedMin)
+    void setDefaultSpeedMin(double defaultSpeedMin)
     {
         m_defaultSpeedMin = defaultSpeedMin;
     }
 
-    int exposureIrisMax() const
+    double exposureIrisMax() const
     {
         return m_exposureIrisMax;
     }
-    void setExposureIrisMax(int exposureIrisMax)
+    void setExposureIrisMax(double exposureIrisMax)
     {
         m_exposureIrisMax = exposureIrisMax;
     }
 
-    int exposureIrisMin() const
+    double exposureIrisMin() const
     {
         return m_exposureIrisMin;
     }
-    void setExposureIrisMin(int exposureIrisMin)
+    void setExposureIrisMin(double exposureIrisMin)
     {
         m_exposureIrisMin = exposureIrisMin;
     }
 
 private:
-    int m_brightnessMax;
-    int m_brightnessMin;
-    int m_colorSaturationMax;
-    int m_colorSaturationMin;
-    int m_contrastMax;
-    int m_contrastMin;
-    int m_sharpnessMax;
-    int m_sharpnessMin;
-    int m_defaultSpeedMax;
-    int m_defaultSpeedMin;
-    int m_exposureIrisMax;
-    int m_exposureIrisMin;
+    double m_brightnessMax;
+    double m_brightnessMin;
+    double m_colorSaturationMax;
+    double m_colorSaturationMin;
+    double m_contrastMax;
+    double m_contrastMin;
+    double m_sharpnessMax;
+    double m_sharpnessMin;
+    double m_defaultSpeedMax;
+    double m_defaultSpeedMin;
+    double m_exposureIrisMax;
+    double m_exposureIrisMin;
 };
 }
 #endif // IMAGESETTINGOPTIONS_H

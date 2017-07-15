@@ -398,10 +398,10 @@ public:
         idata.mediaConfig.video.encodingConfigs.options.clear();
 
         // get video encoder options
-        auto configToken = idata.mediaConfig.video.encodingConfigs.token;
+        auto configToken  = idata.mediaConfig.video.encodingConfigs.token;
         auto profileToken = idata.profiles.toKenPro;
-        auto size = qMin(configToken.length(),profileToken.length());
-        for(int i = 0;i< size;i++){
+        auto size         = qMin(configToken.length(), profileToken.length());
+        for (int i = 0; i < size; i++) {
 
             QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
                 videoEncoderConfigurationOptions(
@@ -871,15 +871,43 @@ public:
         return true;
     }
     bool refreshImageSetting() {
-        ONVIF::ImageSetting* imageSetting = new ONVIF::ImageSetting;
-        imediaManagement->getImageSetting(idata.profiles.sourceTokenVsc[0]);//todo
-        delete imageSetting;
+        QScopedPointer<ONVIF::ImageSetting> imageSetting(
+            imediaManagement->getImageSetting(
+                idata.profiles.sourceTokenVsc[0]));// todo
+
+        if (!imageSetting)
+            return false;
+
+        auto& des = idata.mediaConfig.imageSetting;
+
+        des.autofocusManual = imageSetting->autofocusManual();
+        des.brightness      = imageSetting->brightness();
+        des.colorSaturation = imageSetting->colorSaturation();
+        des.contrast        = imageSetting->contrast();
+        des.defaultSpeed    = imageSetting->defaultSpeed();
+        des.sharpness       = imageSetting->sharpness();
         return true;
     }
     bool refreshImageSettingOptions() {
-        ONVIF::ImageSetting* imageSetting = new ONVIF::ImageSetting;
-        imediaManagement->getImageSetting(idata.profiles.sourceTokenVsc[0]);//todo
-        delete imageSetting;
+
+        QScopedPointer<ONVIF::ImageSettingOptions> imageSettingOptions(
+            imediaManagement->getImageSettingOptions(
+                idata.profiles.sourceTokenVsc[0]));// todo
+        if (!imageSettingOptions)
+            return false;
+
+        auto& des = idata.mediaConfig.imageSetting.options;
+
+        des.brightnessMax      = imageSettingOptions->brightnessMax();
+        des.brightnessMin      = imageSettingOptions->brightnessMin();
+        des.colorSaturationMax = imageSettingOptions->colorSaturationMax();
+        des.colorSaturationMin = imageSettingOptions->colorSaturationMin();
+        des.contrastMax        = imageSettingOptions->contrastMax();
+        des.contrastMin        = imageSettingOptions->contrastMin();
+        des.defaultSpeedMax    = imageSettingOptions->defaultSpeedMax();
+        des.defaultSpeedMin    = imageSettingOptions->defaultSpeedMin();
+        des.sharpnessMax       = imageSettingOptions->sharpnessMax();
+        des.sharpnessMin       = imageSettingOptions->sharpnessMin();
         return true;
     }
 

@@ -189,6 +189,20 @@ struct Data {
             int  sharpness;
             bool autofocusManual;
             int  defaultSpeed;
+            struct Options {
+                int brightnessMax;
+                int brightnessMin;
+                int colorSaturationMax;
+                int colorSaturationMin;
+                int contrastMax;
+                int contrastMin;
+                int sharpnessMax;
+                int sharpnessMin;
+                int defaultSpeedMax;
+                int defaultSpeedMin;
+                int exposureIrisMax;
+                int exposureIrisMin;
+            } options;
         } imageSetting;
 
         struct Video {

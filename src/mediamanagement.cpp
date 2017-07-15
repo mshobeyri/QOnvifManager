@@ -2335,44 +2335,45 @@ MediaManagement::getImageSettingOptions(const QString& token) {
     msg->appendToBody(getImagingSettingsOptions);
     MessageParser* result = sendMessage(msg);
     if (result != NULL) {
-        imageSettingOptions->setBrightnessMax(
-                    result->getValue("//timg:ImagingSettings/tt:Brightness/tt:Min").toInt());
+        imageSettingOptions = new ImageSettingOptions();
         imageSettingOptions->setBrightnessMin(
-                    result->getValue("//timg:ImagingSettings/tt:Brightness/tt:Max").toInt());
+                    result->getValue("//timg:ImagingOptions/tt:Brightness/tt:Min").toDouble ());
+        imageSettingOptions->setBrightnessMax(
+                    result->getValue("//timg:ImagingOptions/tt:Brightness/tt:Max").toDouble ());
 
-        imageSettingOptions->setColorSaturationMax(
-                    result->getValue("//timg:ImagingSettings/tt:ColorSaturation/tt:Min")
-                    .toInt());
         imageSettingOptions->setColorSaturationMin(
-                    result->getValue("//timg:ImagingSettings/tt:ColorSaturation/tt:Max")
-                    .toInt());
-        imageSettingOptions->setContrastMax(
-                    result->getValue("//timg:ImagingSettings/tt:Contrast/tt:Min").toInt());
-
+                    result->getValue("//timg:ImagingOptions/tt:ColorSaturation/tt:Min")
+                    .toDouble ());
+        imageSettingOptions->setColorSaturationMax(
+                    result->getValue("//timg:ImagingOptions/tt:ColorSaturation/tt:Max")
+                    .toDouble ());
         imageSettingOptions->setContrastMin(
-                    result->getValue("//timg:ImagingSettings/tt:Contrast/tt:Max").toInt());
+                    result->getValue("//timg:ImagingOptions/tt:Contrast/tt:Min").toDouble ());
 
-        imageSettingOptions->setSharpnessMax(
-                    result->getValue("//timg:ImagingSettings/tt:Sharpness/tt:Min").toInt());
+        imageSettingOptions->setContrastMax(
+                    result->getValue("//timg:ImagingOptions/tt:Contrast/tt:Max").toDouble ());
 
         imageSettingOptions->setSharpnessMin(
-                    result->getValue("//timg:ImagingSettings/tt:Sharpness/tt:Max").toInt());
+                    result->getValue("//timg:ImagingOptions/tt:Sharpness/tt:Min").toDouble ());
 
-        imageSettingOptions->setExposureIrisMax(
-                    result->getValue("//timg:ImagingSettings/tt:Exposure/tt:Iris/tt:Min")
-                    .toInt());
+        imageSettingOptions->setSharpnessMax(
+                    result->getValue("//timg:ImagingOptions/tt:Sharpness/tt:Max").toDouble ());
 
         imageSettingOptions->setExposureIrisMin(
-                    result->getValue("//timg:ImagingSettings/tt:Exposure/tt:Iris/tt:Max")
-                    .toInt());
+                    result->getValue("//timg:ImagingOptions/tt:Exposure/tt:Iris/tt:Min")
+                    .toDouble ());
 
-        imageSettingOptions->setDefaultSpeedMax(
-                    result->getValue("//timg:ImagingSettings/tt:Focus/tt:DefaultSpeed/tt:Min")
-                    .toInt());
+        imageSettingOptions->setExposureIrisMax(
+                    result->getValue("//timg:ImagingOptions/tt:Exposure/tt:Iris/tt:Max")
+                    .toDouble ());
 
         imageSettingOptions->setDefaultSpeedMin(
-                    result->getValue("//timg:ImagingSettings/tt:Focus/tt:DefaultSpeed/tt:Max")
-                    .toInt());
+                    result->getValue("//timg:ImagingOptions/tt:Focus/tt:DefaultSpeed/tt:Min")
+                    .toDouble());
+
+        imageSettingOptions->setDefaultSpeedMax(
+                    result->getValue("//timg:ImagingOptions/tt:Focus/tt:DefaultSpeed/tt:Max")
+                    .toDouble ());
     }
     delete result;
     delete msg;
