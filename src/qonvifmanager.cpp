@@ -189,6 +189,14 @@ QOnvifManager::setDeviceDateAndTime(
         ->setDateAndTime(_dateTime, _zone, _daylightSaving, _isLocal);
 }
 
+bool
+QOnvifManager::setDeviceImageSetting(
+    QString                          _deviceEndPointAddress,
+    Data::MediaConfig::ImageSetting& _imageSetting) {
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->setDeviceImageSetting(_imageSetting);
+}
+
 QOnvifDevice*
 QOnvifManager::device(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress);
@@ -287,19 +295,20 @@ QOnvifManager::setDeviceNetworkNTP(
 bool
 QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->refreshPtzConfiguration();
+        ->refreshPtzConfiguration();
 }
 
-bool QOnvifManager::refreshDeviceImageSetting(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceImageSetting(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->refreshImageSetting();
+        ->refreshImageSetting();
 }
 
-bool QOnvifManager::refreshDeviceImageSettingOptions(QString _deviceEndPointAddress)
-{
+bool
+QOnvifManager::refreshDeviceImageSettingOptions(
+    QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->refreshImageSettingOptions();
+        ->refreshImageSettingOptions();
 }
 
 bool

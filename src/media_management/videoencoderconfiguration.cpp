@@ -1,5 +1,4 @@
 #include "videoencoderconfiguration.h"
-
 #include "message.h"
 using namespace ONVIF;
 

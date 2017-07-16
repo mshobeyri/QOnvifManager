@@ -189,6 +189,10 @@ struct Data {
             int  sharpness;
             bool autofocusManual;
             int  defaultSpeed;
+            bool exposureManual;
+            int exposureIris;
+            bool forcePersistence;
+            QString token;
             struct Options {
                 int brightnessMax;
                 int brightnessMin;

@@ -107,6 +107,21 @@ public:
         imediaManagement->setVideoEncoderConfiguration(&videoConfiguration);
         return videoConfiguration.result();
     }
+    bool setDeviceImageSetting(Data::MediaConfig::ImageSetting _imageSetting) {
+        ONVIF::ImageSetting imageSetting;
+        imageSetting.setAutofocusManual(_imageSetting.autofocusManual);
+        imageSetting.setBrightness(_imageSetting.brightness);
+        imageSetting.setColorSaturation(_imageSetting.colorSaturation);
+        imageSetting.setContrast(_imageSetting.contrast);
+        imageSetting.setDefaultSpeed(_imageSetting.defaultSpeed);
+        imageSetting.setExposureIris(_imageSetting.exposureIris);
+        imageSetting.setExposureManual(_imageSetting.exposureManual);
+        imageSetting.setForcePersistence(_imageSetting.forcePersistence);
+        imageSetting.setSharpness(_imageSetting.sharpness);
+        imageSetting.setToken(_imageSetting.token);
+        imediaManagement->setImageSettings(&imageSetting);
+        return imageSetting.result();
+    }
     bool setUsers(Data::Users _users) {
 
         ONVIF::Users users;
@@ -873,7 +888,7 @@ public:
     bool refreshImageSetting() {
         QScopedPointer<ONVIF::ImageSetting> imageSetting(
             imediaManagement->getImageSetting(
-                idata.profiles.sourceTokenVsc[0]));// todo
+                idata.profiles.sourceTokenVsc[0])); // todo
 
         if (!imageSetting)
             return false;
@@ -892,7 +907,7 @@ public:
 
         QScopedPointer<ONVIF::ImageSettingOptions> imageSettingOptions(
             imediaManagement->getImageSettingOptions(
-                idata.profiles.sourceTokenVsc[0]));// todo
+                idata.profiles.sourceTokenVsc[0])); // todo
         if (!imageSettingOptions)
             return false;
 
@@ -990,6 +1005,12 @@ bool
 QOnvifDevice::setVideoConfig(
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->setVideoConfig(_videoConfig);
+}
+
+bool
+QOnvifDevice::setDeviceImageSetting(
+    Data::MediaConfig::ImageSetting _imageSetting) {
+    return d_ptr->setDeviceImageSetting(_imageSetting);
 }
 
 bool

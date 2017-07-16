@@ -46,6 +46,9 @@ public:
     ImageSetting* getImageSetting(const QString& token);
     ImageSettingOptions* getImageSettingOptions(const QString& token);
 
+    void
+    setImageSettings(ImageSetting* imageSettings);
+
 protected:
     Message* newMessage();
     QHash<QString, QString> namespaces(const QString& key);

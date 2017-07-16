@@ -8,7 +8,8 @@ class ImageSetting : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness)
-    Q_PROPERTY(int colorSaturation READ colorSaturation WRITE setColorSaturation)
+    Q_PROPERTY(
+            int colorSaturation READ colorSaturation WRITE setColorSaturation)
     Q_PROPERTY(int contrast READ contrast WRITE setContrast)
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness)
 public:
@@ -57,22 +58,43 @@ public:
         m_defaultSpeed = defaultSpeed;
     }
 
-    bool exposureManual() const
-    {
+    bool exposureManual() const {
         return m_exposureManual;
     }
-    void setExposureManual(bool exposureManual)
-    {
+    void setExposureManual(bool exposureManual) {
         m_exposureManual = exposureManual;
     }
 
-    int exposureIris() const
-    {
+    int exposureIris() const {
         return m_exposureIris;
     }
-    void setExposureIris(int exposureIris)
-    {
+    void setExposureIris(int exposureIris) {
         m_exposureIris = exposureIris;
+    }
+
+    bool result() const {
+        return m_result;
+    }
+    void setResult(bool result) {
+        m_result = result;
+    }
+
+    bool forcePersistence() const
+    {
+        return m_forcePersistence;
+    }
+    void setForcePersistence(bool forcePersistence)
+    {
+        m_forcePersistence = forcePersistence;
+    }
+
+    QString token() const
+    {
+        return m_token;
+    }
+    void setToken(const QString &token)
+    {
+        m_token = token;
     }
 
 private:
@@ -84,6 +106,9 @@ private:
     int  m_defaultSpeed;
     bool m_exposureManual;
     int  m_exposureIris;
+    bool m_forcePersistence;
+    QString m_token;
+    bool m_result;
 };
 }
 #endif // IMAGESETTING_H
