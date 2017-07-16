@@ -1140,6 +1140,7 @@ QOnvifDevice::refreshPtzConfiguration() {
 
 bool
 QOnvifDevice::refreshImageSetting() {
+    refreshImageSettingOptions();
     return d_ptr->refreshImageSetting();
 }
 bool
