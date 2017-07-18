@@ -5,6 +5,9 @@
 #include <QRect>
 #include <QString>
 
+static QString lastRequest;
+static QString lastError;
+static QString lastRespond;
 struct Data {
     struct ProbeData {
         QString endPointAddress;
@@ -183,15 +186,15 @@ struct Data {
         } audio;
 
         struct ImageSetting {
-            int  brightness;
-            int  colorSaturation;
-            int  contrast;
-            int  sharpness;
-            bool autofocusManual;
-            int  defaultSpeed;
-            bool exposureManual;
-            int exposureIris;
-            bool forcePersistence;
+            int     brightness;
+            int     colorSaturation;
+            int     contrast;
+            int     sharpness;
+            bool    autofocusManual;
+            int     defaultSpeed;
+            bool    exposureManual;
+            int     exposureIris;
+            bool    forcePersistence;
             QString token;
             struct Options {
                 int brightnessMax;
