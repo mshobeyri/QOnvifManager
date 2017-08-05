@@ -1,7 +1,6 @@
 #include "service.h"
 #include <QDebug>
 #include <QFile>
-#include "datastruct.hpp"
 
 using namespace ONVIF;
 
