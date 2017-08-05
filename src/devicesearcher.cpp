@@ -85,7 +85,7 @@ void DeviceSearcher::sendSearchMsg()
 
 void DeviceSearcher::readPendingDatagrams()
 {
-    while (mUdpSocket->hasPendingDatagrams()) {
+    do {
         QByteArray datagram;
         datagram.resize(mUdpSocket->pendingDatagramSize());
         QHostAddress sender;
@@ -157,5 +157,6 @@ void DeviceSearcher::readPendingDatagrams()
         device_infos.insert("metadata_version", parser.getValue("//d:ProbeMatches/d:ProbeMatch/d:MetadataVersion"));
         emit receiveData(device_infos);
     }
+    }while((mUdpSocket->hasPendingDatagrams()));
     emit deviceSearchingEnded();
 }
