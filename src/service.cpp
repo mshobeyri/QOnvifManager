@@ -29,10 +29,8 @@ Service::sendMessage(Message* message, const QString& namespaceKey) {
     if (message == NULL) {
         return NULL;
     }
-    lastRequest = message->toXmlStr();
     qDebug() << "REQQQQQQQ: " << message->toXmlStr(); // todolog
     QString result = mClient->sendData(message->toXmlStr());
-    lastRespond = message->toXmlStr();
     qDebug() << "RESSSSSSS: " << result;
     if (result == "") {
         return NULL;

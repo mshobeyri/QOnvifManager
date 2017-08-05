@@ -5,9 +5,6 @@
 #include <QRect>
 #include <QString>
 
-static QString lastRequest;
-static QString lastError;
-static QString lastRespond;
 struct Data {
     struct ProbeData {
         QString endPointAddress;
