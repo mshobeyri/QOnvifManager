@@ -8,7 +8,7 @@ namespace ONVIF {
     class DeviceSearcher : public QObject {
         Q_OBJECT
     public:
-//        static DeviceSearcher* searcher;
+        static DeviceSearcher* searcher;
         explicit DeviceSearcher(QHostAddress &addr, QObject *parent = 0);
         static DeviceSearcher* instance(QHostAddress &addr);
         static QList<QHostAddress> getHostAddress();

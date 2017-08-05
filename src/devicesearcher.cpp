@@ -15,13 +15,13 @@
 using namespace ONVIF;
 
 
-//DeviceSearcher* DeviceSearcher::searcher = NULL;
+DeviceSearcher* DeviceSearcher::searcher = NULL;
 
 DeviceSearcher* DeviceSearcher::instance(QHostAddress &addr)
 {
-    //if(searcher == NULL) {
-    DeviceSearcher* searcher = new DeviceSearcher(addr);
-    //}
+    if(searcher == NULL) {
+        searcher = new DeviceSearcher(addr);
+    }
     return searcher;
 }
 
@@ -80,6 +80,7 @@ void DeviceSearcher::sendSearchMsg()
     Message *msg = Message::getOnvifSearchMessage();
     QString msg_str = msg->toXmlStr();
     mUdpSocket->writeDatagram(msg_str.toUtf8(), QHostAddress("239.255.255.250"), 3702);
+    delete msg;
 }
 
 void DeviceSearcher::readPendingDatagrams()
