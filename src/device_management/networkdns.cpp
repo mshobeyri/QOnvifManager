@@ -10,7 +10,8 @@ NetworkDNS::toxml() {
     setDNS.setAttribute("xmlns", "http://www.onvif.org/ver10/device/wsdl");
     fromDhcp = newElement("FromDHCP", this->dhcp() ? "true" : "false");
     setDNS.appendChild(fromDhcp);
-    for (int i = 0; i < this->manualType().length(); i++) {
+    int val = qMin(this->manualType().length(),this->ipv4Address().length());
+    for (int i = 0; i < val; i++) {
         QDomElement dnsManual = newElement("DNSManual");
         QDomElement type      = newElement("Type", this->manualType()[i]);
         type.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
