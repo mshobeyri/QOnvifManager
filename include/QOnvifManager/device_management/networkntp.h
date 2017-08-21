@@ -9,6 +9,7 @@ class NetworkNTP : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool dhcp READ dhcp WRITE setDhcp)
+    Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QString manualType READ manualType WRITE setManualType)
     Q_PROPERTY(QString ipv4Address READ ipv4Address WRITE setIpv4Address)
     Q_PROPERTY(QString ipv6Address READ ipv6Address WRITE setIpv6Address)
@@ -52,8 +53,18 @@ public:
         m_result = result;
     }
 
+    QString name() const
+    {
+        return m_name;
+    }
+    void setName(const QString &name)
+    {
+        m_name = name;
+    }
+
 private:
     bool    m_dhcp;
+    QString m_name;
     QString m_manualType;
     QString m_ipv4Address;
     QString m_ipv6Address;

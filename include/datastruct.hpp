@@ -135,6 +135,7 @@ struct Data {
         struct NTP {
             bool    dhcp;
             QString manualType;
+            QString name;
             QString ipv4Address;
             QString ipv6Address;
         } ntp;
