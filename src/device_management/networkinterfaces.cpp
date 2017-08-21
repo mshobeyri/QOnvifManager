@@ -38,7 +38,7 @@ NetworkInterfaces::toxml() {
     address      = newElement("Address", this->ipv4ManualAddress());
     prefixLength = newElement(
         "PrefixLength", QString::number(this->ipv4ManualPrefixLength()));
-    dhcp = newElement("DHCP", this->ipv4Enabled() == true ? "true" : "false");
+    dhcp = newElement("DHCP", this->ipv4DHCP() == true ? "true" : "false");
     setNetworkInterfaces.appendChild(interfaceToken);
     setNetworkInterfaces.appendChild(networkInterface);
     networkInterface.appendChild(networkInterfaceEnabled);
