@@ -508,7 +508,7 @@ DeviceManagement::getNetworkInterfaces() {
             "ipv4FromDHCPPrefixLength",
             result->getValue("//tt:FromDHCP/tt:PrefixLength").toInt());
         networkInterfaces->setProperty(
-            "ivp4DHCP", result->getValue("//tt:DHCP"));
+            "ipv4DHCP", result->getValue("//tt:DHCP"));
     }
     delete result;
     delete msg;

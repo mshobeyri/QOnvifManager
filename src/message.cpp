@@ -48,22 +48,33 @@ Message*
 Message::getOnvifSearchMessage() {
     QHash<QString, QString> namespaces;
     namespaces.insert("a", "http://schemas.xmlsoap.org/ws/2004/08/addressing");
+    namespaces.insert("s", "http://www.w3.org/2003/05/soap-envelope");
     namespaces.insert("d", "http://schemas.xmlsoap.org/ws/2005/04/discovery");
     namespaces.insert("dn", "http://www.onvif.org/ver10/network/wsdl");
     namespaces.insert("dn", "http://www.onvif.org/ver10/network/wsdl");
     Message*    msg    = new Message(namespaces);
     QDomElement action = newElement(
         "a:Action", "http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe");
+    action.setAttribute("s:mustUnderstand","1");
     QDomElement message_id = newElement("a:MessageID", "uuid:" + msg->uuid());
+    QDomElement replyTo = newElement("a:ReplyTo");
+    QDomElement address = newElement("a:Address","http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous");
+    replyTo.appendChild(address);
     QDomElement to =
         newElement("a:To", "urn:schemas-xmlsoap-org:ws:2005:04:discovery");
+    to.setAttribute("s:mustUnderstand","1");
     msg->appendToHeader(action);
     msg->appendToHeader(message_id);
+    msg->appendToHeader(replyTo);
     msg->appendToHeader(to);
 
     QDomElement probe = newElement("d:Probe");
-    probe.appendChild(newElement("d:Types", "dn:NetworkVideoTransmitter"));
-    probe.appendChild(newElement("d:Scopes"));
+    probe.setAttribute("xmlns","http://schemas.xmlsoap.org/ws/2005/04/discovery");
+    QDomElement type = newElement("d:Types", "dn:NetworkVideoTransmitter");
+    type.setAttribute("xmlns:d","http://schemas.xmlsoap.org/ws/2005/04/discovery");
+    type.setAttribute("xmlns:dp0","http://www.onvif.org/ver10/network/wsdl");
+    probe.appendChild(type);
+//    probe.appendChild(newElement("d:Scopes"));
     msg->appendToBody(probe);
 
     return msg;
