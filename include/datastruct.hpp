@@ -194,18 +194,18 @@ struct Data {
             bool    forcePersistence;
             QString token;
             struct Options {
-                int brightnessMax;
-                int brightnessMin;
-                int colorSaturationMax;
-                int colorSaturationMin;
-                int contrastMax;
-                int contrastMin;
-                int sharpnessMax;
-                int sharpnessMin;
-                int defaultSpeedMax;
-                int defaultSpeedMin;
-                int exposureIrisMax;
-                int exposureIrisMin;
+                double brightnessMax;
+                double brightnessMin;
+                double colorSaturationMax;
+                double colorSaturationMin;
+                double contrastMax;
+                double contrastMin;
+                double sharpnessMax;
+                double sharpnessMin;
+                double defaultSpeedMax;
+                double defaultSpeedMin;
+                double exposureIrisMax;
+                double exposureIrisMin;
             } options;
         } imageSetting;
 
