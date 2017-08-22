@@ -12,7 +12,6 @@ public:
         : iuserName(_username), ipassword(_password) {}
     ~QOnvifManagerPrivate() {}
 
-    QScopedPointer<QOnvifManagerPrivate> d_ptr;
     QString                              iuserName;
     QString                              ipassword;
     QMap<QString, QOnvifDevice*> idevicesMap;
