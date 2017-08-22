@@ -886,6 +886,8 @@ public:
         return true;
     }
     bool refreshImageSetting() {
+        if(idata.profiles.sourceTokenVsc.length()==0)
+            return false;
         QScopedPointer<ONVIF::ImageSetting> imageSetting(
             imediaManagement->getImageSetting(
                 idata.profiles.sourceTokenVsc[0])); // todo
@@ -904,7 +906,8 @@ public:
         return true;
     }
     bool refreshImageSettingOptions() {
-
+        if(idata.profiles.sourceTokenVsc.length()==0)
+            return false;
         QScopedPointer<ONVIF::ImageSettingOptions> imageSettingOptions(
             imediaManagement->getImageSettingOptions(
                 idata.profiles.sourceTokenVsc[0])); // todo
