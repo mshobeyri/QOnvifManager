@@ -45,8 +45,8 @@ enum class MessageType{
     VideoSourceConfigurations,
     VideoEncoderConfigurations,
     Profiles,
-    Profile,
-    Profile,
+    Profile720p,
+    ProfileD1,
     AudioSourceConfigurations,
     AudioEncoderConfigurations,
     VideoSourceConfiguration,
@@ -56,7 +56,10 @@ enum class MessageType{
     VideoEncoderConfigurationOptions,
     StreamUri,
     ImageSetting,
-    ImageSettingOptions
+    ImageSettingOptions,
+
+    setVideoEncoderConfiguration,
+    setImageSettings
 };
 
 
@@ -111,16 +114,18 @@ public:
     void rebootDevice();
 
     // media management
-    bool refreshProfiles();
-    bool refreshVideoConfigs();
-    bool refreshVideoConfigsOptions();
-    bool refreshStreamUris();
-    bool refreshAudioConfigs();
-    bool refreshImageSetting();
-    bool refreshImageSettingOptions();
+    void getProfiles();
+    void getProfile720p();
+    void getProfileD1();
+    void getVideoEncoderConfigurations();
+    void getVideoSourceConfigurations();
+    void getVideoEncoderConfigurationOptions();
+    void getStreamUris();
+    void getImageSetting();
+    void getImageSettingOptions();
 
-    bool setVideoConfig(Data::MediaConfig::Video::EncoderConfig _videoConfig);
-    bool setDeviceImageSetting(Data::MediaConfig::ImageSetting  _imageSetting);
+    void setVideoEncoderConfiguration(Data::MediaConfig::Video::EncoderConfig _videoConfig);
+    void setDeviceImageSetting(Data::MediaConfig::ImageSetting  _imageSetting);
 
     // ptz management
     bool refreshPtzConfiguration();
@@ -144,6 +149,16 @@ signals:
     void networkDNSReceived(Data::Network::DNS);
     void networkHostnameReceived(Data::Network::Hostname);
     void networkNTPReceived(Data::Network::NTP);
+
+    void profilesReceived(Data::Profiles);
+    void profile720pReceived(Data::Profiles);
+    void profileD1Received(Data::Profiles);
+    void videoEncoderConfigurationsReceived(Data::MediaConfig::Video::EncoderConfigs);
+    void videoSourceConfigurationsReceived(Data::MediaConfig::Video::SourceConfig);
+    void videoEncoderConfigurationOptionsReceived(Data::MediaConfig::Video::EncoderConfigs::Options);
+    void streamUrisReceived(Data::MediaConfig::Video::StreamUri);
+    void imageSettingReceived(Data::MediaConfig::ImageSetting);
+    void imageSettingOptionsReceived(Data::MediaConfig::ImageSetting::Options);
 
     void setResultReceived(bool, MessageType);
 private:

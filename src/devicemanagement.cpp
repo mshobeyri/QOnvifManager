@@ -3,7 +3,6 @@
 
 using namespace ONVIF;
 
-
 DeviceManagement::DeviceManagement(
     const QString& wsdlUrl, const QString& username, const QString& password)
     : Service(wsdlUrl, username, password)

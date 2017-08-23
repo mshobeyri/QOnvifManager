@@ -82,7 +82,7 @@ QOnvifManager::refreshDeviceVideoConfigs(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshVideoConfigs();
+        ->getVideoEncoderConfigurations();
 }
 
 bool
@@ -90,7 +90,7 @@ QOnvifManager::refreshDeviceStreamUris(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshStreamUris();
+        ->getStreamUris();
 }
 
 bool
@@ -99,14 +99,14 @@ QOnvifManager::refreshDeviceVideoConfigsOptions(
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshVideoConfigsOptions();
+        ->getVideoEncoderConfigurationOptions();
 }
 
 bool
 QOnvifManager::refreshDeviceProfiles(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProfiles();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->getProfiles();
 }
 
 bool
@@ -233,7 +233,7 @@ QOnvifManager::setDeviceVideoConfig(
     QString                                 _deviceEndPointAddress,
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setVideoConfig(_videoConfig);
+        ->setVideoEncoderConfiguration(_videoConfig);
 }
 
 bool
@@ -300,14 +300,14 @@ QOnvifManager::refreshDevicePtzConfigs(QString _deviceEndPointAddress) {
 bool
 QOnvifManager::refreshDeviceImageSetting(QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshImageSetting();
+        ->getImageSetting();
 }
 
 bool
 QOnvifManager::refreshDeviceImageSettingOptions(
     QString _deviceEndPointAddress) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshImageSettingOptions();
+        ->getImageSettingOptions();
 }
 
 bool
