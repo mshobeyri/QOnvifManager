@@ -48,7 +48,253 @@ QOnvifDevice::QOnvifDevice(
     QString  _password,
     QObject* _parent)
     : d_ptr{new QOnvifDevicePrivate{_serviceAddress, _userName, _password}},
-      QObject(_parent) {}
+      QObject(_parent){
+
+    connect(d_ptr->ideviceManagement,&ONVIF::DeviceManagement::resultReceived,this,[this](QVariant var, MessageType messageType){
+
+        switch (messageType) {
+        case MessageType::DeviceInformation :
+        {
+            QHash<QString, QString> deviceInformationHash = var.value<QHash<QString, QString> >();
+            d_ptr->idata.information.manufacturer = deviceInformationHash.value("mf");
+            d_ptr->idata.information.model        = deviceInformationHash.value("model");
+            d_ptr->idata.information.firmwareVersion =
+                deviceInformationHash.value("firmware_version");
+            d_ptr->idata.information.serialNumber =
+                deviceInformationHash.value("serial_number");
+            d_ptr->idata.information.hardwareId =
+                deviceInformationHash.value("hardware_id");
+
+            emit deviceInformationReceived(d_ptr->idata.information);
+        }
+            break;
+        case MessageType::DeviceScopes :
+        {
+            QHash<QString, QString> deviceScopesHash = var.value<QHash<QString, QString> >();
+            d_ptr->idata.scopes.name     = deviceScopesHash.value("name");
+            d_ptr->idata.scopes.location = deviceScopesHash.value("location");
+            d_ptr->idata.scopes.hardware = deviceScopesHash.value("hardware");
+
+            emit deviceScopesReceived(d_ptr->idata.scopes);
+        }
+            break;
+        case MessageType::SystemDateAndTime :
+        {
+            QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(var));
+
+            d_ptr->idata.dateTime.localTime      = systemDateAndTime->localTime();
+            d_ptr->idata.dateTime.utcTime        = systemDateAndTime->utcTime();
+            d_ptr->idata.dateTime.timeZone       = systemDateAndTime->tz();
+            d_ptr->idata.dateTime.daylightSaving = systemDateAndTime->daylightSavings();
+
+            emit systemDateAndTimeReceived(d_ptr->idata.dateTime);
+        }
+            break;
+        case MessageType::Users :
+        {
+            QScopedPointer<ONVIF::Users> users(ONVIF::VPtr<ONVIF::Users>::asPtr(var));
+
+            d_ptr->idata.users.clear();
+            for (int i = 0; i < users->userNames().length(); i++) {
+                Data::User user;
+                user.username  = users->userNames().value(i);
+                user.password  = users->passWord().value(i);
+                user.userLevel = users->userLevel().value(i);
+                d_ptr->idata.users.append(user);
+            }
+
+            emit usersReceived(d_ptr->idata.users);
+        }
+            break;
+        case MessageType::Capabilities :
+        {
+            QScopedPointer<ONVIF::Capabilities> capabilities(ONVIF::VPtr<ONVIF::Capabilities>::asPtr(var));
+
+            auto& src = capabilities;
+            auto& des = d_ptr->idata.capabilities;
+
+            // device capabilities
+            des.accessPolicyConfig     = src->accessPolicyConfig();
+            des.deviceXAddr            = src->deviceXAddr();
+            des.iPFilter               = src->iPFilter();
+            des.zeroConfiguration      = src->zeroConfiguration();
+            des.iPVersion6             = src->iPVersion6();
+            des.dynDNS                 = src->dynDNS();
+            des.discoveryResolve       = src->discoveryResolve();
+            des.systemLogging          = src->systemLogging();
+            des.firmwareUpgrade        = src->firmwareUpgrade();
+            des.major                  = src->major();
+            des.minor                  = src->minor();
+            des.httpFirmwareUpgrade    = src->httpFirmwareUpgrade();
+            des.httpSystemBackup       = src->httpSystemBackup();
+            des.httpSystemLogging      = src->httpSystemLogging();
+            des.httpSupportInformation = src->httpSupportInformation();
+            des.inputConnectors        = src->inputConnectors();
+            des.relayOutputs           = src->relayOutputs();
+            des.tls11                  = src->tls11();
+            des.tls22                  = src->tls22();
+            des.onboardKeyGeneration   = src->onboardKeyGeneration();
+            des.accessPolicyConfig     = src->accessPolicyConfig();
+            des.x509Token              = src->x509Token();
+            des.samlToken              = src->samlToken();
+            des.kerberosToken          = src->kerberosToken();
+            des.relToken               = src->relToken();
+            des.tls10                  = src->tls10();
+            des.dot1x                  = src->dot1x();
+            des.remoteUserHanding      = src->remoteUserHanding();
+            des.systemBackup           = src->systemBackup();
+            des.discoveryBye           = src->discoveryBye();
+            des.remoteDiscovery        = src->remoteDiscovery();
+
+            // ptz capabilities
+            des.ptzAddress = capabilities->ptzXAddr();
+
+            // image capabilities
+             des.imagingXAddress = capabilities->imagingXAddr();
+
+            // media capabilities
+             des.mediaXAddress = capabilities->mediaXAddr();
+             des.rtpMulticast  = capabilities->rtpMulticast();
+             des.rtpTcp        = capabilities->rtpTcp();
+             des.rtpRtspTcp    = capabilities->rtpRtspTcp();
+
+            emit capabilitiesReceived(d_ptr->idata.capabilities);
+        }
+            break;
+        case MessageType::NetworkInterfaces :
+        {
+            QScopedPointer<ONVIF::NetworkInterfaces> networkInterfaces(ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.interfaces;
+            auto& src = networkInterfaces;
+
+            des.networkInfacesEnabled    = src->networkInfacesEnabled();
+            des.autoNegotiation          = src->autoNegotiation();
+            des.speed                    = src->speed();
+            des.mtu                      = src->mtu();
+            des.ipv4Enabled              = src->ipv4Enabled();
+            des.ipv4ManualAddress        = src->ipv4ManualAddress();
+            des.ipv4ManualPrefixLength   = src->ipv4ManualPrefixLength();
+            des.ipv4DHCP                 = src->ipv4DHCP();
+            des.networkInfacesName       = src->networkInfacesName();
+            des.hwAaddress               = src->hwAaddress();
+            des.ipv4LinkLocalAddress     = src->ipv4LinkLocalAddress();
+            des.ipvLinkLocalPrefixLength = src->ipvLinkLocalPrefixLength();
+            des.ipv4FromDHCPAddress      = src->ipv4FromDHCPAddress();
+            des.ipv4FromDHCPPrefixLength = src->ipv4FromDHCPPrefixLength();
+            des.interfaceToken           = src->interfaceToken();
+            des.result                   = src->result();
+            des.duplexFull = src->duplex() == ONVIF::NetworkInterfaces::Duplex::Full
+                                 ? true
+                                 : false;
+
+            emit networkInterfacesReceived(d_ptr->idata.network.interfaces);
+        }
+            break;
+        case MessageType::NetworkProtocols :
+        {
+            QScopedPointer<ONVIF::NetworkProtocols> networkProtocols(ONVIF::VPtr<ONVIF::NetworkProtocols>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.protocols;
+            auto& src = networkProtocols;
+
+            des.networkProtocolsEnabled = src->getNetworkProtocolsEnabled();
+            des.networkProtocolsName    = src->getNetworkProtocolsName();
+            des.networkProtocolsPort    = src->getNetworkProtocolsPort();
+
+            emit networkProtocolsReceived(d_ptr->idata.network.protocols);
+        }
+            break;
+        case MessageType::NetworkDefaultGateway :
+        {
+            QScopedPointer<ONVIF::NetworkDefaultGateway> networkDefaultGateway(ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.defaultGateway;
+            auto& src = networkDefaultGateway;
+
+            des.ipv4Address = src->ipv4Address();
+            des.ipv6Address = src->ipv6Address();
+
+            emit networkDefaultGatewayReceived(d_ptr->idata.network.defaultGateway);
+        }
+            break;
+        case MessageType::NetworkDiscoveryMode :
+        {
+            QScopedPointer<ONVIF::NetworkDiscoveryMode> networkDiscoveryMode(ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.discoveryMode;
+            auto& src = networkDiscoveryMode;
+
+            des.discoveryMode = src->discoveryMode();
+
+            emit networkDiscoveryModeReceived(d_ptr->idata.network.discoveryMode);
+        }
+            break;
+        case MessageType::NetworkDNS :
+        {
+            QScopedPointer<ONVIF::NetworkDNS> networkDNS(ONVIF::VPtr<ONVIF::NetworkDNS>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.dns;
+            auto& src = networkDNS;
+
+            des.dhcp         = src->dhcp();
+            des.ipv4Address  = src->ipv4Address();
+            des.manualType   = src->manualType();
+            des.searchDomain = src->searchDomain();
+
+            emit networkDNSReceived(d_ptr->idata.network.dns);
+        }
+            break;
+        case MessageType::NetworkHostname :
+        {
+            QScopedPointer<ONVIF::NetworkHostname> networkHostname(ONVIF::VPtr<ONVIF::NetworkHostname>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.hostname;
+            auto& src = networkHostname;
+
+            des.dhcp = src->dhcp();
+            des.name = src->name();
+
+            emit networkHostnameReceived(d_ptr->idata.network.hostname);
+        }
+            break;
+        case MessageType::NetworkNTP :
+        {
+            QScopedPointer<ONVIF::NetworkNTP> networkNTP(ONVIF::VPtr<ONVIF::NetworkNTP>::asPtr(var));
+
+            auto& des = d_ptr->idata.network.ntp;
+            auto& src = networkNTP;
+
+            des.dhcp        = src->dhcp();
+            des.ipv4Address = src->ipv4Address();
+            des.ipv6Address = src->ipv6Address();
+            des.manualType  = src->manualType();
+
+            emit networkNTPReceived(d_ptr->idata.network.ntp);
+        }
+            break;
+        case MessageType::SetDeviceScopes :
+        case MessageType::SetSystemDateAndTime :
+        case MessageType::SetUsers :
+        case MessageType::SetSystemFactoryDefault :
+        case MessageType::SetSystemReboot :
+        case MessageType::SetNetworkInterfaces :
+        case MessageType::SetNetworkProtocols :
+        case MessageType::SetNetworkDefaultGateway :
+        case MessageType::SetNetworkDiscoveryMode :
+        case MessageType::SetNetworkDNS :
+        case MessageType::SetNetworkHostname :
+        case MessageType::SetNetworkNTP :
+        {
+            bool r = var.value<bool>();
+            emit setResultReceived(r, messageType);
+        }
+            break;
+        default:
+            break;
+        }
+    });
+}
 
 QOnvifDevice::~QOnvifDevice() {}
 
@@ -57,18 +303,63 @@ QOnvifDevice::data() {
     return d_ptr->idata;
 }
 
-bool
-QOnvifDevice::deviceDateAndTime(Data::DateTime& _datetime) {
-    QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(
-        d_ptr->ideviceManagement->getSystemDateAndTime());
-    if (!systemDateAndTime)
-        return false;
-    d_ptr->idata.dateTime.localTime      = systemDateAndTime->localTime();
-    d_ptr->idata.dateTime.utcTime        = systemDateAndTime->utcTime();
-    d_ptr->idata.dateTime.timeZone       = systemDateAndTime->tz();
-    d_ptr->idata.dateTime.daylightSaving = systemDateAndTime->daylightSavings();
-    _datetime                     = d_ptr->idata.dateTime;
-    return systemDateAndTime->result();
+void
+QOnvifDevice::getDeviceInformation() {
+    d_ptr->ideviceManagement->getData(MessageType::DeviceInformation);
+}
+
+void
+QOnvifDevice::getDeviceScopes() {
+    d_ptr->ideviceManagement->getData(MessageType::DeviceScopes);
+}
+
+void
+QOnvifDevice::getDeviceDateAndTime() {
+    d_ptr->ideviceManagement->getData(MessageType::SystemDateAndTime);
+}
+
+void
+QOnvifDevice::getUsers() {
+    d_ptr->ideviceManagement->getData(MessageType::Users);
+}
+
+void
+QOnvifDevice::getDeviceCapabilities() {
+    d_ptr->ideviceManagement->getData(MessageType::Capabilities);
+}
+
+void
+QOnvifDevice::getInterfaces() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkInterfaces);
+}
+void
+QOnvifDevice::getProtocols() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkProtocols);
+}
+
+void
+QOnvifDevice::getDefaultGateway() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkDefaultGateway);
+}
+
+void
+QOnvifDevice::getDiscoveryMode() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkDiscoveryMode);
+}
+
+void
+QOnvifDevice::getDNS() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkDNS);
+}
+
+void
+QOnvifDevice::getHostname() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkHostname);
+}
+
+void
+QOnvifDevice::getNTP() {
+    d_ptr->ideviceManagement->getData(MessageType::NetworkNTP);
 }
 
 void
@@ -76,12 +367,162 @@ QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData) {
     d_ptr->idata.probeData = _probeData;
 }
 
-bool
+void
 QOnvifDevice::setScopes(QString _name, QString _location) {
     ONVIF::SystemScopes systemScopes;
     systemScopes.setScopes(_name, _location);
-    d_ptr->ideviceManagement->setDeviceScopes(&systemScopes);
-    return systemScopes.result();
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::SystemScopes>::asQVariant(&systemScopes),
+                MessageType::SetDeviceScopes);
+}
+
+void
+QOnvifDevice::setDateAndTime(
+        QDateTime _dateAndTime,
+        QString   _zone,
+        bool      _daylightSaving,
+        bool      _isLocal) {
+    ONVIF::SystemDateAndTime systemDateAndTime;
+    systemDateAndTime.setIsLocal(_isLocal);
+    if (_isLocal) {
+        systemDateAndTime.setlocalTime(_dateAndTime);
+    } else {
+        systemDateAndTime.setutcTime(_dateAndTime);
+    }
+    systemDateAndTime.setTz(_zone);
+    systemDateAndTime.setDaylightSavings(_daylightSaving);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::SystemDateAndTime>::asQVariant(&systemDateAndTime),
+                MessageType::SetSystemDateAndTime);
+}
+
+void
+QOnvifDevice::setUsers(Data::Users _users) {
+    ONVIF::Users users;
+    for (int i = 0; i < _users.length(); i++) {
+        users.setUserNames(_users[i].username);
+        users.setPassWords(_users[i].password);
+        users.setUserLevel(_users[i].userLevel);
+        users.setIsAddMode(_users[i].isAddMode);
+    }
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::Users>::asQVariant(&users),
+                MessageType::SetUsers);
+}
+
+void
+QOnvifDevice::setNetworkInterfaces(Data::Network::Interfaces _interfaces) {
+    ONVIF::NetworkInterfaces networkInterface;
+    auto&                    des = networkInterface;
+    des.setAutoNegotiation(_interfaces.autoNegotiation);
+    des.setDuplex(
+        _interfaces.duplexFull ? ONVIF::NetworkInterfaces::Duplex::Full
+                              : ONVIF::NetworkInterfaces::Duplex::Half);
+
+    des.setHwAaddress(_interfaces.hwAaddress);
+    des.setIpv4DHCP(_interfaces.ipv4DHCP);
+    des.setIpv4Enabled(_interfaces.ipv4Enabled);
+    des.setIpv4FromDHCPAddress(_interfaces.ipv4FromDHCPAddress);
+    des.setIpv4FromDHCPPrefixLength(_interfaces.ipv4FromDHCPPrefixLength);
+    des.setIpv4LinkLocalAddress(_interfaces.ipv4LinkLocalAddress);
+    des.setIpv4ManualAddress(_interfaces.ipv4ManualAddress);
+    des.setIpv4ManualPrefixLength(_interfaces.ipv4ManualPrefixLength);
+    des.setIpvLinkLocalPrefixLength(_interfaces.ipvLinkLocalPrefixLength);
+    des.setMtu(_interfaces.mtu);
+    des.setNetworkInfacesEnabled(_interfaces.networkInfacesEnabled);
+    des.setNetworkInfacesName(_interfaces.networkInfacesName);
+    des.setSpeed(_interfaces.speed);
+    des.setInterfaceToken(_interfaces.interfaceToken);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkInterfaces>::asQVariant(&networkInterface),
+                MessageType::SetNetworkInterfaces);
+}
+
+void
+QOnvifDevice::setNetworkProtocols(Data::Network::Protocols _protocols) {
+    ONVIF::NetworkProtocols networkProtocols;
+    auto& des = networkProtocols;
+    for (int i = 0; i < _protocols.networkProtocolsName.length(); i++) {
+        des.setNetworkProtocolsEnabled(
+            _protocols.networkProtocolsEnabled[i]);
+        des.setNetworkProtocolsPort(_protocols.networkProtocolsPort[i]);
+        des.setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
+    }
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkProtocols>::asQVariant(&networkProtocols),
+                MessageType::SetNetworkProtocols);
+}
+
+void
+QOnvifDevice::setNetworkDefaultGateway(Data::Network::DefaultGateway _defaultGateway) {
+    ONVIF::NetworkDefaultGateway networkDefaultGateway;
+    networkDefaultGateway.setIpv4Address(_defaultGateway.ipv4Address);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asQVariant(&networkDefaultGateway),
+                MessageType::SetNetworkDefaultGateway);
+}
+
+void
+QOnvifDevice::setNetworkDiscoveryMode(Data::Network::DiscoveryMode _discoveryMode) {
+    ONVIF::NetworkDiscoveryMode networkDiscoveryMode;
+    networkDiscoveryMode.setDiscoveryMode(_discoveryMode.discoveryMode);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asQVariant(&networkDiscoveryMode),
+                MessageType::SetNetworkDiscoveryMode);
+}
+
+void
+QOnvifDevice::setNetworkDNS(Data::Network::DNS _dns) {
+    ONVIF::NetworkDNS networkDNS;
+    networkDNS.setDhcp(_dns.dhcp);
+    foreach (QString ipAddress, _dns.ipv4Address)
+        networkDNS.setIpv4Address(ipAddress);
+    foreach (QString manualType, _dns.manualType)
+        networkDNS.setManualType(manualType);
+    networkDNS.setSearchDomain(_dns.searchDomain);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkDNS>::asQVariant(&networkDNS),
+                MessageType::SetNetworkDNS);
+}
+
+void
+QOnvifDevice::setNetworkHostname(Data::Network::Hostname _hostname) {
+    ONVIF::NetworkHostname networkHostname;
+    networkHostname.setDhcp(_hostname.dhcp);
+    networkHostname.setName(_hostname.name);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkHostname>::asQVariant(&networkHostname),
+                MessageType::SetNetworkHostname);
+}
+
+void
+QOnvifDevice::setNetworkNTP(Data::Network::NTP _ntp) {
+    ONVIF::NetworkNTP networkNTP;
+    networkNTP.setDhcp(_ntp.dhcp);
+    networkNTP.setIpv4Address(_ntp.ipv4Address);
+    networkNTP.setManualType(_ntp.ipv6Address);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::NetworkNTP>::asQVariant(&networkNTP),
+                MessageType::SetNetworkNTP);
+}
+
+void
+QOnvifDevice::resetFactoryDevice(bool isHard) {
+    ONVIF::SystemFactoryDefault systemFactoryDefault;
+    systemFactoryDefault.setFactoryDefault(
+        isHard ? ONVIF::SystemFactoryDefault::Hard
+               : ONVIF::SystemFactoryDefault::Soft);
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asQVariant(&systemFactoryDefault),
+                MessageType::SetSystemFactoryDefault);
+}
+
+void
+QOnvifDevice::rebootDevice() {
+    ONVIF::SystemReboot systemReboot;
+    d_ptr->ideviceManagement->setData(
+                ONVIF::VPtr<ONVIF::SystemReboot>::asQVariant(&systemReboot),
+                MessageType::SetSystemReboot);
 }
 
 bool
@@ -126,246 +567,6 @@ QOnvifDevice::setDeviceImageSetting(
     imageSetting.setToken(_imageSetting.token);
     d_ptr->imediaManagement->setImageSettings(&imageSetting);
     return imageSetting.result();
-}
-
-bool
-QOnvifDevice::setUsers(Data::Users _users) {
-    ONVIF::Users users;
-    for (int i = 0; i < _users.length(); i++) {
-        users.setUserNames(_users[i].username);
-        users.setPassWords(_users[i].password);
-        users.setUserLevel(_users[i].userLevel);
-        users.setIsAddMode(_users[i].isAddMode);
-    }
-    d_ptr->ideviceManagement->setUsers(&users);
-    return users.result();
-}
-
-bool
-QOnvifDevice::setInterfaces(Data::Network::Interfaces _interfaces) {
-    ONVIF::NetworkInterfaces networkInterface;
-    auto&                    des = networkInterface;
-    des.setAutoNegotiation(_interfaces.autoNegotiation);
-    des.setDuplex(
-        _interfaces.duplexFull ? ONVIF::NetworkInterfaces::Duplex::Full
-                              : ONVIF::NetworkInterfaces::Duplex::Half);
-
-    des.setHwAaddress(_interfaces.hwAaddress);
-    des.setIpv4DHCP(_interfaces.ipv4DHCP);
-    des.setIpv4Enabled(_interfaces.ipv4Enabled);
-    des.setIpv4FromDHCPAddress(_interfaces.ipv4FromDHCPAddress);
-    des.setIpv4FromDHCPPrefixLength(_interfaces.ipv4FromDHCPPrefixLength);
-    des.setIpv4LinkLocalAddress(_interfaces.ipv4LinkLocalAddress);
-    des.setIpv4ManualAddress(_interfaces.ipv4ManualAddress);
-    des.setIpv4ManualPrefixLength(_interfaces.ipv4ManualPrefixLength);
-    des.setIpvLinkLocalPrefixLength(_interfaces.ipvLinkLocalPrefixLength);
-    des.setMtu(_interfaces.mtu);
-    des.setNetworkInfacesEnabled(_interfaces.networkInfacesEnabled);
-    des.setNetworkInfacesName(_interfaces.networkInfacesName);
-    des.setSpeed(_interfaces.speed);
-    des.setInterfaceToken(_interfaces.interfaceToken);
-    d_ptr->ideviceManagement->setNetworkInterfaces(&networkInterface);
-    return networkInterface.result();
-}
-
-bool
-QOnvifDevice::setProtocols(Data::Network::Protocols _protocols) {
-    ONVIF::NetworkProtocols networkProtocols;
-    auto&                   des = networkProtocols;
-    for (int i = 0; i < _protocols.networkProtocolsName.length(); i++) {
-        des.setNetworkProtocolsEnabled(
-            _protocols.networkProtocolsEnabled[i]);
-        des.setNetworkProtocolsPort(_protocols.networkProtocolsPort[i]);
-        des.setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
-    }
-    d_ptr->ideviceManagement->setNetworkProtocols(&networkProtocols);
-    return networkProtocols.result();
-}
-
-bool
-QOnvifDevice::setDefaultGateway(Data::Network::DefaultGateway _defaultGateway) {
-    ONVIF::NetworkDefaultGateway networkDefaultGateway;
-    networkDefaultGateway.setIpv4Address(_defaultGateway.ipv4Address);
-    d_ptr->ideviceManagement->setDefaultGateway(&networkDefaultGateway);
-    return networkDefaultGateway.result();
-}
-
-bool
-QOnvifDevice::setDiscoveryMode(Data::Network::DiscoveryMode _discoveryMode) {
-    ONVIF::NetworkDiscoveryMode networkDiscoveryMode;
-    networkDiscoveryMode.setDiscoveryMode(_discoveryMode.discoveryMode);
-    d_ptr->ideviceManagement->setDiscoveryMode(&networkDiscoveryMode);
-    return networkDiscoveryMode.result();
-}
-
-bool
-QOnvifDevice::setDNS(Data::Network::DNS _dns) {
-    ONVIF::NetworkDNS networkDNS;
-    networkDNS.setDhcp(_dns.dhcp);
-    foreach (QString ipAddress, _dns.ipv4Address)
-        networkDNS.setIpv4Address(ipAddress);
-    foreach (QString manualType, _dns.manualType)
-        networkDNS.setManualType(manualType);
-    networkDNS.setSearchDomain(_dns.searchDomain);
-    d_ptr->ideviceManagement->setDNS(&networkDNS);
-    return networkDNS.result();
-}
-
-bool
-QOnvifDevice::setHostname(Data::Network::Hostname _hostname) {
-    ONVIF::NetworkHostname networkHostname;
-    networkHostname.setDhcp(_hostname.dhcp);
-    networkHostname.setName(_hostname.name);
-    d_ptr->ideviceManagement->setHostname(&networkHostname);
-    return networkHostname.result();
-}
-
-bool
-QOnvifDevice::setNTP(Data::Network::NTP _ntp) {
-    ONVIF::NetworkNTP networkNTP;
-    networkNTP.setDhcp(_ntp.dhcp);
-    networkNTP.setIpv4Address(_ntp.ipv4Address);
-    networkNTP.setManualType(_ntp.ipv6Address);
-    d_ptr->ideviceManagement->setNTP(&networkNTP);
-    return networkNTP.result();
-}
-bool
-QOnvifDevice::setDateAndTime(
-    QDateTime _dateAndTime,
-    QString   _zone,
-    bool      _daylightSaving,
-    bool      _isLocal) {
-    ONVIF::SystemDateAndTime systemDateAndTime;
-    systemDateAndTime.setIsLocal(_isLocal);
-    if (_isLocal) {
-        systemDateAndTime.setlocalTime(_dateAndTime);
-    } else {
-        systemDateAndTime.setutcTime(_dateAndTime);
-    }
-    systemDateAndTime.setTz(_zone);
-    systemDateAndTime.setDaylightSavings(_daylightSaving);
-    d_ptr->ideviceManagement->setSystemDateAndTime(&systemDateAndTime);
-    return systemDateAndTime.result();
-}
-
-bool
-QOnvifDevice::refreshDeviceCapabilities() {
-    QScopedPointer<ONVIF::Capabilities> capabilitiesDevice(
-        d_ptr->ideviceManagement->getCapabilitiesDevice());
-    if (!capabilitiesDevice)
-        return false;
-
-    auto& src = capabilitiesDevice;
-    auto& des = d_ptr->idata.capabilities;
-
-    des.accessPolicyConfig     = src->accessPolicyConfig();
-    des.deviceXAddr            = src->deviceXAddr();
-    des.iPFilter               = src->iPFilter();
-    des.zeroConfiguration      = src->zeroConfiguration();
-    des.iPVersion6             = src->iPVersion6();
-    des.dynDNS                 = src->dynDNS();
-    des.discoveryResolve       = src->discoveryResolve();
-    des.systemLogging          = src->systemLogging();
-    des.firmwareUpgrade        = src->firmwareUpgrade();
-    des.major                  = src->major();
-    des.minor                  = src->minor();
-    des.httpFirmwareUpgrade    = src->httpFirmwareUpgrade();
-    des.httpSystemBackup       = src->httpSystemBackup();
-    des.httpSystemLogging      = src->httpSystemLogging();
-    des.httpSupportInformation = src->httpSupportInformation();
-    des.inputConnectors        = src->inputConnectors();
-    des.relayOutputs           = src->relayOutputs();
-    des.tls11                  = src->tls11();
-    des.tls22                  = src->tls22();
-    des.onboardKeyGeneration   = src->onboardKeyGeneration();
-    des.accessPolicyConfig     = src->accessPolicyConfig();
-    des.x509Token              = src->x509Token();
-    des.samlToken              = src->samlToken();
-    des.kerberosToken          = src->kerberosToken();
-    des.relToken               = src->relToken();
-    des.tls10                  = src->tls10();
-    des.dot1x                  = src->dot1x();
-    des.remoteUserHanding      = src->remoteUserHanding();
-    des.systemBackup           = src->systemBackup();
-    des.discoveryBye           = src->discoveryBye();
-    des.remoteDiscovery        = src->remoteDiscovery();
-
-    // ptz capabilities
-    QScopedPointer<ONVIF::Capabilities> capabilitiesPtz(
-        d_ptr->ideviceManagement->getCapabilitiesDevice());
-    if (!capabilitiesPtz)
-        return false;
-
-    des.ptzAddress = capabilitiesPtz->ptzXAddr();
-
-    // image capabilities
-    QScopedPointer<ONVIF::Capabilities> capabilitiesImage(
-        d_ptr->ideviceManagement->getCapabilitiesDevice());
-    if (!capabilitiesImage)
-        return false;
-
-    des.imagingXAddress = capabilitiesImage->imagingXAddr();
-
-    // media capabilities
-    QScopedPointer<ONVIF::Capabilities> capabilitiesMedia(
-        d_ptr->ideviceManagement->getCapabilitiesDevice());
-    if (!capabilitiesMedia)
-        return false;
-
-    des.mediaXAddress = capabilitiesMedia->mediaXAddr();
-    des.rtpMulticast  = capabilitiesMedia->rtpMulticast();
-    des.rtpTcp        = capabilitiesMedia->rtpTcp();
-    des.rtpRtspTcp    = capabilitiesMedia->rtpRtspTcp();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshDeviceInformation() {
-    QHash<QString, QString> deviceInformationHash =
-        d_ptr->ideviceManagement->getDeviceInformation();
-    d_ptr->idata.information.manufacturer = deviceInformationHash.value("mf");
-    d_ptr->idata.information.model        = deviceInformationHash.value("model");
-    d_ptr->idata.information.firmwareVersion =
-        deviceInformationHash.value("firmware_version");
-    d_ptr->idata.information.serialNumber =
-        deviceInformationHash.value("serial_number");
-    d_ptr->idata.information.hardwareId =
-        deviceInformationHash.value("hardware_id");
-    return true;
-}
-
-bool
-QOnvifDevice::refreshDeviceScopes() {
-    QHash<QString, QString> deviceScopesHash =
-        d_ptr->ideviceManagement->getDeviceScopes();
-    d_ptr->idata.scopes.name     = deviceScopesHash.value("name");
-    d_ptr->idata.scopes.location = deviceScopesHash.value("location");
-    d_ptr->idata.scopes.hardware = deviceScopesHash.value("hardware");
-    return true;
-}
-
-bool
-QOnvifDevice::resetFactoryDevice(bool isHard) {
-    QScopedPointer<ONVIF::SystemFactoryDefault> systemFactoryDefault{
-        new ONVIF::SystemFactoryDefault{}};
-    if (!systemFactoryDefault)
-        return false;
-    systemFactoryDefault->setFactoryDefault(
-        isHard ? ONVIF::SystemFactoryDefault::Hard
-               : ONVIF::SystemFactoryDefault::Soft);
-    d_ptr->ideviceManagement->setSystemFactoryDefault(systemFactoryDefault.data());
-    return systemFactoryDefault->result();
-}
-
-bool
-QOnvifDevice::rebootDevice() {
-    QScopedPointer<ONVIF::SystemReboot> systemReboot{
-        new ONVIF::SystemReboot{}};
-    if (!systemReboot)
-        return false;
-    d_ptr->ideviceManagement->systemReboot(systemReboot.data());
-    return systemReboot->result();
 }
 
 bool
@@ -757,149 +958,6 @@ QOnvifDevice::refreshProfiles() {
         profileD1->m_defaultContinuousPantTiltVelocitySpace;
     d_ptr->idata.profileD1.defaultContinuousZoomVelocitySpace =
         profileD1->m_defaultContinuousZoomVelocitySpace;
-    return true;
-}
-
-bool
-QOnvifDevice::refreshInterfaces() {
-    QScopedPointer<ONVIF::NetworkInterfaces> networkInterfaces(
-        d_ptr->ideviceManagement->getNetworkInterfaces());
-    if (!networkInterfaces)
-        return false;
-
-    auto& des = d_ptr->idata.network.interfaces;
-    auto& src = networkInterfaces;
-
-    des.networkInfacesEnabled    = src->networkInfacesEnabled();
-    des.autoNegotiation          = src->autoNegotiation();
-    des.speed                    = src->speed();
-    des.mtu                      = src->mtu();
-    des.ipv4Enabled              = src->ipv4Enabled();
-    des.ipv4ManualAddress        = src->ipv4ManualAddress();
-    des.ipv4ManualPrefixLength   = src->ipv4ManualPrefixLength();
-    des.ipv4DHCP                 = src->ipv4DHCP();
-    des.networkInfacesName       = src->networkInfacesName();
-    des.hwAaddress               = src->hwAaddress();
-    des.ipv4LinkLocalAddress     = src->ipv4LinkLocalAddress();
-    des.ipvLinkLocalPrefixLength = src->ipvLinkLocalPrefixLength();
-    des.ipv4FromDHCPAddress      = src->ipv4FromDHCPAddress();
-    des.ipv4FromDHCPPrefixLength = src->ipv4FromDHCPPrefixLength();
-    des.interfaceToken           = src->interfaceToken();
-    des.result                   = src->result();
-    des.duplexFull = src->duplex() == ONVIF::NetworkInterfaces::Duplex::Full
-                         ? true
-                         : false;
-    return true;
-}
-
-bool
-QOnvifDevice::refreshProtocols() {
-    QScopedPointer<ONVIF::NetworkProtocols> networkProtocols(
-        d_ptr->ideviceManagement->getNetworkProtocols());
-    if (!networkProtocols)
-        return false;
-
-    auto& des = d_ptr->idata.network.protocols;
-    auto& src = networkProtocols;
-
-    des.networkProtocolsEnabled = src->getNetworkProtocolsEnabled();
-    des.networkProtocolsName    = src->getNetworkProtocolsName();
-    des.networkProtocolsPort    = src->getNetworkProtocolsPort();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshDefaultGateway() {
-    QScopedPointer<ONVIF::NetworkDefaultGateway> networkDefaultGateway(
-        d_ptr->ideviceManagement->getNetworkDefaultGateway());
-    if (!networkDefaultGateway)
-        return false;
-    auto& des = d_ptr->idata.network.defaultGateway;
-    auto& src = networkDefaultGateway;
-
-    des.ipv4Address = src->ipv4Address();
-    des.ipv6Address = src->ipv6Address();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshDiscoveryMode() {
-    QScopedPointer<ONVIF::NetworkDiscoveryMode> networkDiscoveryMode(
-        d_ptr->ideviceManagement->getNetworkDiscoverMode());
-    if (!networkDiscoveryMode)
-        return false;
-    auto& des = d_ptr->idata.network.discoveryMode;
-    auto& src = networkDiscoveryMode;
-
-    des.discoveryMode = src->discoveryMode();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshDNS() {
-    QScopedPointer<ONVIF::NetworkDNS> networkDNS(
-        d_ptr->ideviceManagement->getNetworkDNS());
-    if (!networkDNS)
-        return false;
-    auto& des = d_ptr->idata.network.dns;
-    auto& src = networkDNS;
-
-    des.dhcp         = src->dhcp();
-    des.ipv4Address  = src->ipv4Address();
-    des.manualType   = src->manualType();
-    des.searchDomain = src->searchDomain();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshHostname() {
-    QScopedPointer<ONVIF::NetworkHostname> networkHostname(
-        d_ptr->ideviceManagement->getNetworkHostname());
-    if (!networkHostname)
-        return false;
-    auto& des = d_ptr->idata.network.hostname;
-    auto& src = networkHostname;
-
-    des.dhcp = src->dhcp();
-    des.name = src->name();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshNTP() {
-    QScopedPointer<ONVIF::NetworkNTP> networkNTP(
-        d_ptr->ideviceManagement->getNetworkNTP());
-    if (!networkNTP)
-        return false;
-    auto& des = d_ptr->idata.network.ntp;
-    auto& src = networkNTP;
-
-    des.dhcp        = src->dhcp();
-    des.ipv4Address = src->ipv4Address();
-    des.ipv6Address = src->ipv6Address();
-    des.manualType  = src->manualType();
-
-    return true;
-}
-
-bool
-QOnvifDevice::refreshUsers() {
-    QScopedPointer<ONVIF::Users> users(d_ptr->ideviceManagement->getUsers());
-    if (!users)
-        return false;
-    d_ptr->idata.users.clear();
-    for (int i = 0; i < users->userNames().length(); i++) {
-        Data::User user;
-        user.username  = users->userNames().value(i);
-        user.password  = users->passWord().value(i);
-        user.userLevel = users->userLevel().value(i);
-        d_ptr->idata.users.append(user);
-    }
     return true;
 }
 

@@ -6,7 +6,18 @@ using namespace ONVIF;
 
 DeviceManagement::DeviceManagement(
     const QString& wsdlUrl, const QString& username, const QString& password)
-    : Service(wsdlUrl, username, password) {}
+    : Service(wsdlUrl, username, password)
+{
+    connect(this,&DeviceManagement::messageParserReceived,this,&DeviceManagement::onMessageParserReceived);
+}
+
+Message*
+DeviceManagement::newMessage() {
+    QHash<QString, QString> names;
+    names.insert("wsdl", "http://www.onvif.org/ver10/device/wsdl");
+    names.insert("sch", "http://www.onvif.org/ver10/schema");
+    return createMessage(names);
+}
 
 QHash<QString, QString>
 DeviceManagement::namespaces(const QString& key) {
@@ -92,14 +103,18 @@ DeviceManagement::namespaces(const QString& key) {
     return names;
 }
 
+void
+DeviceManagement::onMessageParserReceived(MessageParser *result, device::MessageType messageType)
+{
+    if (result == NULL)
+        return;
 
-QHash<QString, QString>
-DeviceManagement::getDeviceInformation() {
-    QHash<QString, QString> device_info;
-    Message* msg = newMessage();
-    msg->appendToBody(newElement("wsdl:GetDeviceInformation"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
+    QVariant var;
+
+    switch (messageType) {
+    case device::MessageType::DeviceInformation :
+    {
+        QHash<QString, QString> device_info;
         device_info.insert("mf", result->getValue("//tds:Manufacturer"));
         device_info.insert("model", result->getValue("//tds:Model"));
         device_info.insert(
@@ -107,21 +122,12 @@ DeviceManagement::getDeviceInformation() {
         device_info.insert(
             "serial_number", result->getValue("//tds:SerialNumber"));
         device_info.insert("hardware_id", result->getValue("//tds:HardwareId"));
+        var = qVariantFromValue(device_info);
     }
-    delete result;
-    delete msg;
-    return device_info;
-}
-
-QHash<QString, QString>
-DeviceManagement::getDeviceScopes() {
-    QHash<QString, QString> device_scopes;
-    Message* msg = newMessage();
-    msg->appendToBody(newElement(
-        "wsdl:GetScopes xmlns=\"http://www.onvif.org/ver10/device/wsdl\""));
-    MessageParser* result = sendMessage(msg);
-
-    if (result != NULL) {
+        break;
+    case device::MessageType::DeviceScopes :
+    {
+        QHash<QString, QString> device_scopes;
         device_scopes.insert(
             "name",
             result->getValue(
@@ -146,127 +152,37 @@ DeviceManagement::getDeviceScopes() {
                     "/tt:ScopeItem[starts-with(text(),'odm:hardware:') or "
                     "starts-with(text(),'onvif://www.onvif.org/hardware/')]")
                 .remove(0, 31));
+        var = qVariantFromValue(device_scopes);
     }
-
-    delete result;
-    delete msg;
-    return device_scopes;
-}
-
-Message*
-DeviceManagement::newMessage() {
-    QHash<QString, QString> names;
-    names.insert("wsdl", "http://www.onvif.org/ver10/device/wsdl");
-    names.insert("sch", "http://www.onvif.org/ver10/schema");
-    return createMessage(names);
-}
-
-SystemDateAndTime*
-DeviceManagement::getSystemDateAndTime() {
-    SystemDateAndTime* systemDateAndTime = NULL;
-    Message*           msg               = newMessage();
-    msg->appendToBody(newElement("wsdl:GetSystemDateAndTime"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        systemDateAndTime = new SystemDateAndTime();
-        systemDateAndTime->setProperty(
-            "dateTimeType", result->getValue("//tt:DateTimeType"));
-        systemDateAndTime->setDaylightSavings(
-            result->getValue("//tt:DaylightSavings") == "true");
-        systemDateAndTime->setTz(result->getValue("//tt:TimeZone/tt:TZ"));
-        systemDateAndTime->setUtcTime(
-            result->getValue("//tt:UTCDateTime/tt:Date/tt:Year").toInt(),
-            result->getValue("//tt:UTCDateTime/tt:Date/tt:Month").toInt(),
-            result->getValue("//tt:UTCDateTime/tt:Date/tt:Day").toInt(),
-            result->getValue("//tt:UTCDateTime/tt:Time/tt:Hour").toInt(),
-            result->getValue("//tt:UTCDateTime/tt:Time/tt:Minute").toInt(),
-            result->getValue("//tt:UTCDateTime/tt:Time/tt:Second").toInt());
-        systemDateAndTime->setLocalTime(
-            result->getValue("//tt:LocalDateTime/tt:Date/tt:Year").toInt(),
-            result->getValue("//tt:LocalDateTime/tt:Date/tt:Month").toInt(),
-            result->getValue("//tt:LocalDateTime/tt:Date/tt:Day").toInt(),
-            result->getValue("//tt:LocalDateTime/tt:Time/tt:Hour").toInt(),
-            result->getValue("//tt:LocalDateTime/tt:Time/tt:Minute").toInt(),
-            result->getValue("//tt:LocalDateTime/tt:Time/tt:Second").toInt());
+        break;
+    case device::MessageType::SystemDateAndTime :
+    {
+         SystemDateAndTime* systemDateAndTime = new SystemDateAndTime();
+         systemDateAndTime->setProperty(
+             "dateTimeType", result->getValue("//tt:DateTimeType"));
+         systemDateAndTime->setDaylightSavings(
+             result->getValue("//tt:DaylightSavings") == "true");
+         systemDateAndTime->setTz(result->getValue("//tt:TimeZone/tt:TZ"));
+         systemDateAndTime->setUtcTime(
+             result->getValue("//tt:UTCDateTime/tt:Date/tt:Year").toInt(),
+             result->getValue("//tt:UTCDateTime/tt:Date/tt:Month").toInt(),
+             result->getValue("//tt:UTCDateTime/tt:Date/tt:Day").toInt(),
+             result->getValue("//tt:UTCDateTime/tt:Time/tt:Hour").toInt(),
+             result->getValue("//tt:UTCDateTime/tt:Time/tt:Minute").toInt(),
+             result->getValue("//tt:UTCDateTime/tt:Time/tt:Second").toInt());
+         systemDateAndTime->setLocalTime(
+             result->getValue("//tt:LocalDateTime/tt:Date/tt:Year").toInt(),
+             result->getValue("//tt:LocalDateTime/tt:Date/tt:Month").toInt(),
+             result->getValue("//tt:LocalDateTime/tt:Date/tt:Day").toInt(),
+             result->getValue("//tt:LocalDateTime/tt:Time/tt:Hour").toInt(),
+             result->getValue("//tt:LocalDateTime/tt:Time/tt:Minute").toInt(),
+             result->getValue("//tt:LocalDateTime/tt:Time/tt:Second").toInt());
+         var = VPtr<SystemDateAndTime>::asQVariant(systemDateAndTime);
     }
-
-    delete result;
-    delete msg;
-    return systemDateAndTime;
-}
-
-void
-DeviceManagement::setSystemDateAndTime(SystemDateAndTime* systemDateAndTime) {
-    Message* msg = newMessage();
-    msg->appendToBody(systemDateAndTime->toxml());
-    MessageParser* result = sendMessage(msg);
-    systemDateAndTime->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetSystemDateAndTimeResponse"))
-            systemDateAndTime->setResult(true);
-        else
-            systemDateAndTime->setResult(false);
-
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setDeviceScopes(SystemScopes* systemScopes) {
-    Message* msg = newMessage();
-    msg->appendToBody(systemScopes->toxml());
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        if (result->find("//tds:SetScopesResponse"))
-            systemScopes->setResult(true);
-        else
-            systemScopes->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setSystemFactoryDefault(
-    SystemFactoryDefault* systemFactoryDefault) {
-    Message* msg = newMessage();
-    msg->appendToBody(systemFactoryDefault->toxml());
-    MessageParser* result = sendMessage(msg);
-    systemFactoryDefault->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetSystemFactoryDefaultResponse"))
-            systemFactoryDefault->setResult(true);
-        else
-            systemFactoryDefault->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::systemReboot(SystemReboot* systemReboot) {
-    Message* msg = newMessage();
-    msg->appendToBody(systemReboot->toxml());
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        if (result->find("//tds:SystemRebootResponse"))
-            systemReboot->setResult(true);
-        else
-            systemReboot->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-Users*
-DeviceManagement::getUsers() {
-    Users*   user = NULL;
-    Message* msg  = newMessage();
-    msg->appendToBody(newElement("wsdl:GetUsers"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        user = new Users();
+        break;
+    case device::MessageType::Users :
+    {
+        Users* user = new Users();
 
         //        user->setProperty("userName",
         //        result->getValue("//tt:Username"));
@@ -293,58 +209,18 @@ DeviceManagement::getUsers() {
             user->setUserLevel(userLevel.trimmed());
             item = items.next();
         }
+        var = VPtr<Users>::asQVariant(user);
     }
-    delete result;
-    delete msg;
-    return user;
-}
-
-Capabilities*
-DeviceManagement::getCapabilitiesPtz() {
-    Capabilities* capabilities = NULL;
-    Message*      msg          = newMessage();
-    QDomElement   cap          = newElement("wsdl:GetCapabilities");
-    cap.appendChild(newElement("wsdl:Category", "PTZ"));
-    msg->appendToBody(cap);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        capabilities = new Capabilities();
+        break;
+    case device::MessageType::Capabilities :
+    {
+        Capabilities* capabilities = new Capabilities();
+        //PTZ
         capabilities->setProperty(
             "ptzXAddr", result->getValue("//tt:PTZ/tt:XAddr"));
-    }
-    delete result;
-    delete msg;
-    return capabilities;
-}
-
-Capabilities*
-DeviceManagement::getCapabilitiesImaging() {
-    Capabilities* capabilities = NULL;
-    Message*      msg          = newMessage();
-    QDomElement   cap          = newElement("wsdl:GetCapabilities");
-    cap.appendChild(newElement("wsdl:Category", "Imaging"));
-    msg->appendToBody(cap);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        capabilities = new Capabilities();
+        //Imaging
         capabilities->setProperty(
             "imagingXAddr", result->getValue("//tt:Imaging/tt:XAddr"));
-    }
-    delete result;
-    delete msg;
-    return capabilities;
-}
-
-Capabilities*
-DeviceManagement::getCapabilitiesMedia() {
-    Capabilities* capabilities = NULL;
-    Message*      msg          = newMessage();
-    QDomElement   cap          = newElement("wsdl:GetCapabilities");
-    cap.appendChild(newElement("wsdl:Category", "Media"));
-    msg->appendToBody(cap);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        capabilities = new Capabilities();
         capabilities->setProperty(
             "mediaXAddr", result->getValue("//tt:Media/tt:XAddr"));
         capabilities->setProperty(
@@ -356,22 +232,7 @@ DeviceManagement::getCapabilitiesMedia() {
         capabilities->setProperty(
             "rtpRtspTcp",
             result->getValue("//tt:RTP_RTSP_TCP") == "true" ? true : false);
-    }
-    delete result;
-    delete msg;
-    return capabilities;
-}
-
-Capabilities*
-DeviceManagement::getCapabilitiesDevice() {
-    Capabilities* capabilities = NULL;
-    Message*      msg          = newMessage();
-    QDomElement   cap          = newElement("wsdl:GetCapabilities");
-    cap.appendChild(newElement("wsdl:Category", "Device"));
-    msg->appendToBody(cap);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        capabilities = new Capabilities();
+        //Device
         capabilities->setProperty(
             "deviceXAddr", result->getValue("//tt:Device/tt:XAddr"));
         capabilities->setProperty(
@@ -460,21 +321,12 @@ DeviceManagement::getCapabilitiesDevice() {
             "remoteUserHanding",
             result->getValue("//tt:RemoteUserHanding") == "true" ? true
                                                                  : false);
+        var = VPtr<Capabilities>::asQVariant(capabilities);
     }
-    delete result;
-    delete msg;
-    return capabilities;
-}
-
-
-NetworkInterfaces*
-DeviceManagement::getNetworkInterfaces() {
-    NetworkInterfaces* networkInterfaces = NULL;
-    Message*           msg               = newMessage();
-    msg->appendToBody(newElement("wsdl:GetNetworkInterfaces"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkInterfaces = new NetworkInterfaces();
+        break;
+    case device::MessageType::NetworkInterfaces :
+    {
+        NetworkInterfaces* networkInterfaces = new NetworkInterfaces();
         networkInterfaces->setProperty(
             "interfaceToken",
             result->getValue("//tds:NetworkInterfaces/@token"));
@@ -509,149 +361,12 @@ DeviceManagement::getNetworkInterfaces() {
             result->getValue("//tt:FromDHCP/tt:PrefixLength").toInt());
         networkInterfaces->setProperty(
             "ipv4DHCP", result->getValue("//tt:DHCP"));
+        var = VPtr<NetworkInterfaces>::asQVariant(networkInterfaces);
     }
-    delete result;
-    delete msg;
-    return networkInterfaces;
-}
-
-void
-DeviceManagement::setNetworkInterfaces(NetworkInterfaces* networkInterfaces) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkInterfaces->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkInterfaces->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetNetworkInterfacesResponse"))
-            networkInterfaces->setResult(true);
-        else
-            networkInterfaces->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setNetworkProtocols(NetworkProtocols* networkProtocols) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkProtocols->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkProtocols->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetNetworkProtocolsResponse"))
-            networkProtocols->setResult(true);
-        else
-            networkProtocols->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setDefaultGateway(
-    NetworkDefaultGateway* networkDefaultGateway) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkDefaultGateway->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkDefaultGateway->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetNetworkDefaultGatewayResponse"))
-            networkDefaultGateway->setResult(true);
-        else
-            networkDefaultGateway->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setDiscoveryMode(NetworkDiscoveryMode* networkDiscoveryMode) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkDiscoveryMode->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkDiscoveryMode->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetDiscoveryModeResponse"))
-            networkDiscoveryMode->setResult(true);
-        else
-            networkDiscoveryMode->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setDNS(NetworkDNS* networkDns) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkDns->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkDns->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetDNSResponse"))
-            networkDns->setResult(true);
-        else
-            networkDns->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setHostname(NetworkHostname* networkHostname) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkHostname->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkHostname->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetHostnameResponse"))
-            networkHostname->setResult(true);
-        else
-            networkHostname->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void
-DeviceManagement::setNTP(NetworkNTP* networkNtp) {
-    Message* msg = newMessage();
-    msg->appendToBody(networkNtp->toxml());
-    MessageParser* result = sendMessage(msg);
-    networkNtp->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetNTPResponse"))
-            networkNtp->setResult(true);
-        else
-            networkNtp->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-void DeviceManagement::setUsers(Users* users)
-{
-    Message* msg = newMessage();
-    msg->appendToBody(users->toxml());
-    MessageParser* result = sendMessage(msg);
-    users->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetUserResponse"))
-            users->setResult(true);
-        else
-            users->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-NetworkProtocols*
-DeviceManagement::getNetworkProtocols() {
-    NetworkProtocols* networkProtocols = NULL;
-    Message*          msg              = newMessage();
-    msg->appendToBody(newElement("wsdl:GetNetworkProtocols"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkProtocols = new NetworkProtocols();
+        break;
+    case device::MessageType::NetworkProtocols :
+    {
+        NetworkProtocols* networkProtocols = new NetworkProtocols();
 
         QXmlQuery* query = result->query();
         query->setQuery(
@@ -677,57 +392,32 @@ DeviceManagement::getNetworkProtocols() {
                 protocolsPort.trimmed().toInt());
             item = items.next();
         }
+        var = VPtr<NetworkProtocols>::asQVariant(networkProtocols);
     }
-    delete result;
-    delete msg;
-    return networkProtocols;
-}
-NetworkDefaultGateway*
-DeviceManagement::getNetworkDefaultGateway() {
-    NetworkDefaultGateway* networkDefaultGateway = NULL;
-    Message*               msg                   = newMessage();
-    msg->appendToBody(newElement("wsdl:GetNetworkDefaultGateway"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkDefaultGateway = new NetworkDefaultGateway();
-        networkDefaultGateway->setProperty(
-            "ipv4Address",
-            result->getValue("//tds:NetworkGateway/tt:IPv4Address"));
-        networkDefaultGateway->setProperty(
-            "ipv6Address",
-            result->getValue("//tds:NetworkGateway/tt:IPv6Address"));
+        break;
+    case device::MessageType::NetworkDefaultGateway :
+    {
+        NetworkDefaultGateway* networkDefaultGateway = new NetworkDefaultGateway();
+       networkDefaultGateway->setProperty(
+           "ipv4Address",
+           result->getValue("//tds:NetworkGateway/tt:IPv4Address"));
+       networkDefaultGateway->setProperty(
+           "ipv6Address",
+           result->getValue("//tds:NetworkGateway/tt:IPv6Address"));
+       var = VPtr<NetworkDefaultGateway>::asQVariant(networkDefaultGateway);
     }
-    delete result;
-    delete msg;
-    return networkDefaultGateway;
-}
-
-NetworkDiscoveryMode*
-DeviceManagement::getNetworkDiscoverMode() {
-
-    NetworkDiscoveryMode* networkDiscoveryMode = NULL;
-    Message*              msg                  = newMessage();
-    msg->appendToBody(newElement("wsdl:GetDiscoveryMode"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkDiscoveryMode = new NetworkDiscoveryMode();
+        break;
+    case device::MessageType::NetworkDiscoveryMode :
+    {
+        NetworkDiscoveryMode* networkDiscoveryMode = new NetworkDiscoveryMode();
         networkDiscoveryMode->setProperty(
             "discoveryMode", result->getValue("//tds:DiscoveryMode"));
+        var = VPtr<NetworkDiscoveryMode>::asQVariant(networkDiscoveryMode);
     }
-    delete result;
-    delete msg;
-    return networkDiscoveryMode;
-}
-
-NetworkDNS*
-DeviceManagement::getNetworkDNS() {
-
-    NetworkDNS* networkDNS = NULL;
-    Message*    msg        = newMessage();
-    msg->appendToBody(newElement("wsdl:GetDNS"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkDNS = new NetworkDNS();
+        break;
+    case device::MessageType::NetworkDNS :
+    {
+        NetworkDNS* networkDNS = new NetworkDNS();
         networkDNS->setProperty(
             "dhcp", result->getValue("//tds:DNSInformation/tt:FromDHCP"));
         networkDNS->setProperty(
@@ -754,40 +444,22 @@ DeviceManagement::getNetworkDNS() {
             networkDNS->setIpv4Address(dnsIPv4Address.trimmed());
             item = items.next();
         }
+        var = VPtr<NetworkDNS>::asQVariant(networkDNS);
     }
-    delete result;
-    delete msg;
-    return networkDNS;
-}
-
-NetworkHostname*
-DeviceManagement::getNetworkHostname() {
-
-    NetworkHostname* networkHostname = NULL;
-    Message*         msg             = newMessage();
-    msg->appendToBody(newElement("wsdl:GetHostname"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkHostname = new NetworkHostname();
+        break;
+    case device::MessageType::NetworkHostname :
+    {
+        NetworkHostname* networkHostname = new NetworkHostname();
         networkHostname->setProperty(
             "dhcp", result->getValue("//tds:HostnameInformation/tt:FromDHCP"));
         networkHostname->setProperty(
             "name", result->getValue("//tds:HostnameInformation/tt:Name"));
+        var = VPtr<NetworkHostname>::asQVariant(networkHostname);
     }
-    delete result;
-    delete msg;
-    return networkHostname;
-}
-
-NetworkNTP*
-DeviceManagement::getNetworkNTP() {
-
-    NetworkNTP* networkNTP = NULL;
-    Message*    msg        = newMessage();
-    msg->appendToBody(newElement("wsdl:GetNTP"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        networkNTP = new NetworkNTP();
+        break;
+    case device::MessageType::NetworkNTP :
+    {
+        NetworkNTP* networkNTP = new NetworkNTP();
         networkNTP->setProperty(
             "dhcp", result->getValue("//tds:NTPInformation/tt:fromDHCP"));
         networkNTP->setProperty(
@@ -801,8 +473,279 @@ DeviceManagement::getNetworkNTP() {
             "ipv6Address",
             result->getValue(
                 "//tds:NTPInformation/tt:NTPManual/tt:IPv6Address"));
+        var = VPtr<NetworkNTP>::asQVariant(networkNTP);
     }
-    delete result;
-    delete msg;
-    return networkNTP;
+        break;
+    case device::MessageType::SetDeviceScopes :
+    {
+        bool r = false;
+        if (result->find("//tds:SetScopesResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetSystemDateAndTime :
+    {
+        bool r = false;
+        if (result->find("//tds:SetSystemDateAndTimeResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetUsers :
+    {
+        bool r = false;
+        if (result->find("//tds:SetUserResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetSystemFactoryDefault :
+    {
+        bool r = false;
+        if (result->find("//tds:SetSystemFactoryDefaultResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetSystemReboot :
+    {
+        bool r = false;
+        if (result->find("//tds:SystemRebootResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkInterfaces :
+    {
+        bool r = false;
+        if (result->find("//tds:SetNetworkInterfacesResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkProtocols :
+    {
+        bool r = false;
+        if (result->find("//tds:SetNetworkProtocolsResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkDefaultGateway :
+    {
+        bool r = false;
+        if (result->find("//tds:SetNetworkDefaultGatewayResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkDiscoveryMode :
+    {
+        bool r = false;
+        if (result->find("//tds:SetDiscoveryModeResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkDNS :
+    {
+        bool r = false;
+        if (result->find("//tds:SetDNSResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkHostname :
+    {
+        bool r = false;
+        if (result->find("//tds:SetHostnameResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetNetworkNTP :
+    {
+        bool r = false;
+        if (result->find("//tds:SetNTPResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    default:
+        break;
+    }
+
+    emit resultReceived(var, messageType);
+
+    result->deleteLater();
+}
+
+void
+DeviceManagement::getData(device::MessageType messageType)
+{
+    Message* msg = newMessage();
+
+    switch (messageType) {
+    case device::MessageType::DeviceInformation:
+
+        msg->appendToBody(newElement("wsdl:GetDeviceInformation"));
+
+        break;
+    case device::MessageType::DeviceScopes:
+
+        msg->appendToBody(newElement(
+            "wsdl:GetScopes xmlns=\"http://www.onvif.org/ver10/device/wsdl\""));
+
+        break;
+    case device::MessageType::SystemDateAndTime:
+
+        msg->appendToBody(newElement("wsdl:GetSystemDateAndTime"));
+
+        break;
+    case device::MessageType::Users:
+
+        msg->appendToBody(newElement("wsdl:GetUsers"));
+
+        break;
+    case device::MessageType::Capabilities:
+    {
+        QDomElement cap = newElement("wsdl:GetCapabilities");
+        cap.appendChild(newElement("wsdl:Category", "All"));
+        msg->appendToBody(cap);
+    }
+        break;
+    case device::MessageType::NetworkInterfaces:
+
+        msg->appendToBody(newElement("wsdl:GetNetworkInterfaces"));
+
+        break;
+    case device::MessageType::NetworkProtocols:
+
+        msg->appendToBody(newElement("wsdl:GetNetworkProtocols"));
+
+        break;
+    case device::MessageType::NetworkDefaultGateway:
+
+        msg->appendToBody(newElement("wsdl:GetNetworkDefaultGateway"));
+
+        break;
+    case device::MessageType::NetworkDiscoveryMode:
+
+        msg->appendToBody(newElement("wsdl:GetDiscoveryMode"));
+
+        break;
+    case device::MessageType::NetworkDNS:
+
+        msg->appendToBody(newElement("wsdl:GetDNS"));
+
+        break;
+    case device::MessageType::NetworkHostname:
+
+        msg->appendToBody(newElement("wsdl:GetHostname"));
+
+        break;
+    case device::MessageType::NetworkNTP:
+
+        msg->appendToBody(newElement("wsdl:GetNTP"));
+
+        break;
+    default:
+        msg->deleteLater();
+        return;
+        break;
+    }
+
+    sendMessage(msg, messageType);
+    msg->deleteLater();
+}
+
+void
+DeviceManagement::setData(QVariant data, device::MessageType messageType)
+{
+    Message* msg = newMessage();
+    QDomElement domElement;
+
+    switch (messageType) {
+    case device::MessageType::SetDeviceScopes:
+    {
+        SystemScopes* d = qvariant_cast<SystemScopes *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetSystemDateAndTime:
+    {
+        SystemDateAndTime* d = qvariant_cast<SystemDateAndTime *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetUsers:
+    {
+        Users* d = qvariant_cast<Users *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetSystemFactoryDefault:
+    {
+        SystemFactoryDefault* d = qvariant_cast<SystemFactoryDefault *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetSystemReboot:
+    {
+        SystemReboot* d = qvariant_cast<SystemReboot *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkInterfaces:
+    {
+        NetworkInterfaces* d = qvariant_cast<NetworkInterfaces *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkProtocols:
+    {
+        NetworkProtocols* d = qvariant_cast<NetworkProtocols *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkDefaultGateway:
+    {
+        NetworkDefaultGateway* d = qvariant_cast<NetworkDefaultGateway *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkDiscoveryMode:
+    {
+        NetworkDiscoveryMode* d = qvariant_cast<NetworkDiscoveryMode *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkDNS:
+    {
+        NetworkDNS* d = qvariant_cast<NetworkDNS *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkHostname:
+    {
+        NetworkHostname* d = qvariant_cast<NetworkHostname *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetNetworkNTP:
+    {
+        NetworkNTP* d = qvariant_cast<NetworkNTP *>(data);
+        domElement = d->toxml();
+    }
+        break;
+    default:
+        msg->deleteLater();
+        return;
+        break;
+    }
+
+    msg->appendToBody(domElement);
+    sendMessage(msg, messageType);
+    msg->deleteLater();
 }

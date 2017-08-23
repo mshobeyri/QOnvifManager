@@ -71,7 +71,6 @@ SOURCES += \
     ptz_management/relativemove.cpp \
     ptz_management/removepreset.cpp \
     ptz_management/stop.cpp \
-    client.cpp \
     mediamanagement.cpp \
     message.cpp \
     messageparser.cpp \
@@ -125,7 +124,6 @@ HEADERS += \
     ../include/QOnvifManager/ptz_management/relativemove.h \
     ../include/QOnvifManager/ptz_management/removepreset.h \
     ../include/QOnvifManager/ptz_management/stop.h \
-    ../include/QOnvifManager/client.h \
     ../include/QOnvifManager/mediamanagement.h \
     ../include/QOnvifManager/message.h \
     ../include/QOnvifManager/messageparser.h \

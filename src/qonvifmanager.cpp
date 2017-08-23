@@ -58,7 +58,7 @@ QOnvifManager::refreshDeviceCapabilities(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshDeviceCapabilities();
+        ->getDeviceCapabilities();
 }
 
 bool
@@ -66,7 +66,7 @@ QOnvifManager::refreshDeviceInformations(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshDeviceInformation();
+        ->getDeviceInformation();
 }
 
 bool
@@ -74,7 +74,7 @@ QOnvifManager::refreshDeviceScopes(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshDeviceScopes();
+        ->getDeviceScopes();
 }
 
 bool
@@ -114,14 +114,14 @@ QOnvifManager::refreshDeviceInterfaces(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshInterfaces();
+        ->getInterfaces();
 }
 
 bool
 QOnvifManager::refreshDeviceProtocols(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshProtocols();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->getProtocols();
 }
 
 bool
@@ -129,7 +129,7 @@ QOnvifManager::refreshDeviceDefaultGateway(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshDefaultGateway();
+        ->getDefaultGateway();
 }
 
 bool
@@ -137,35 +137,35 @@ QOnvifManager::refreshDeviceDiscoveryMode(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->refreshDiscoveryMode();
+        ->getDiscoveryMode();
 }
 
 bool
 QOnvifManager::refreshDeviceDNS(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshDNS();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->getDNS();
 }
 
 bool
 QOnvifManager::refreshDeviceHostname(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshHostname();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->getHostname();
 }
 
 bool
 QOnvifManager::refreshDeviceNTP(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshNTP();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->getNTP();
 }
 
 bool
 QOnvifManager::refreshDeviceUsers(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return false;
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->refreshUsers();
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->getUsers();
 }
 
 bool
@@ -174,7 +174,7 @@ QOnvifManager::deviceDateAndTime(
     if (!cameraExist(_deviceEndPointAddress))
         return false;
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->deviceDateAndTime(_datetime);
+        ->getDeviceDateAndTime(_datetime);
 }
 
 bool
@@ -246,14 +246,14 @@ bool
 QOnvifManager::setDeviceNetworkInterfaces(
     QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setInterfaces(_interfaces);
+        ->setNetworkInterfaces(_interfaces);
 }
 
 bool
 QOnvifManager::setDeviceNetworkProtocols(
     QString _deviceEndPointAddress, Data::Network::Protocols _protocols) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setProtocols(_protocols);
+        ->setNetworkProtocols(_protocols);
 }
 
 bool
@@ -261,7 +261,7 @@ QOnvifManager::setDeviceNetworkDefaultGateway(
     QString                       _deviceEndPointAddress,
     Data::Network::DefaultGateway _defaultGateway) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setDefaultGateway(_defaultGateway);
+        ->setNetworkDefaultGateway(_defaultGateway);
 }
 
 bool
@@ -269,26 +269,26 @@ QOnvifManager::setDeviceNetworkDiscoveryMode(
     QString                      _deviceEndPointAddress,
     Data::Network::DiscoveryMode _discoveryMode) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setDiscoveryMode(_discoveryMode);
+        ->setNetworkDiscoveryMode(_discoveryMode);
 }
 
 bool
 QOnvifManager::setDeviceNetworkDNS(
     QString _deviceEndPointAddress, Data::Network::DNS _dns) {
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setDNS(_dns);
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setNetworkDNS(_dns);
 }
 
 bool
 QOnvifManager::setDeviceNetworkHostname(
     QString _deviceEndPointAddress, Data::Network::Hostname _hostname) {
     return d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->setHostname(_hostname);
+        ->setNetworkHostname(_hostname);
 }
 
 bool
 QOnvifManager::setDeviceNetworkNTP(
     QString _deviceEndPointAddress, Data::Network::NTP _ntp) {
-    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setNTP(_ntp);
+    return d_ptr->idevicesMap.value(_deviceEndPointAddress)->setNetworkNTP(_ntp);
 }
 
 bool
