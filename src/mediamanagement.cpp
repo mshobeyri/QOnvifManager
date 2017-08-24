@@ -2389,13 +2389,13 @@ void MediaManagement::setData(QVariant data, device::MessageType messageType)
     switch (messageType) {
     case device::MessageType::setVideoEncoderConfiguration:
     {
-        VideoEncoderConfiguration* d = qvariant_cast<VideoEncoderConfiguration *>(data);
+        VideoEncoderConfiguration* d = ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::setImageSettings:
     {
-        ImageSetting* d = qvariant_cast<ImageSetting *>(data);
+        ImageSetting* d = ONVIF::VPtr<ONVIF::ImageSetting>::asPtr(data);
         domElement = d->toxml();
     }
         break;

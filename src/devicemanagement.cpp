@@ -668,73 +668,73 @@ DeviceManagement::setData(QVariant data, device::MessageType messageType)
     switch (messageType) {
     case device::MessageType::SetDeviceScopes:
     {
-        SystemScopes* d = qvariant_cast<SystemScopes *>(data);
+        SystemScopes* d = ONVIF::VPtr<ONVIF::SystemScopes>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetSystemDateAndTime:
     {
-        SystemDateAndTime* d = qvariant_cast<SystemDateAndTime *>(data);
+        SystemDateAndTime* d = ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetUsers:
     {
-        Users* d = qvariant_cast<Users *>(data);
+        Users* d = ONVIF::VPtr<ONVIF::Users>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetSystemFactoryDefault:
     {
-        SystemFactoryDefault* d = qvariant_cast<SystemFactoryDefault *>(data);
+        SystemFactoryDefault* d = ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetSystemReboot:
     {
-        SystemReboot* d = qvariant_cast<SystemReboot *>(data);
+        SystemReboot* d = ONVIF::VPtr<ONVIF::SystemReboot>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkInterfaces:
     {
-        NetworkInterfaces* d = qvariant_cast<NetworkInterfaces *>(data);
+        NetworkInterfaces* d = ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkProtocols:
     {
-        NetworkProtocols* d = qvariant_cast<NetworkProtocols *>(data);
+        NetworkProtocols* d = ONVIF::VPtr<ONVIF::NetworkProtocols>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkDefaultGateway:
     {
-        NetworkDefaultGateway* d = qvariant_cast<NetworkDefaultGateway *>(data);
+        NetworkDefaultGateway* d = ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkDiscoveryMode:
     {
-        NetworkDiscoveryMode* d = qvariant_cast<NetworkDiscoveryMode *>(data);
+        NetworkDiscoveryMode* d = ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkDNS:
     {
-        NetworkDNS* d = qvariant_cast<NetworkDNS *>(data);
+        NetworkDNS* d = ONVIF::VPtr<ONVIF::NetworkDNS>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkHostname:
     {
-        NetworkHostname* d = qvariant_cast<NetworkHostname *>(data);
+        NetworkHostname* d = ONVIF::VPtr<ONVIF::NetworkHostname>::asPtr(data);
         domElement = d->toxml();
     }
         break;
     case device::MessageType::SetNetworkNTP:
     {
-        NetworkNTP* d = qvariant_cast<NetworkNTP *>(data);
+        NetworkNTP* d = ONVIF::VPtr<ONVIF::NetworkNTP>::asPtr(data);
         domElement = d->toxml();
     }
         break;
