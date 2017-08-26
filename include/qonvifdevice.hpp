@@ -44,11 +44,11 @@ enum class MessageType{
     SetNetworkNTP,
 
     //media
-    VideoSourceConfigurations,
-    VideoEncoderConfigurations,
     Profiles,
     Profile720p,
     ProfileD1,
+    VideoEncoderConfigurations,
+    VideoSourceConfigurations,
     AudioSourceConfigurations,
     AudioEncoderConfigurations,
     VideoSourceConfiguration,

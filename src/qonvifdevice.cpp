@@ -272,7 +272,32 @@ QOnvifDevice::QOnvifDevice(
 
             emit networkNTPReceived(d_ptr->idata.network.ntp);
         }
+            break;  
+        case MessageType::SetScopes :
+        case MessageType::SetDateAndTime :
+        case MessageType::SetUsers :
+        case MessageType::SetSystemFactoryDefault :
+        case MessageType::SetSystemReboot :
+        case MessageType::SetNetworkInterfaces :
+        case MessageType::SetNetworkProtocols :
+        case MessageType::SetNetworkDefaultGateway :
+        case MessageType::SetNetworkDiscoveryMode :
+        case MessageType::SetNetworkDNS :
+        case MessageType::SetNetworkHostname :
+        case MessageType::SetNetworkNTP :
+        {
+            bool r = var.value<bool>();
+            emit setResultReceived(r, messageType);
+        }
             break;
+        default:
+            break;
+        }
+    });
+
+    connect(d_ptr->imediaManagement,&ONVIF::MediaManagement::resultReceived,this,[this](QVariant var, MessageType messageType){
+
+        switch (messageType) {
         case MessageType::Profiles :
         {
             QScopedPointer<ONVIF::Profiles> profiles(ONVIF::VPtr<ONVIF::Profiles>::asPtr(var));
@@ -658,6 +683,21 @@ QOnvifDevice::QOnvifDevice(
             emit imageSettingOptionsReceived(d_ptr->idata.mediaConfig.imageSetting.options);
         }
             break;
+        case MessageType::SetVideoEncoderConfiguration :
+        case MessageType::SetImageSettings :
+        {
+            bool r = var.value<bool>();
+            emit setResultReceived(r, messageType);
+        }
+            break;
+        default:
+            break;
+        }
+    });
+
+    connect(d_ptr->iptzManagement,&ONVIF::PtzManagement::resultReceived,this,[this](QVariant var, MessageType messageType){
+
+        switch (messageType) {
         case MessageType::Configurations :
         {
             QScopedPointer<ONVIF::Configurations> config(ONVIF::VPtr<ONVIF::Configurations>::asPtr(var));
@@ -689,15 +729,15 @@ QOnvifDevice::QOnvifDevice(
             des.zoomX                 = config->zoomX();
 
             des.defaultAbsolutePantTiltPositionSpace =
-                config->defaultAbsolutePantTiltPositionSpace();
+                    config->defaultAbsolutePantTiltPositionSpace();
             des.defaultAbsoluteZoomPositionSpace =
-                config->defaultAbsoluteZoomPositionSpace();
+                    config->defaultAbsoluteZoomPositionSpace();
             des.defaultRelativePanTiltTranslationSpace =
-                config->defaultRelativePanTiltTranslationSpace();
+                    config->defaultRelativePanTiltTranslationSpace();
             des.defaultRelativeZoomTranslationSpace =
-                config->defaultRelativeZoomTranslationSpace();
+                    config->defaultRelativeZoomTranslationSpace();
             des.defaultContinuousPanTiltVelocitySpace =
-                config->defaultContinuousPanTiltVelocitySpace();
+                    config->defaultContinuousPanTiltVelocitySpace();
 
             emit ptzConfigurationReceived(d_ptr->idata.ptz.config);
         }
@@ -717,20 +757,6 @@ QOnvifDevice::QOnvifDevice(
             QScopedPointer<ONVIF::Presets> presets(ONVIF::VPtr<ONVIF::Presets>::asPtr(var));
         }
             break;
-        case MessageType::SetScopes :
-        case MessageType::SetDateAndTime :
-        case MessageType::SetUsers :
-        case MessageType::SetSystemFactoryDefault :
-        case MessageType::SetSystemReboot :
-        case MessageType::SetNetworkInterfaces :
-        case MessageType::SetNetworkProtocols :
-        case MessageType::SetNetworkDefaultGateway :
-        case MessageType::SetNetworkDiscoveryMode :
-        case MessageType::SetNetworkDNS :
-        case MessageType::SetNetworkHostname :
-        case MessageType::SetNetworkNTP :
-        case MessageType::SetVideoEncoderConfiguration :
-        case MessageType::SetImageSettings :
         case MessageType::RemovePreset :
         case MessageType::SetPreset :
         case MessageType::ContinuousMove :
