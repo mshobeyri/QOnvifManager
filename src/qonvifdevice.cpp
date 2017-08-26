@@ -3,6 +3,8 @@
 #include "mediamanagement.h"
 #include "ptzmanagement.h"
 #include <QString>
+#include <QTimer>
+#include <QEventLoop>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace device {
@@ -1051,6 +1053,23 @@ QOnvifDevice::getVideoEncoderConfigurationOptions() {
 
 void
 QOnvifDevice::getStreamUris() {
+
+    if(d_ptr->idata.profiles.toKenPro.isEmpty())
+    {
+        getProfiles();
+
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect(this,&QOnvifDevice::profilesReceived,&loop,&QEventLoop::quit);
+        connect(&timer,&QTimer::timeout,&loop,&QEventLoop::quit);
+        timer.start(3000);
+        loop.exec();
+
+        if(!timer.isActive())
+            return;
+    }
+
     d_ptr->idata.profiles.streamUris.clear();
 
     // get video stream uri
@@ -1064,6 +1083,8 @@ QOnvifDevice::getStreamUris() {
 
 void
 QOnvifDevice::getImageSetting() {
+    getImageSettingOptions();
+
     QVariantList parameters;
     parameters.append(d_ptr->idata.profiles.sourceTokenVsc[0]);
     d_ptr->imediaManagement->getData(MessageType::ImageSetting, parameters);
@@ -1071,6 +1092,22 @@ QOnvifDevice::getImageSetting() {
 
 void
 QOnvifDevice::getImageSettingOptions() {
+    if(d_ptr->idata.profiles.sourceTokenVsc.isEmpty())
+    {
+        getProfiles();
+
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect(this,&QOnvifDevice::profilesReceived,&loop,&QEventLoop::quit);
+        connect(&timer,&QTimer::timeout,&loop,&QEventLoop::quit);
+        timer.start(3000);
+        loop.exec();
+
+        if(!timer.isActive())
+            return;
+    }
+
     QVariantList parameters;
     parameters.append(d_ptr->idata.profiles.sourceTokenVsc[0]);
     d_ptr->imediaManagement->getData(MessageType::ImageSettingOptions, parameters);

@@ -5,7 +5,6 @@
 #include "qonvifdevice.hpp"
 #include "qonvifmanager.hpp"
 #include "ui_mainwindow.h"
-#include <QTimer>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -64,26 +63,13 @@ MainWindow::on_btnRefreshData_clicked() {
     ui->txtLocation->setText("");
     ui->txtName->setText("");
 
-//    ionvifManager->getDeviceCapabilities(currentDevice());
-//    ionvifManager->getDeviceInformation(currentDevice());
+    ionvifManager->getDeviceCapabilities(currentDevice());
+    ionvifManager->getDeviceInformation(currentDevice());
 
-    ionvifManager->getDeviceProfiles(currentDevice());
+    //ionvifManager->getDeviceProfiles(currentDevice());
 
-    QTimer timer;
-    timer.setSingleShot(true);
-    QEventLoop loop;
-    connect(ionvifManager,&QOnvifManager::deviceProfilesReceived,&loop,&QEventLoop::quit);
-    connect(&timer,&QTimer::timeout,&loop,&QEventLoop::quit);
-    timer.start(3000);
-    loop.exec();
-
-    if(timer.isActive())
-    {
-        ionvifManager->getDeviceImageSettingOptions(currentDevice());
-        ionvifManager->getDeviceImageSetting(currentDevice());
-    }
-    else
-        qDebug("timeout");
+    ionvifManager->getDeviceImageSettingOptions(currentDevice());
+    ionvifManager->getDeviceImageSetting(currentDevice());
 
 //        ionvifManager->refreshDeviceVideoConfigs(currentDevice());
 //        ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
