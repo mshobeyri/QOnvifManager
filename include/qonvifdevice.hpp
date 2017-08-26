@@ -17,9 +17,9 @@ namespace device {
 
 enum class MessageType{
     //device
-    DeviceInformation,
-    DeviceScopes,
-    SystemDateAndTime,
+    Information,
+    Scopes,
+    DateAndTime,
     Users,
     Capabilities,
     NetworkInterfaces,
@@ -30,8 +30,8 @@ enum class MessageType{
     NetworkHostname,
     NetworkNTP,
 
-    SetDeviceScopes,
-    SetSystemDateAndTime,
+    SetScopes,
+    SetDateAndTime,
     SetUsers,
     SetSystemFactoryDefault,
     SetSystemReboot,
@@ -87,6 +87,7 @@ enum class MessageType{
 class QOnvifDevicePrivate;
 class QOnvifDevice : public QObject
 {
+    Q_OBJECT
 public:
     QOnvifDevice(
         QString  _serviceAddress,
@@ -99,11 +100,11 @@ public:
     Data& data();
 
     // device management
-    void getDeviceInformation();
-    void getDeviceScopes();
-    void getDeviceDateAndTime();
+    void getInformation();
+    void getScopes();
+    void getDateAndTime();
     void getUsers();
-    void getDeviceCapabilities();
+    void getCapabilities();
     void getInterfaces();
     void getProtocols();
     void getDefaultGateway();
@@ -112,7 +113,7 @@ public:
     void getHostname();
     void getNTP();
 
-    void setDeviceProbeData(Data::ProbeData _probeData);
+    void setProbeData(Data::ProbeData _probeData);
 
     void setScopes(QString _name, QString _location);
     void setDateAndTime(
@@ -129,8 +130,8 @@ public:
     void setNetworkHostname(Data::Network::Hostname _hostname);
     void setNetworkNTP(Data::Network::NTP _ntp);
 
-    void resetFactoryDevice(bool isHard);
-    void rebootDevice();
+    void resetFactory(bool isHard);
+    void reboot();
 
     // media management
     void getProfiles();
@@ -144,7 +145,7 @@ public:
     void getImageSettingOptions();
 
     void setVideoEncoderConfiguration(Data::MediaConfig::Video::EncoderConfig _videoConfig);
-    void setDeviceImageSetting(Data::MediaConfig::ImageSetting  _imageSetting);
+    void setImageSetting(Data::MediaConfig::ImageSetting  _imageSetting);
 
     // ptz management
     void getPtzConfiguration();
@@ -157,9 +158,9 @@ public:
 
 signals:
 
-    void deviceInformationReceived(Data::Information);
-    void deviceScopesReceived(Data::Scopes);
-    void systemDateAndTimeReceived(Data::DateTime);
+    void informationReceived(Data::Information);
+    void scopesReceived(Data::Scopes);
+    void dateAndTimeReceived(Data::DateTime);
     void usersReceived(Data::Users);
     void capabilitiesReceived(Data::Capabilities);
     void networkInterfacesReceived(Data::Network::Interfaces);

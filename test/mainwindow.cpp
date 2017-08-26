@@ -5,6 +5,7 @@
 #include "qonvifdevice.hpp"
 #include "qonvifmanager.hpp"
 #include "ui_mainwindow.h"
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -12,9 +13,16 @@ MainWindow::MainWindow(QWidget* parent)
     ionvifManager = new QOnvifManager("admin", "admin", this);
     connect(
         ionvifManager,
-        &QOnvifManager::newDeviceFinded,
+        &QOnvifManager::newDeviceFound,
         this,
         &MainWindow::onNewDeviceFinded);
+
+
+    connect(ionvifManager,&QOnvifManager::deviceDateAndTimeReceived,this,[this](Data::DateTime _dataAndTime){
+        ui->dateTimeEditLocal->setDateTime(_dataAndTime.localTime);
+        ui->dateTimeEditUtc->setDateTime(_dataAndTime.utcTime);
+    });
+
     on_btnRefresh_clicked();
 }
 
@@ -55,11 +63,28 @@ void
 MainWindow::on_btnRefreshData_clicked() {
     ui->txtLocation->setText("");
     ui->txtName->setText("");
-    //    ionvifManager->refreshDeviceCapabilities(currentDevice());
-    //    ionvifManager->refreshDeviceInformations(currentDevice());
-        ionvifManager->refreshDeviceProfiles(currentDevice());
-        ionvifManager->refreshDeviceImageSetting(currentDevice());
-        ionvifManager->refreshDeviceImageSettingOptions(currentDevice());
+
+//    ionvifManager->getDeviceCapabilities(currentDevice());
+//    ionvifManager->getDeviceInformation(currentDevice());
+
+    ionvifManager->getDeviceProfiles(currentDevice());
+
+    QTimer timer;
+    timer.setSingleShot(true);
+    QEventLoop loop;
+    connect(ionvifManager,&QOnvifManager::deviceProfilesReceived,&loop,&QEventLoop::quit);
+    connect(&timer,&QTimer::timeout,&loop,&QEventLoop::quit);
+    timer.start(3000);
+    loop.exec();
+
+    if(timer.isActive())
+    {
+        ionvifManager->getDeviceImageSettingOptions(currentDevice());
+        ionvifManager->getDeviceImageSetting(currentDevice());
+    }
+    else
+        qDebug("timeout");
+
 //        ionvifManager->refreshDeviceVideoConfigs(currentDevice());
 //        ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
     //    ionvifManager->refreshDeviceStreamUris(currentDevice());
@@ -100,10 +125,7 @@ MainWindow::on_actionAbout_triggered() {
 
 void
 MainWindow::on_btnGetDataAndTime_clicked() {
-    Data::DateTime dateAndTime;
-    ionvifManager->deviceDateAndTime(currentDevice(), dateAndTime);
-    ui->dateTimeEditLocal->setDateTime(dateAndTime.localTime);
-    ui->dateTimeEditUtc->setDateTime(dateAndTime.utcTime);
+    ionvifManager->getDeviceDateAndTime(currentDevice());
 }
 
 void
@@ -146,7 +168,7 @@ MainWindow::on_btnsetHome_clicked() {
 
 void
 MainWindow::on_btnrefreshPresents_clicked() {
-    ionvifManager->device(currentDevice())->refreshPresets();
+    ionvifManager->device(currentDevice())->getPresets();
 }
 
 void

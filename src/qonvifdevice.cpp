@@ -53,7 +53,7 @@ QOnvifDevice::QOnvifDevice(
     connect(d_ptr->ideviceManagement,&ONVIF::DeviceManagement::resultReceived,this,[this](QVariant var, MessageType messageType){
 
         switch (messageType) {
-        case MessageType::DeviceInformation :
+        case MessageType::Information :
         {
             QHash<QString, QString> deviceInformationHash = var.value<QHash<QString, QString> >();
             d_ptr->idata.information.manufacturer = deviceInformationHash.value("mf");
@@ -65,20 +65,20 @@ QOnvifDevice::QOnvifDevice(
             d_ptr->idata.information.hardwareId =
                 deviceInformationHash.value("hardware_id");
 
-            emit deviceInformationReceived(d_ptr->idata.information);
+            emit informationReceived(d_ptr->idata.information);
         }
             break;
-        case MessageType::DeviceScopes :
+        case MessageType::Scopes :
         {
             QHash<QString, QString> deviceScopesHash = var.value<QHash<QString, QString> >();
             d_ptr->idata.scopes.name     = deviceScopesHash.value("name");
             d_ptr->idata.scopes.location = deviceScopesHash.value("location");
             d_ptr->idata.scopes.hardware = deviceScopesHash.value("hardware");
 
-            emit deviceScopesReceived(d_ptr->idata.scopes);
+            emit scopesReceived(d_ptr->idata.scopes);
         }
             break;
-        case MessageType::SystemDateAndTime :
+        case MessageType::DateAndTime :
         {
             QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(var));
 
@@ -87,7 +87,7 @@ QOnvifDevice::QOnvifDevice(
             d_ptr->idata.dateTime.timeZone       = systemDateAndTime->tz();
             d_ptr->idata.dateTime.daylightSaving = systemDateAndTime->daylightSavings();
 
-            emit systemDateAndTimeReceived(d_ptr->idata.dateTime);
+            emit dateAndTimeReceived(d_ptr->idata.dateTime);
         }
             break;
         case MessageType::Users :
@@ -717,8 +717,8 @@ QOnvifDevice::QOnvifDevice(
             QScopedPointer<ONVIF::Presets> presets(ONVIF::VPtr<ONVIF::Presets>::asPtr(var));
         }
             break;
-        case MessageType::SetDeviceScopes :
-        case MessageType::SetSystemDateAndTime :
+        case MessageType::SetScopes :
+        case MessageType::SetDateAndTime :
         case MessageType::SetUsers :
         case MessageType::SetSystemFactoryDefault :
         case MessageType::SetSystemReboot :
@@ -759,18 +759,18 @@ QOnvifDevice::data() {
 }
 
 void
-QOnvifDevice::getDeviceInformation() {
-    d_ptr->ideviceManagement->getData(MessageType::DeviceInformation);
+QOnvifDevice::getInformation() {
+    d_ptr->ideviceManagement->getData(MessageType::Information);
 }
 
 void
-QOnvifDevice::getDeviceScopes() {
-    d_ptr->ideviceManagement->getData(MessageType::DeviceScopes);
+QOnvifDevice::getScopes() {
+    d_ptr->ideviceManagement->getData(MessageType::Scopes);
 }
 
 void
-QOnvifDevice::getDeviceDateAndTime() {
-    d_ptr->ideviceManagement->getData(MessageType::SystemDateAndTime);
+QOnvifDevice::getDateAndTime() {
+    d_ptr->ideviceManagement->getData(MessageType::DateAndTime);
 }
 
 void
@@ -779,7 +779,7 @@ QOnvifDevice::getUsers() {
 }
 
 void
-QOnvifDevice::getDeviceCapabilities() {
+QOnvifDevice::getCapabilities() {
     d_ptr->ideviceManagement->getData(MessageType::Capabilities);
 }
 
@@ -818,7 +818,7 @@ QOnvifDevice::getNTP() {
 }
 
 void
-QOnvifDevice::setDeviceProbeData(Data::ProbeData _probeData) {
+QOnvifDevice::setProbeData(Data::ProbeData _probeData) {
     d_ptr->idata.probeData = _probeData;
 }
 
@@ -828,7 +828,7 @@ QOnvifDevice::setScopes(QString _name, QString _location) {
     systemScopes.setScopes(_name, _location);
     d_ptr->ideviceManagement->setData(
                 ONVIF::VPtr<ONVIF::SystemScopes>::asQVariant(&systemScopes),
-                MessageType::SetDeviceScopes);
+                MessageType::SetScopes);
 }
 
 void
@@ -848,7 +848,7 @@ QOnvifDevice::setDateAndTime(
     systemDateAndTime.setDaylightSavings(_daylightSaving);
     d_ptr->ideviceManagement->setData(
                 ONVIF::VPtr<ONVIF::SystemDateAndTime>::asQVariant(&systemDateAndTime),
-                MessageType::SetSystemDateAndTime);
+                MessageType::SetDateAndTime);
 }
 
 void
@@ -962,7 +962,7 @@ QOnvifDevice::setNetworkNTP(Data::Network::NTP _ntp) {
 }
 
 void
-QOnvifDevice::resetFactoryDevice(bool isHard) {
+QOnvifDevice::resetFactory(bool isHard) {
     ONVIF::SystemFactoryDefault systemFactoryDefault;
     systemFactoryDefault.setFactoryDefault(
         isHard ? ONVIF::SystemFactoryDefault::Hard
@@ -973,7 +973,7 @@ QOnvifDevice::resetFactoryDevice(bool isHard) {
 }
 
 void
-QOnvifDevice::rebootDevice() {
+QOnvifDevice::reboot() {
     ONVIF::SystemReboot systemReboot;
     d_ptr->ideviceManagement->setData(
                 ONVIF::VPtr<ONVIF::SystemReboot>::asQVariant(&systemReboot),
@@ -1078,7 +1078,7 @@ QOnvifDevice::setVideoEncoderConfiguration(
 }
 
 void
-QOnvifDevice::setDeviceImageSetting(
+QOnvifDevice::setImageSetting(
     Data::MediaConfig::ImageSetting _imageSetting) {
     ONVIF::ImageSetting imageSetting;
     imageSetting.setAutofocusManual(_imageSetting.autofocusManual);

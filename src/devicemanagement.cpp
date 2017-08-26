@@ -111,7 +111,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
     QVariant var;
 
     switch (messageType) {
-    case device::MessageType::DeviceInformation :
+    case device::MessageType::Information :
     {
         QHash<QString, QString> device_info;
         device_info.insert("mf", result->getValue("//tds:Manufacturer"));
@@ -124,7 +124,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
         var = qVariantFromValue(device_info);
     }
         break;
-    case device::MessageType::DeviceScopes :
+    case device::MessageType::Scopes :
     {
         QHash<QString, QString> device_scopes;
         device_scopes.insert(
@@ -154,7 +154,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
         var = qVariantFromValue(device_scopes);
     }
         break;
-    case device::MessageType::SystemDateAndTime :
+    case device::MessageType::DateAndTime :
     {
          SystemDateAndTime* systemDateAndTime = new SystemDateAndTime();
          systemDateAndTime->setProperty(
@@ -475,7 +475,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
         var = VPtr<NetworkNTP>::asQVariant(networkNTP);
     }
         break;
-    case device::MessageType::SetDeviceScopes :
+    case device::MessageType::SetScopes :
     {
         bool r = false;
         if (result->find("//tds:SetScopesResponse"))
@@ -483,7 +483,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
         var = qVariantFromValue(r);
     }
         break;
-    case device::MessageType::SetSystemDateAndTime :
+    case device::MessageType::SetDateAndTime :
     {
         bool r = false;
         if (result->find("//tds:SetSystemDateAndTimeResponse"))
@@ -586,18 +586,18 @@ DeviceManagement::getData(device::MessageType messageType)
     Message* msg = newMessage();
 
     switch (messageType) {
-    case device::MessageType::DeviceInformation:
+    case device::MessageType::Information:
 
         msg->appendToBody(newElement("wsdl:GetDeviceInformation"));
 
         break;
-    case device::MessageType::DeviceScopes:
+    case device::MessageType::Scopes:
 
         msg->appendToBody(newElement(
             "wsdl:GetScopes xmlns=\"http://www.onvif.org/ver10/device/wsdl\""));
 
         break;
-    case device::MessageType::SystemDateAndTime:
+    case device::MessageType::DateAndTime:
 
         msg->appendToBody(newElement("wsdl:GetSystemDateAndTime"));
 
@@ -666,13 +666,13 @@ DeviceManagement::setData(QVariant data, device::MessageType messageType)
     QDomElement domElement;
 
     switch (messageType) {
-    case device::MessageType::SetDeviceScopes:
+    case device::MessageType::SetScopes:
     {
         SystemScopes* d = ONVIF::VPtr<ONVIF::SystemScopes>::asPtr(data);
         domElement = d->toxml();
     }
         break;
-    case device::MessageType::SetSystemDateAndTime:
+    case device::MessageType::SetDateAndTime:
     {
         SystemDateAndTime* d = ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(data);
         domElement = d->toxml();
