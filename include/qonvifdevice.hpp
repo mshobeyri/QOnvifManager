@@ -16,6 +16,7 @@ namespace device {
 
 
 enum class MessageType{
+    //device
     DeviceInformation,
     DeviceScopes,
     SystemDateAndTime,
@@ -42,6 +43,7 @@ enum class MessageType{
     SetNetworkHostname,
     SetNetworkNTP,
 
+    //media
     VideoSourceConfigurations,
     VideoEncoderConfigurations,
     Profiles,
@@ -58,8 +60,25 @@ enum class MessageType{
     ImageSetting,
     ImageSettingOptions,
 
-    setVideoEncoderConfiguration,
-    setImageSettings
+    SetVideoEncoderConfiguration,
+    SetImageSettings,
+
+    //ptz
+    Configurations,
+    Configuration,
+    Nodes,
+    Node,
+    Presets,
+
+    RemovePreset,
+    SetPreset,
+    ContinuousMove,
+    AbsoluteMove,
+    RelativeMove,
+    Stop,
+    GotoPreset,
+    GotoHomePosition,
+    SetHomePosition
 };
 
 
@@ -128,12 +147,13 @@ public:
     void setDeviceImageSetting(Data::MediaConfig::ImageSetting  _imageSetting);
 
     // ptz management
-    bool refreshPtzConfiguration();
-    bool refreshPresets();
-    bool goHomePosition();
-    bool setHomePosition();
-    bool continuousMove(const float x, const float y, const float z);
-    bool stopMovement();
+    void getPtzConfiguration();
+    void getPresets();
+
+    void goHomePosition();
+    void setHomePosition();
+    void continuousMove(const float x, const float y, const float z);
+    void stopMovement();
 
 signals:
 
@@ -159,6 +179,9 @@ signals:
     void streamUrisReceived(Data::MediaConfig::Video::StreamUri);
     void imageSettingReceived(Data::MediaConfig::ImageSetting);
     void imageSettingOptionsReceived(Data::MediaConfig::ImageSetting::Options);
+
+    void ptzConfigurationReceived(Data::Ptz::Config);
+    void presetsReceived();
 
     void setResultReceived(bool, MessageType);
 private:

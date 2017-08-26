@@ -10,7 +10,19 @@ PtzManagement::PtzManagement(const QString & wsdlUrl, const QString &username, c
 
 }
 
-QHash<QString, QString> PtzManagement::namespaces(const QString &key)
+Message *
+PtzManagement::newMessage()
+{
+    QHash<QString, QString> names;
+    names.insert("wsdl", "http://www.onvif.org/ver20/ptz/wsdl");
+    names.insert("sch", "http://www.onvif.org/ver10/schema");
+    names.insert("tptz","http://www.onvif.org/ver20/ptz/wsdl");
+
+    return createMessage(names);
+}
+
+QHash<QString, QString>
+PtzManagement::namespaces(const QString &key)
 {
     QHash<QString, QString> names;
     Q_UNUSED(key)
@@ -67,24 +79,18 @@ QHash<QString, QString> PtzManagement::namespaces(const QString &key)
     return names;
 }
 
-Message *PtzManagement::newMessage()
+void
+PtzManagement::onMessageParserReceived(MessageParser * result, device::MessageType messageType)
 {
-    QHash<QString, QString> names;
-    names.insert("wsdl", "http://www.onvif.org/ver20/ptz/wsdl");
-    names.insert("sch", "http://www.onvif.org/ver10/schema");
-    names.insert("tptz","http://www.onvif.org/ver20/ptz/wsdl");
+    if (result == NULL)
+        return;
 
-    return createMessage(names);
-}
+    QVariant var;
 
-Configurations *PtzManagement::getConfigurations()
-{
-    Configurations *configurations = NULL;
-    Message *msg = newMessage();
-    msg->appendToBody(newElement("wsdl:GetConfigurations"));
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        configurations = new Configurations();
+    switch (messageType) {
+    case device::MessageType::Configurations :
+    {
+        Configurations* configurations = new Configurations();
         QXmlQuery *query = result->query();
         QString value,xml;
         QDomDocument doc;
@@ -210,153 +216,75 @@ Configurations *PtzManagement::getConfigurations()
 
             item = items.next();
         }
+        var = VPtr<Configurations>::asQVariant(configurations);
     }
-    delete msg;
-    delete result;
-    return configurations;
-}
-
-void PtzManagement::getPresets(Presets *presets)
-{
-    Message *msg = newMessage();
-    QDomElement getPresets = newElement("wsdl:GetPresets");
-    QDomElement profileToken = newElement("wsdl:ProfileToken",presets->getProfileToken());
-    getPresets.appendChild(profileToken);
-    msg->appendToBody(getPresets);
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
+        break;
+    case device::MessageType::Configuration :
+    {
+        Configuration* configuration = new Configuration();
         QXmlQuery *query = result->query();
-        QXmlResultItems items;
-        QXmlItem item;
-        QString value,xml;
-        QDomDocument doc;
         QDomNodeList itemNodeList;
         QDomNode node;
-        query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:Preset");
-        query->evaluateTo(&items);
-        item = items.next();
-        while(!item.isNull()) {
-            query->setFocus(item);
-            query->setQuery(result->nameSpace()+".");
-            query->evaluateTo(&xml);
-            doc.setContent(xml);
-            itemNodeList = doc.elementsByTagName("tptz:Preset");
-            for(int i=0; i<itemNodeList.size(); i++) {
-                node = itemNodeList.at(i);
-                value = node.toElement().attribute("token");
-                presets->setToken(value.trimmed());
-            }
-            query->setQuery(result->nameSpace()+"./tt:Name/string()");
-            query->evaluateTo(&value);
-            presets->setName(value.trimmed());
-            item = items.next();
+        QDomDocument doc;
+        QString value,xml;
+        query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:PTZConfiguration");
+        query->evaluateTo(&xml);
+        doc.setContent(xml);
+        itemNodeList = doc.elementsByTagName("tptz:PTZConfiguration");
+        for(int i=0; i<itemNodeList.size(); i++) {
+            node = itemNodeList.at(i);
+            value = node.toElement().attribute("token");
+            configuration->setPtzConfigurationToken(value.trimmed());
         }
-    }
-    delete msg;
-    delete result;
-}
+        configuration->setName(result->getValue("//tt:Name").trimmed());
+        configuration->setUseCount(result->getValue("//tt:UseCount").trimmed().toInt());
+        configuration->setNodeToken(result->getValue("//tt:NodeToken").trimmed());
+        configuration->setDefaultAbsolutePantTiltPositionSpace(result->getValue("//tt:DefaultAbsolutePantTiltPositionSpace").trimmed());
+        configuration->setDefaultAbsoluteZoomPositionSpace(result->getValue("//tt:DefaultAbsoluteZoomPositionSpace").trimmed());
+        configuration->setDefaultContinuousPanTiltVelocitySpace(result->getValue("//DefaultContinuousPanTiltVelocitySpace").trimmed());
+        configuration->setDefaultContinuousZoomVelocitySpace(result->getValue("//tt:DefaultContinuousZoomVelocitySpace").trimmed());
+        configuration->setDefaultRelativePanTiltTranslationSpace(result->getValue("//tt:DefaultRelativePanTiltTranslationSpace").trimmed());
+        configuration->setDefaultRelativeZoomTranslationSpace(result->getValue("//tt:DefaultRelativeZoomTranslationSpace").trimmed());
+        query->setQuery(result->nameSpace()+"doc($inputDocument)//tt:DefaultPTZSpeed/tt:PanTilt");
+        query->evaluateTo(&xml);
+        doc.setContent(xml);
+        itemNodeList = doc.elementsByTagName("tt:PanTilt");
+        for(int i=0; i<itemNodeList.size(); i++) {
+            node = itemNodeList.at(i);
+            value = node.toElement().attribute("space");
+            configuration->setPanTiltSpace(value.trimmed());
+            value = node.toElement().attribute("y");
+            configuration->setPanTiltY(value.trimmed().toFloat());
+            value = node.toElement().attribute("x");
+            configuration->setPanTiltX(value.trimmed().toFloat());
+        }
 
-void PtzManagement::removePreset(RemovePreset *removePreset)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(removePreset->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:RemovePresetResponse"))
-            removePreset->setResult(true);
-        else
-            removePreset->setResult(false);
-        delete msg;
-        delete result;
+        query->setQuery(result->nameSpace()+"doc($inputDocument)//tt:DefaultPTZSpeed/tt:Zoom");
+        query->evaluateTo(&xml);
+        doc.setContent(xml);
+        itemNodeList = doc.elementsByTagName("tt:Zoom");
+        for(int i=0; i<itemNodeList.size(); i++) {
+            node = itemNodeList.at(i);
+            value = node.toElement().attribute("space");
+            configuration->setZoomSpace(value.trimmed());
+            value = node.toElement().attribute("x");
+            configuration->setZoomX(value.trimmed().toFloat());
+        }
+        configuration->setDefaultPTZTimeout(result->getValue("//tt:DefaultPTZTimeout").trimmed());
+        configuration->setPanTiltUri(result->getValue("//tt:PanTiltLimits/tt:Range/tt:URI").trimmed());
+        configuration->setPanTiltXRangeMin(result->getValue("//tt:PanTiltLimits/tt:Range/tt:XRange/tt:Min").trimmed().toFloat());
+        configuration->setPanTiltXRangeMax(result->getValue("//tt:PanTiltLimits/tt:Range/tt:XRange/tt:Max").trimmed().toFloat());
+        configuration->setPanTiltYRangeMax(result->getValue("//tt:PanTiltLimits/tt:Range/tt:YRange/tt:Min").trimmed().toFloat());
+        configuration->setPanTiltYRangeMax(result->getValue("//tt:PanTiltLimits/tt:Range/tt:YRange/tt:Max").trimmed().toFloat());
+        configuration->setZoomUri(result->getValue("//tt:ZoomLimits/tt:Range/tt:URI").trimmed());
+        configuration->setZoomXRangeMin(result->getValue("//tt:ZoomLimits/tt:Range/tt:XRange/tt:Min").trimmed().toFloat());
+        configuration->setZoomXRangeMax(result->getValue("//tt:ZoomLimits/tt:Range/tt:XRange/tt:Max").trimmed().toFloat());
+        var = VPtr<Configuration>::asQVariant(configuration);
     }
-}
-
-void PtzManagement::setPreset(Preset *preset)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(preset->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:SetPresetResponse"))
-            preset->setResult(true);
-        else
-            preset->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::continuousMove(ContinuousMove *continuousMove)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(continuousMove->toxml());
-    MessageParser *result = sendMessage(msg);
-    continuousMove->setResult(false);
-    if(result != NULL) {
-        if(result->find("//tptz:ContinuousMoveResponse"))
-            continuousMove->setResult(true);
-        else
-            continuousMove->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::absoluteMove(AbsoluteMove *absoluteMove)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(absoluteMove->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:AbsoluteMoveResponse"))
-            absoluteMove->setResult(true);
-        else
-            absoluteMove->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::relativeMove(RelativeMove *relativeMove)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(relativeMove->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:RelativeMoveResponse"))
-            relativeMove->setResult(true);
-        else
-            relativeMove->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::stop(Stop *stop)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(stop->toxml());
-    MessageParser *result = sendMessage(msg);
-    stop->setResult(false);
-    if(result != NULL) {
-        if(result->find("//tptz:StopResponse"))
-            stop->setResult(true);
-        else
-            stop->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-Nodes *PtzManagement::getNodes()
-{
-    Nodes *nodes = NULL;
-    Message *msg = newMessage();
-    QDomElement getNodes = newElement("wsdl:GetNodes");
-    msg->appendToBody(getNodes);
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        nodes = new Nodes();
+        break;
+    case device::MessageType::Nodes :
+    {
+        Nodes* nodes = new Nodes();
         QXmlQuery *query = result->query();
         QXmlResultItems items;
         QXmlItem item;
@@ -511,132 +439,12 @@ Nodes *PtzManagement::getNodes()
             nodes->setHomeSupported(value.trimmed() == "true"?true:false);
             item = items.next();
         }
+        var = VPtr<Nodes>::asQVariant(nodes);
     }
-    delete msg;
-    delete result;
-    return nodes;
-}
-
-
-void PtzManagement::gotoPreset(GotoPreset *gotoPreset)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(gotoPreset->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:GotoPresetResponse"))
-            gotoPreset->setResult(true);
-        else
-            gotoPreset->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::gotoHomePosition(GotoHomePosition *gotoHomePosition)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(gotoHomePosition->toxml());
-    MessageParser *result =sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:GotoHomePositionResponse"))
-            gotoHomePosition->setResult(true);
-        else
-            gotoHomePosition->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::setHomePosition(HomePosition *homePosition)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(homePosition->toxml());
-    MessageParser *result =sendMessage(msg);
-    if(result != NULL) {
-        if(result->find("//tptz:SetHomePositionResponse"))
-            homePosition->setResult(true);
-        else
-            homePosition->setResult(false);
-        delete msg;
-        delete result;
-    }
-}
-
-void PtzManagement::getConfiguration(Configuration *configuration)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(configuration->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
-        QXmlQuery *query = result->query();
-        QDomNodeList itemNodeList;
-        QDomNode node;
-        QDomDocument doc;
-        QString value,xml;
-        query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:PTZConfiguration");
-        query->evaluateTo(&xml);
-        doc.setContent(xml);
-        itemNodeList = doc.elementsByTagName("tptz:PTZConfiguration");
-        for(int i=0; i<itemNodeList.size(); i++) {
-            node = itemNodeList.at(i);
-            value = node.toElement().attribute("token");
-            configuration->setPtzConfigurationToken(value.trimmed());
-        }
-        configuration->setName(result->getValue("//tt:Name").trimmed());
-        configuration->setUseCount(result->getValue("//tt:UseCount").trimmed().toInt());
-        configuration->setNodeToken(result->getValue("//tt:NodeToken").trimmed());
-        configuration->setDefaultAbsolutePantTiltPositionSpace(result->getValue("//tt:DefaultAbsolutePantTiltPositionSpace").trimmed());
-        configuration->setDefaultAbsoluteZoomPositionSpace(result->getValue("//tt:DefaultAbsoluteZoomPositionSpace").trimmed());
-        configuration->setDefaultContinuousPanTiltVelocitySpace(result->getValue("//DefaultContinuousPanTiltVelocitySpace").trimmed());
-        configuration->setDefaultContinuousZoomVelocitySpace(result->getValue("//tt:DefaultContinuousZoomVelocitySpace").trimmed());
-        configuration->setDefaultRelativePanTiltTranslationSpace(result->getValue("//tt:DefaultRelativePanTiltTranslationSpace").trimmed());
-        configuration->setDefaultRelativeZoomTranslationSpace(result->getValue("//tt:DefaultRelativeZoomTranslationSpace").trimmed());
-        query->setQuery(result->nameSpace()+"doc($inputDocument)//tt:DefaultPTZSpeed/tt:PanTilt");
-        query->evaluateTo(&xml);
-        doc.setContent(xml);
-        itemNodeList = doc.elementsByTagName("tt:PanTilt");
-        for(int i=0; i<itemNodeList.size(); i++) {
-            node = itemNodeList.at(i);
-            value = node.toElement().attribute("space");
-            configuration->setPanTiltSpace(value.trimmed());
-            value = node.toElement().attribute("y");
-            configuration->setPanTiltY(value.trimmed().toFloat());
-            value = node.toElement().attribute("x");
-            configuration->setPanTiltX(value.trimmed().toFloat());
-        }
-
-        query->setQuery(result->nameSpace()+"doc($inputDocument)//tt:DefaultPTZSpeed/tt:Zoom");
-        query->evaluateTo(&xml);
-        doc.setContent(xml);
-        itemNodeList = doc.elementsByTagName("tt:Zoom");
-        for(int i=0; i<itemNodeList.size(); i++) {
-            node = itemNodeList.at(i);
-            value = node.toElement().attribute("space");
-            configuration->setZoomSpace(value.trimmed());
-            value = node.toElement().attribute("x");
-            configuration->setZoomX(value.trimmed().toFloat());
-        }
-        configuration->setDefaultPTZTimeout(result->getValue("//tt:DefaultPTZTimeout").trimmed());
-        configuration->setPanTiltUri(result->getValue("//tt:PanTiltLimits/tt:Range/tt:URI").trimmed());
-        configuration->setPanTiltXRangeMin(result->getValue("//tt:PanTiltLimits/tt:Range/tt:XRange/tt:Min").trimmed().toFloat());
-        configuration->setPanTiltXRangeMax(result->getValue("//tt:PanTiltLimits/tt:Range/tt:XRange/tt:Max").trimmed().toFloat());
-        configuration->setPanTiltYRangeMax(result->getValue("//tt:PanTiltLimits/tt:Range/tt:YRange/tt:Min").trimmed().toFloat());
-        configuration->setPanTiltYRangeMax(result->getValue("//tt:PanTiltLimits/tt:Range/tt:YRange/tt:Max").trimmed().toFloat());
-        configuration->setZoomUri(result->getValue("//tt:ZoomLimits/tt:Range/tt:URI").trimmed());
-        configuration->setZoomXRangeMin(result->getValue("//tt:ZoomLimits/tt:Range/tt:XRange/tt:Min").trimmed().toFloat());
-        configuration->setZoomXRangeMax(result->getValue("//tt:ZoomLimits/tt:Range/tt:XRange/tt:Max").trimmed().toFloat());
-    }
-    delete msg;
-    delete result;
-}
-
-void PtzManagement::getNode(Node *node)
-{
-    Message *msg = newMessage();
-    msg->appendToBody(node->toxml());
-    MessageParser *result = sendMessage(msg);
-    if(result != NULL) {
+        break;
+    case device::MessageType::Node :
+    {
+        Node* node = new Node();
         QXmlQuery *query = result->query();
         QDomNodeList itemNodeList;
         QDomNode node1;
@@ -685,7 +493,243 @@ void PtzManagement::getNode(Node *node)
         node->setZoomSpeedSpaceXRangeMax(result->getValue("//tt:SupportPTZSpace/tt:ZoomSpeedSpace/tt:Max").trimmed().toInt());
         node->setMaximumNumberOfPresets(result->getValue("//tt:MaximumNumberOfPresets").trimmed().toInt());
         node->setHomeSupport(result->getValue("//tt:HomeSupported").trimmed() == "true"?true:false);
+        var = VPtr<Node>::asQVariant(node);
     }
-    delete msg;
-    delete result;
+        break;
+    case device::MessageType::Presets :
+    {
+        Presets* presets = new Presets();
+        QXmlQuery *query = result->query();
+        QXmlResultItems items;
+        QXmlItem item;
+        QString value,xml;
+        QDomDocument doc;
+        QDomNodeList itemNodeList;
+        QDomNode node;
+        query->setQuery(result->nameSpace()+"doc($inputDocument)//tptz:Preset");
+        query->evaluateTo(&items);
+        item = items.next();
+        while(!item.isNull()) {
+            query->setFocus(item);
+            query->setQuery(result->nameSpace()+".");
+            query->evaluateTo(&xml);
+            doc.setContent(xml);
+            itemNodeList = doc.elementsByTagName("tptz:Preset");
+            for(int i=0; i<itemNodeList.size(); i++) {
+                node = itemNodeList.at(i);
+                value = node.toElement().attribute("token");
+                presets->setToken(value.trimmed());
+            }
+            query->setQuery(result->nameSpace()+"./tt:Name/string()");
+            query->evaluateTo(&value);
+            presets->setName(value.trimmed());
+            item = items.next();
+        }
+        var = VPtr<Presets>::asQVariant(presets);
+    }
+        break;
+    case device::MessageType::RemovePreset :
+    {
+        bool r = false;
+        if (result->find("//tptz:RemovePresetResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetPreset :
+    {
+        bool r = false;
+        if (result->find("//tptz:SetPresetResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::ContinuousMove :
+    {
+        bool r = false;
+        if (result->find("//tptz:ContinuousMoveResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::AbsoluteMove :
+    {
+        bool r = false;
+        if (result->find("//tptz:AbsoluteMoveResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::RelativeMove :
+    {
+        bool r = false;
+        if (result->find("//tptz:RelativeMoveResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::Stop :
+    {
+        bool r = false;
+        if (result->find("//tptz:StopResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::GotoPreset :
+    {
+        bool r = false;
+        if (result->find("//tptz:GotoPresetResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::GotoHomePosition :
+    {
+        bool r = false;
+        if (result->find("//tptz:GotoHomePositionResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    case device::MessageType::SetHomePosition :
+    {
+        bool r = false;
+        if (result->find("//tptz:SetHomePositionResponse"))
+            r = true;
+        var = qVariantFromValue(r);
+    }
+        break;
+    default:
+        break;
+    }
+
+    emit resultReceived(var, messageType);
+
+    result->deleteLater();
+}
+
+void
+PtzManagement::getData(device::MessageType messageType, QVariantList parameters)
+{
+    Message* msg = newMessage();
+
+    switch (messageType) {
+    case device::MessageType::Configurations:
+
+        msg->appendToBody(newElement("wsdl:GetConfigurations"));
+
+        break;
+    case device::MessageType::Configuration:
+    {
+        QString token = parameters.isEmpty() ? "" : parameters.at(0).toString();
+        QDomElement getConfiguration = newElement("wsdl:GetConfiguration");
+        QDomElement ptzConfigurationToken = newElement("wsdl:PTZConfigurationToken",token);
+        getConfiguration.appendChild(ptzConfigurationToken);
+        msg->appendToBody(getConfiguration);
+    }
+        break;
+    case device::MessageType::Nodes:
+
+        msg->appendToBody(newElement("wsdl:GetNodes"));
+
+        break;
+    case device::MessageType::Node:
+    {
+        QString ptzNodeToken = parameters.isEmpty() ? "" : parameters.at(0).toString();
+        QDomElement getNode = newElement("wsdl:GetNode");
+        QDomElement nodeToken = newElement("wsdl:NodeToken",ptzNodeToken);
+        getNode.appendChild(nodeToken);
+        msg->appendToBody(getNode);
+    }
+        break;
+    case device::MessageType::Presets:
+    {
+        QString token = parameters.isEmpty() ? "" : parameters.at(0).toString();
+        QDomElement getPresets = newElement("wsdl:GetPresets");
+        QDomElement profileToken = newElement("wsdl:ProfileToken",token);
+        getPresets.appendChild(profileToken);
+        msg->appendToBody(getPresets);
+    }
+        break;
+    default:
+        msg->deleteLater();
+        return;
+        break;
+    }
+
+    sendMessage(msg, messageType);
+    msg->deleteLater();
+}
+
+void
+PtzManagement::setData(QVariant data, device::MessageType messageType)
+{
+    Message* msg = newMessage();
+    QDomElement domElement;
+
+    switch (messageType) {
+    case device::MessageType::RemovePreset:
+    {
+        RemovePreset* d = ONVIF::VPtr<ONVIF::RemovePreset>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetPreset:
+    {
+        Preset* d = ONVIF::VPtr<ONVIF::Preset>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::ContinuousMove:
+    {
+        ContinuousMove* d = ONVIF::VPtr<ONVIF::ContinuousMove>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::AbsoluteMove:
+    {
+        AbsoluteMove* d = ONVIF::VPtr<ONVIF::AbsoluteMove>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::RelativeMove:
+    {
+        RelativeMove* d = ONVIF::VPtr<ONVIF::RelativeMove>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::Stop:
+    {
+        Stop* d = ONVIF::VPtr<ONVIF::Stop>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::GotoPreset:
+    {
+        GotoPreset* d = ONVIF::VPtr<ONVIF::GotoPreset>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::GotoHomePosition:
+    {
+        GotoHomePosition* d = ONVIF::VPtr<ONVIF::GotoHomePosition>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    case device::MessageType::SetHomePosition:
+    {
+        HomePosition* d = ONVIF::VPtr<ONVIF::HomePosition>::asPtr(data);
+        domElement = d->toxml();
+    }
+        break;
+    default:
+        msg->deleteLater();
+        return;
+        break;
+    }
+
+    msg->appendToBody(domElement);
+    sendMessage(msg, messageType);
+    msg->deleteLater();
 }

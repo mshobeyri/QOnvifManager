@@ -159,6 +159,7 @@ void MediaManagement::onMessageParserReceived(MessageParser *result, device::Mes
         }
         var = VPtr<VideoSourceConfigurations>::asQVariant(videoSourceConfigurations);
     }
+        break;
     case device::MessageType::VideoEncoderConfigurations :
     {
         VideoEncoderConfigurations* videoEncoderConfigurations = new VideoEncoderConfigurations();
@@ -2193,7 +2194,7 @@ void MediaManagement::onMessageParserReceived(MessageParser *result, device::Mes
         var = VPtr<ImageSettingOptions>::asQVariant(imageSettingOptions);
     }
         break;
-    case device::MessageType::setVideoEncoderConfiguration :
+    case device::MessageType::SetVideoEncoderConfiguration :
     {
         bool r = false;
         if (result->find("//tds:SetVideoEncoderConfigurationResponse") ||
@@ -2203,7 +2204,7 @@ void MediaManagement::onMessageParserReceived(MessageParser *result, device::Mes
         var = qVariantFromValue(r);
     }
         break;
-    case device::MessageType::setImageSettings :
+    case device::MessageType::SetImageSettings :
     {
         bool r = false;
         if (result->find("//timg:SetImagingSettingsResponse") ||
@@ -2387,13 +2388,13 @@ void MediaManagement::setData(QVariant data, device::MessageType messageType)
     QDomElement domElement;
 
     switch (messageType) {
-    case device::MessageType::setVideoEncoderConfiguration:
+    case device::MessageType::SetVideoEncoderConfiguration:
     {
         VideoEncoderConfiguration* d = ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asPtr(data);
         domElement = d->toxml();
     }
         break;
-    case device::MessageType::setImageSettings:
+    case device::MessageType::SetImageSettings:
     {
         ImageSetting* d = ONVIF::VPtr<ONVIF::ImageSetting>::asPtr(data);
         domElement = d->toxml();

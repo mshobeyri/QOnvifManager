@@ -658,6 +658,65 @@ QOnvifDevice::QOnvifDevice(
             emit imageSettingOptionsReceived(d_ptr->idata.mediaConfig.imageSetting.options);
         }
             break;
+        case MessageType::Configurations :
+        {
+            QScopedPointer<ONVIF::Configurations> config(ONVIF::VPtr<ONVIF::Configurations>::asPtr(var));
+        }
+            break;
+        case MessageType::Configuration :
+        {
+            QScopedPointer<ONVIF::Configuration> config(ONVIF::VPtr<ONVIF::Configuration>::asPtr(var));
+
+            auto& des = d_ptr->idata.ptz.config;
+
+            des.name                  = config->name();
+            des.useCount              = config->useCount();
+            des.nodeToken             = config->nodeToken();
+            des.panTiltX              = config->panTiltX();
+            des.panTiltY              = config->panTiltY();
+            des.zoomSpace             = config->zoomSpace();
+            des.defaultPTZTimeout     = config->defaultPTZTimeout();
+            des.panTiltUri            = config->panTiltUri();
+            des.panTiltXRangeMin      = config->panTiltXRangeMin();
+            des.panTiltXRangeMax      = config->panTiltXRangeMax();
+            des.panTiltYRangeMin      = config->panTiltXRangeMin();
+            des.panTiltYRangeMax      = config->panTiltYRangeMax();
+            des.zoomUri               = config->zoomUri();
+            des.zoomXRangeMin         = config->zoomXRangeMin();
+            des.zoomXRangeMax         = config->zoomXRangeMax();
+            des.ptzConfigurationToken = config->ptzConfigurationToken();
+            des.panTiltSpace          = config->panTiltSpace();
+            des.zoomX                 = config->zoomX();
+
+            des.defaultAbsolutePantTiltPositionSpace =
+                config->defaultAbsolutePantTiltPositionSpace();
+            des.defaultAbsoluteZoomPositionSpace =
+                config->defaultAbsoluteZoomPositionSpace();
+            des.defaultRelativePanTiltTranslationSpace =
+                config->defaultRelativePanTiltTranslationSpace();
+            des.defaultRelativeZoomTranslationSpace =
+                config->defaultRelativeZoomTranslationSpace();
+            des.defaultContinuousPanTiltVelocitySpace =
+                config->defaultContinuousPanTiltVelocitySpace();
+
+            emit ptzConfigurationReceived(d_ptr->idata.ptz.config);
+        }
+            break;
+        case MessageType::Nodes :
+        {
+            QScopedPointer<ONVIF::Nodes> nodes(ONVIF::VPtr<ONVIF::Nodes>::asPtr(var));
+        }
+            break;
+        case MessageType::Node :
+        {
+            QScopedPointer<ONVIF::Node> node(ONVIF::VPtr<ONVIF::Node>::asPtr(var));
+        }
+            break;
+        case MessageType::Presets :
+        {
+            QScopedPointer<ONVIF::Presets> presets(ONVIF::VPtr<ONVIF::Presets>::asPtr(var));
+        }
+            break;
         case MessageType::SetDeviceScopes :
         case MessageType::SetSystemDateAndTime :
         case MessageType::SetUsers :
@@ -670,8 +729,17 @@ QOnvifDevice::QOnvifDevice(
         case MessageType::SetNetworkDNS :
         case MessageType::SetNetworkHostname :
         case MessageType::SetNetworkNTP :
-        case MessageType::setVideoEncoderConfiguration :
-        case MessageType::setImageSettings :
+        case MessageType::SetVideoEncoderConfiguration :
+        case MessageType::SetImageSettings :
+        case MessageType::RemovePreset :
+        case MessageType::SetPreset :
+        case MessageType::ContinuousMove :
+        case MessageType::AbsoluteMove :
+        case MessageType::RelativeMove :
+        case MessageType::Stop :
+        case MessageType::GotoPreset :
+        case MessageType::GotoHomePosition :
+        case MessageType::SetHomePosition :
         {
             bool r = var.value<bool>();
             emit setResultReceived(r, messageType);
@@ -982,46 +1050,6 @@ QOnvifDevice::getImageSettingOptions() {
     d_ptr->imediaManagement->getData(MessageType::ImageSettingOptions, parameters);
 }
 
-bool
-QOnvifDevice::refreshPtzConfiguration() {
-    ONVIF::Configuration* config = new ONVIF::Configuration;
-    d_ptr->iptzManagement->getConfiguration(config);
-    auto& des = d_ptr->idata.ptz.config;
-
-    des.name                  = config->name();
-    des.useCount              = config->useCount();
-    des.nodeToken             = config->nodeToken();
-    des.panTiltX              = config->panTiltX();
-    des.panTiltY              = config->panTiltY();
-    des.zoomSpace             = config->zoomSpace();
-    des.defaultPTZTimeout     = config->defaultPTZTimeout();
-    des.panTiltUri            = config->panTiltUri();
-    des.panTiltXRangeMin      = config->panTiltXRangeMin();
-    des.panTiltXRangeMax      = config->panTiltXRangeMax();
-    des.panTiltYRangeMin      = config->panTiltXRangeMin();
-    des.panTiltYRangeMax      = config->panTiltYRangeMax();
-    des.zoomUri               = config->zoomUri();
-    des.zoomXRangeMin         = config->zoomXRangeMin();
-    des.zoomXRangeMax         = config->zoomXRangeMax();
-    des.ptzConfigurationToken = config->ptzConfigurationToken();
-    des.panTiltSpace          = config->panTiltSpace();
-    des.zoomX                 = config->zoomX();
-
-    des.defaultAbsolutePantTiltPositionSpace =
-        config->defaultAbsolutePantTiltPositionSpace();
-    des.defaultAbsoluteZoomPositionSpace =
-        config->defaultAbsoluteZoomPositionSpace();
-    des.defaultRelativePanTiltTranslationSpace =
-        config->defaultRelativePanTiltTranslationSpace();
-    des.defaultRelativeZoomTranslationSpace =
-        config->defaultRelativeZoomTranslationSpace();
-    des.defaultContinuousPanTiltVelocitySpace =
-        config->defaultContinuousPanTiltVelocitySpace();
-
-    delete config;
-    return true;
-}
-
 void
 QOnvifDevice::setVideoEncoderConfiguration(
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
@@ -1046,7 +1074,7 @@ QOnvifDevice::setVideoEncoderConfiguration(
     videoEncoderConfiguration.setSessionTimeout(_videoConfig.sessionTimeout);
     d_ptr->imediaManagement->setData(
                 ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asQVariant(&videoEncoderConfiguration),
-                MessageType::setVideoEncoderConfiguration);
+                MessageType::SetVideoEncoderConfiguration);
 }
 
 void
@@ -1065,57 +1093,60 @@ QOnvifDevice::setDeviceImageSetting(
     imageSetting.setToken(_imageSetting.token);
     d_ptr->imediaManagement->setData(
                 ONVIF::VPtr<ONVIF::ImageSetting>::asQVariant(&imageSetting),
-                MessageType::setImageSettings);
+                MessageType::SetImageSettings);
 }
 
-bool
-QOnvifDevice::refreshPresets() {
-    ONVIF::Presets* presets = new ONVIF::Presets;
-    presets->setProfileToken("MediaProfile000");
-    d_ptr->iptzManagement->getPresets(presets);
-    delete presets;
-    return true;
+void
+QOnvifDevice::getPtzConfiguration() {
+    d_ptr->iptzManagement->getData(MessageType::Configuration);
 }
 
-bool
-QOnvifDevice::goHomePosition() {
-    ONVIF::GotoHomePosition* goHomePose = new ONVIF::GotoHomePosition;
-    goHomePose->setProfileToken("MediaProfile000");
-    d_ptr->iptzManagement->gotoHomePosition(goHomePose);
-    delete goHomePose;
-    return true;
+void
+QOnvifDevice::getPresets() {
+    QVariantList parameters;
+    parameters.append("MediaProfile000");
+    d_ptr->iptzManagement->getData(MessageType::Presets, parameters);
 }
 
-bool
-QOnvifDevice::setHomePosition() {
-    ONVIF::HomePosition* homePosition = new ONVIF::HomePosition;
-    homePosition->setProfileToken("MediaProfile000");
-    d_ptr->iptzManagement->setHomePosition(homePosition);
-    delete homePosition;
-    return true;
+void
+QOnvifDevice::goHomePosition() {    
+    ONVIF::GotoHomePosition gotoHomePosition;
+    gotoHomePosition.setProfileToken("MediaProfile000");
+    d_ptr->iptzManagement->setData(
+                ONVIF::VPtr<ONVIF::GotoHomePosition>::asQVariant(&gotoHomePosition),
+                MessageType::GotoHomePosition);
 }
 
-bool
+void
+QOnvifDevice::setHomePosition() {    
+    ONVIF::HomePosition homePosition;
+    homePosition.setProfileToken("MediaProfile000");
+    d_ptr->iptzManagement->setData(
+                ONVIF::VPtr<ONVIF::HomePosition>::asQVariant(&homePosition),
+                MessageType::SetHomePosition);
+}
+
+void
 QOnvifDevice::continuousMove(const float x, const float y, const float z) {
-    ONVIF::ContinuousMove* continuousMove = new ONVIF::ContinuousMove;
-    continuousMove->setProfileToken("MediaProfile000");
-    continuousMove->setPanTiltX(x);
-    continuousMove->setPanTiltY(y);
-    continuousMove->setZoomX(z);
-    d_ptr->iptzManagement->continuousMove(continuousMove);
-    delete continuousMove;
-    return true;
+    ONVIF::ContinuousMove continuousMove;
+    continuousMove.setProfileToken("MediaProfile000");
+    continuousMove.setPanTiltX(x);
+    continuousMove.setPanTiltY(y);
+    continuousMove.setZoomX(z);
+    d_ptr->iptzManagement->setData(
+                ONVIF::VPtr<ONVIF::ContinuousMove>::asQVariant(&continuousMove),
+                MessageType::ContinuousMove);
 }
 
-bool
-QOnvifDevice::stopMovement() {
-    ONVIF::Stop* stop = new ONVIF::Stop;
-    stop->setProfileToken("MediaProfile000");
-    stop->setPanTilt(true);
-    stop->setZoom(true);
-    d_ptr->iptzManagement->stop(stop);
-    delete stop;
-    return true;
+void
+QOnvifDevice::stopMovement() {    
+    ONVIF::Stop stop;
+    stop.setProfileToken("MediaProfile000");
+    stop.setPanTilt(true);
+    stop.setZoom(true);
+    d_ptr->iptzManagement->setData(
+                ONVIF::VPtr<ONVIF::Stop>::asQVariant(&stop),
+                MessageType::Stop);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
