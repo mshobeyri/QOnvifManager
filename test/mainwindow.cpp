@@ -65,25 +65,21 @@ MainWindow::on_btnRefreshData_clicked() {
 
     ionvifManager->getDeviceCapabilities(currentDevice());
     ionvifManager->getDeviceInformation(currentDevice());
-
-    //ionvifManager->getDeviceProfiles(currentDevice());
-
+    ionvifManager->getDeviceProfiles(currentDevice());
     ionvifManager->getDeviceImageSettingOptions(currentDevice());
     ionvifManager->getDeviceImageSetting(currentDevice());
-
-//        ionvifManager->refreshDeviceVideoConfigs(currentDevice());
-//        ionvifManager->refreshDeviceVideoConfigsOptions(currentDevice());
-    //    ionvifManager->refreshDeviceStreamUris(currentDevice());
-
-    //    ionvifManager->refreshDeviceUsers(currentDevice());
-    //    ionvifManager->refreshDeviceScopes(currentDevice());
-//    ionvifManager->refreshDeviceInterfaces(currentDevice());
-//    ionvifManager->refreshDeviceDNS(currentDevice());
-//    ionvifManager->refreshDeviceDefaultGateway(currentDevice());
-//    ionvifManager->refreshDeviceDiscoveryMode(currentDevice());
-//    ionvifManager->refreshDeviceHostname(currentDevice());
-//    ionvifManager->refreshDeviceNTP(currentDevice());
-    //    ionvifManager->refreshDevicePtzConfigs(currentDevice());
+    ionvifManager->getDeviceVideoEncoderConfigurations(currentDevice());
+    ionvifManager->getDeviceVideoEncoderConfigurationOptions(currentDevice());
+    ionvifManager->getDeviceStreamUris(currentDevice());
+    ionvifManager->getDeviceUsers(currentDevice());
+    ionvifManager->getDeviceScopes(currentDevice());
+    ionvifManager->getDeviceInterfaces(currentDevice());
+    ionvifManager->getDeviceDNS(currentDevice());
+    ionvifManager->getDeviceDefaultGateway(currentDevice());
+    ionvifManager->getDeviceDiscoveryMode(currentDevice());
+    ionvifManager->getDeviceHostname(currentDevice());
+    ionvifManager->getDeviceNTP(currentDevice());
+    ionvifManager->getDevicePtzConfiguration(currentDevice());
 
     // setScopes
     //    ui->txtLocation->setText(
