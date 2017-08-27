@@ -73,12 +73,12 @@ MainWindow::on_btnRefreshData_clicked() {
     ionvifManager->getDeviceStreamUris(currentDevice());
     ionvifManager->getDeviceUsers(currentDevice());
     ionvifManager->getDeviceScopes(currentDevice());
-    ionvifManager->getDeviceInterfaces(currentDevice());
-    ionvifManager->getDeviceDNS(currentDevice());
-    ionvifManager->getDeviceDefaultGateway(currentDevice());
-    ionvifManager->getDeviceDiscoveryMode(currentDevice());
-    ionvifManager->getDeviceHostname(currentDevice());
-    ionvifManager->getDeviceNTP(currentDevice());
+    ionvifManager->getDeviceNetworkInterfaces(currentDevice());
+    ionvifManager->getDeviceNetworkDNS(currentDevice());
+    ionvifManager->getDeviceNetworkDefaultGateway(currentDevice());
+    ionvifManager->getDeviceNetworkDiscoveryMode(currentDevice());
+    ionvifManager->getDeviceNetworkHostname(currentDevice());
+    ionvifManager->getDeviceNetworkNTP(currentDevice());
     ionvifManager->getDevicePtzConfiguration(currentDevice());
 
     // setScopes

@@ -182,7 +182,7 @@ QOnvifManager::getDeviceProfiles(QString _deviceEndPointAddress) {
 }
 
 void
-QOnvifManager::getDeviceInterfaces(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkInterfaces(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getInterfaces();
@@ -196,35 +196,35 @@ QOnvifManager::getDeviceProtocols(QString _deviceEndPointAddress) {
 }
 
 void
-QOnvifManager::getDeviceDefaultGateway(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkDefaultGateway(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getDefaultGateway();
 }
 
 void
-QOnvifManager::getDeviceDiscoveryMode(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkDiscoveryMode(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getDiscoveryMode();
 }
 
 void
-QOnvifManager::getDeviceDNS(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkDNS(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getDNS();
 }
 
 void
-QOnvifManager::getDeviceHostname(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkHostname(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getHostname();
 }
 
 void
-QOnvifManager::getDeviceNTP(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkNTP(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getNTP();
