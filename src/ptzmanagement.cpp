@@ -7,7 +7,7 @@ using namespace ONVIF;
 PtzManagement::PtzManagement(const QString & wsdlUrl, const QString &username, const QString &password)
     :Service(wsdlUrl, username, password)
 {
-
+    connect(this,&PtzManagement::messageParserReceived,this,&PtzManagement::onMessageParserReceived);
 }
 
 Message *
