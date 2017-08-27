@@ -1038,6 +1038,37 @@ void QOnvifDevice::getVideoSourceConfigurations()
 void
 QOnvifDevice::getVideoEncoderConfigurationOptions() {
 
+    if(d_ptr->idata.profiles.toKenPro.isEmpty())
+    {
+        getProfiles();
+
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect(this,&QOnvifDevice::profilesReceived,&loop,&QEventLoop::quit);
+        connect(&timer,&QTimer::timeout,&loop,&QEventLoop::quit);
+        timer.start(3000);
+        loop.exec();
+
+        if(!timer.isActive())
+            return;
+    }
+    if(d_ptr->idata.mediaConfig.video.encodingConfigs.token.isEmpty())
+    {
+        getVideoEncoderConfigurations();
+
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect(this,&QOnvifDevice::videoEncoderConfigurationsReceived,&loop,&QEventLoop::quit);
+        connect(&timer,&QTimer::timeout,&loop,&QEventLoop::quit);
+        timer.start(3000);
+        loop.exec();
+
+        if(!timer.isActive())
+            return;
+    }
+
     // get video encoder options
     d_ptr->idata.mediaConfig.video.encodingConfigs.options.clear();
     auto configToken  = d_ptr->idata.mediaConfig.video.encodingConfigs.token;
