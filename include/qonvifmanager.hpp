@@ -46,7 +46,7 @@ public:
     void getDeviceStreamUris(QString _deviceEndPointAddress);
     void getDeviceProfiles(QString _deviceEndPointAddress);
     void getDeviceNetworkInterfaces(QString _deviceEndPointAddress);
-    void getDeviceProtocols(QString _deviceEndPointAddress);
+    void getDeviceNetworkProtocols(QString _deviceEndPointAddress);
     void getDeviceNetworkDefaultGateway(QString _deviceEndPointAddress);
     void getDeviceNetworkDiscoveryMode(QString _deviceEndPointAddress);
     void getDeviceNetworkDNS(QString _deviceEndPointAddress);

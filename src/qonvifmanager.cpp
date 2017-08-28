@@ -189,7 +189,7 @@ QOnvifManager::getDeviceNetworkInterfaces(QString _deviceEndPointAddress) {
 }
 
 void
-QOnvifManager::getDeviceProtocols(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceNetworkProtocols(QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->getProtocols();
