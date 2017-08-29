@@ -48,71 +48,74 @@ Message*
 Message::getOnvifSearchMessage() {
     QHash<QString, QString> namespaces;
     namespaces.insert("a", "http://schemas.xmlsoap.org/ws/2004/08/addressing");
-    namespaces.insert("s", "http://www.w3.org/2003/05/soap-envelope");
     namespaces.insert("d", "http://schemas.xmlsoap.org/ws/2005/04/discovery");
     namespaces.insert("dn", "http://www.onvif.org/ver10/network/wsdl");
     namespaces.insert("dn", "http://www.onvif.org/ver10/network/wsdl");
     Message*    msg    = new Message(namespaces);
     QDomElement action = newElement(
         "a:Action", "http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe");
-    action.setAttribute("s:mustUnderstand","1");
     QDomElement message_id = newElement("a:MessageID", "uuid:" + msg->uuid());
-    QDomElement replyTo = newElement("a:ReplyTo");
-    QDomElement address = newElement("a:Address","http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous");
-    replyTo.appendChild(address);
     QDomElement to =
         newElement("a:To", "urn:schemas-xmlsoap-org:ws:2005:04:discovery");
-    to.setAttribute("s:mustUnderstand","1");
     msg->appendToHeader(action);
     msg->appendToHeader(message_id);
-    msg->appendToHeader(replyTo);
     msg->appendToHeader(to);
 
     QDomElement probe = newElement("d:Probe");
-    probe.setAttribute("xmlns","http://schemas.xmlsoap.org/ws/2005/04/discovery");
-    QDomElement type = newElement("d:Types", "dn:NetworkVideoTransmitter");
-    type.setAttribute("xmlns:d","http://schemas.xmlsoap.org/ws/2005/04/discovery");
-    type.setAttribute("xmlns:dp0","http://www.onvif.org/ver10/network/wsdl");
-    probe.appendChild(type);
-//    probe.appendChild(newElement("d:Scopes"));
+    probe.appendChild(newElement("d:Types", "dn:NetworkVideoTransmitter"));
+    probe.appendChild(newElement("d:Scopes"));
     msg->appendToBody(probe);
 
     return msg;
 }
-// QString
-// base64_encode(QByteArray ba) {
-//    return ba.toBase64();
-//}
-
-// QByteArray
-// base64_decode(QByteArray ba) {
-//    return QByteArray::fromBase64(ba);
-//}
 
 #define SOAP_WSSE_NONCELEN (20)
+static bool
+CalcWssePassword(
+    const QDateTime& current,
+    const QString&   passwd,
+    QString&         passwdDigest,
+    QString&         nonceBase64) {
+    char                buf[SOAP_WSSE_NONCELEN];
+    int                 nonceInt = qrand();
+    QByteArray          sha1Output;
+    QCryptographicHash* hash = NULL;
 
-QString
-nonceCalc() {
-    int  nonceInt = qrand();
-    char buf[SOAP_WSSE_NONCELEN];
+    // sprintf(buf, "%8.8x%4.4hx%8.8x", (int)time(NULL), count++, nonceInt);
     memset(buf, 1, SOAP_WSSE_NONCELEN);
     memcpy(buf, &nonceInt, sizeof(nonceInt));
-    QByteArray nonceByteArray(buf, SOAP_WSSE_NONCELEN);
-    QString    nonce(nonceByteArray.toBase64());
-    return nonce;
-}
+    QByteArray nonce(buf, SOAP_WSSE_NONCELEN);
+    QString    nonceStr(nonce.toBase64());
+    // qDebug() << "nonceStr:";
+    // qDebug() <<  nonceStr;
+    QString timeStr(
+        current.toTimeSpec(Qt::UTC).toString("yyyy-MM-ddThh:mm:ssZ"));
+    // qDebug() << "timeStr:";
+    // qDebug() << timeStr;
 
-QByteArray
-sha1(QByteArray resBytes) {
-    QCryptographicHash sha(QCryptographicHash::Sha1);
-    sha.addData(resBytes);
-    return sha.result();
-}
+    // QString sha1Input = nonceStr + timeStr + passwd;
+    // qDebug() << "sha1Input:";
+    // qDebug() << sha1Input;
+    hash = new QCryptographicHash(QCryptographicHash::Sha1);
+    // QByteArray sha1Output = QCryptographicHash::hash(sha1Input.toLatin1(),
+    // QCryptographicHash::Sha1);
 
-QString
-passwordDigest(QString& nonce, QString& dateTime, QString& password) {
-    QByteArray res = QString(nonce + dateTime + password).toUtf8();
-    return sha1(res).toBase64();
+    hash->addData(buf, SOAP_WSSE_NONCELEN);
+    hash->addData(timeStr.toLatin1().data(), strlen(timeStr.toLatin1().data()));
+    hash->addData(passwd.toLatin1().data(), strlen(passwd.toLatin1().data()));
+    sha1Output = hash->result();
+    QString passwdDigestStr(sha1Output.toBase64());
+    QString sha1OutputStr(sha1Output.toHex());
+    // qDebug() << "sha1Output" << sha1OutputStr;
+    // qDebug() << "passwdDigestStr:";
+    // qDebug() << passwdDigestStr;
+
+    nonceBase64  = nonceStr;
+    passwdDigest = passwdDigestStr;
+
+    delete hash;
+
+    return true;
 }
 
 Message*
@@ -120,22 +123,12 @@ Message::getMessageWithUserInfo(
     QHash<QString, QString>& namespaces,
     const QString& name,
     const QString& passwd) {
-    namespaces.insert(
-        "wsse",
-        "http://docs.oasis-open.org/wss/2004/01/"
-        "oasis-200401-wss-wssecurity-secext-1.0.xsd");
-    namespaces.insert(
-        "wsu",
-        "http://docs.oasis-open.org/wss/2004/01/"
-        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
+    namespaces.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
+                              "oasis-200401-wss-wssecurity-secext-1.0.xsd");
+    namespaces.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/"
+                             "oasis-200401-wss-wssecurity-utility-1.0.xsd");
     Message*    msg      = new Message(namespaces);
-    QDomElement security = newElement("Security");
-    security.setAttribute("s:mustUnderstand", "1");
-    security.setAttribute(
-        "xmlns",
-        "http://docs.oasis-open.org/wss/2004/01/"
-        "oasis-200401-wss-wssecurity-secext-1.0."
-        "xsd");
+    QDomElement security = newElement("wsse:Security");
 
     QDomElement usernameToken = newElement("wsse:UsernameToken");
     // usernameToken.setAttribute("wsu:Id", "UsernameToken-1");
@@ -150,33 +143,23 @@ Message::getMessageWithUserInfo(
     usernameToken.appendChild(password);
     usernameToken.appendChild(newElement("wsu:Created", current.toTimeSpec(Qt::UTC).toString("yyyy-MM-ddThh:mm:ss")));
 #else /* PasswordDigest  */
-    //    QDomElement username = newElement("wsse:Username", name);todo: i
-    //    remove this line and add next line to handle not respond cams proble,
+    QDomElement username = newElement("wsse:Username", name);
+    QString     passwdDigest;
+    QString     nonceBase64;
+    /* calc passwd Digest and nonce */
+    CalcWssePassword(current, passwd, passwdDigest, nonceBase64);
 
-    QDomElement username = newElement("Username", name);
+    QDomElement password = newElement("wsse:Password", passwdDigest);
+    QDomElement nonce    = newElement("wsse:Nonce", nonceBase64);
+    password.setAttribute("Type", "http://docs.oasis-open.org/wss/2004/01/"
+                                  "oasis-200401-wss-username-token-profile-1.0#"
+                                  "PasswordDigest");
     usernameToken.appendChild(username);
-
-    QString createdStr =
-        QDateTime::currentDateTime().toTimeSpec(Qt::UTC).toString(
-            "yyyy-MM-ddThh:mm:sssZ");
-    usernameToken.appendChild(newElement("wsu:Created", createdStr));
-
-    QString     nonceStr       = nonceCalc();
-    QString     nonceBase64Str = nonceStr.toUtf8().toBase64();
-    QDomElement nonceB64       = newElement("wsse:Nonce", nonceBase64Str);
-    usernameToken.appendChild(nonceB64);
-
-    QString passwordStr     = passwd;
-    QString passwdDigestStr = passwordDigest(nonceStr, createdStr, passwordStr);
-
-    QDomElement password = newElement("wsse:Password", passwdDigestStr);
-    password.setAttribute(
-        "Type",
-        "http://docs.oasis-open.org/wss/2004/01/"
-        "oasis-200401-wss-username-token-profile-1.0#"
-        "PasswordDigest");
-    usernameToken.appendChild(password);
-
+    usernameToken.appendChild(password); // todo
+    usernameToken.appendChild(nonce);
+    usernameToken.appendChild(newElement(
+        "wsu:Created",
+        current.toTimeSpec(Qt::UTC).toString("yyyy-MM-ddThh:mm:ssZ")));
 #endif
 #if 0
     QDomElement timestamp = newElement("wsu:Timestamp");
@@ -191,16 +174,15 @@ Message::getMessageWithUserInfo(
 }
 
 
-      Message::Message(
-          const QHash<QString, QString>& namespaces, QObject* parent)
+Message::Message(const QHash<QString, QString>& namespaces, QObject* parent)
     : QObject(parent) {
     this->mNamespaces = namespaces;
     mDoc.appendChild(mDoc.createProcessingInstruction(
         "xml", "version=\"1.0\" encoding=\"UTF-8\""));
     mEnv = mDoc.createElementNS(
-        "http://www.w3.org/2003/05/soap-envelope", "s:Envelope");
-    mHeader = mDoc.createElement("s:Header");
-    mBody   = mDoc.createElement("s:Body");
+        "http://www.w3.org/2003/05/soap-envelope", "soap:Envelope");
+    mHeader = mDoc.createElement("soap:Header");
+    mBody   = mDoc.createElement("soap:Body");
 }
 
 QString
@@ -210,6 +192,7 @@ Message::toXmlStr() {
         i.next();
         mEnv.setAttribute("xmlns:" + i.key(), i.value());
     }
+
     mEnv.appendChild(mHeader);
     mEnv.appendChild(mBody);
     mDoc.appendChild(mEnv);

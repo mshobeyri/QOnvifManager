@@ -465,6 +465,9 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             "manualType",
             result->getValue("//tds:NTPInformation/tt:NTPManual/tt:Type"));
         networkNTP->setProperty(
+            "name",
+            result->getValue("//tds:NTPInformation/tt:NTPManual/tt:DNSname"));
+        networkNTP->setProperty(
             "ipv4Address",
             result->getValue(
                 "//tds:NTPInformation/tt:NTPManual/tt:IPv4Address"));

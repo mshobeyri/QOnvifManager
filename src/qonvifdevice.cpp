@@ -268,6 +268,7 @@ QOnvifDevice::QOnvifDevice(
             auto& src = networkNTP;
 
             des.dhcp        = src->dhcp();
+            des.name        = src->name();
             des.ipv4Address = src->ipv4Address();
             des.ipv6Address = src->ipv6Address();
             des.manualType  = src->manualType();
