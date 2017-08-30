@@ -184,6 +184,7 @@ signals:
     void ptzConfigurationReceived(Data::Ptz::Config);
     void presetsReceived();
 
+    void getResultReceived(Data, MessageType);
     void setResultReceived(bool, MessageType);
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)

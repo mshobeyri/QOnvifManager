@@ -111,6 +111,9 @@ QOnvifManager::QOnvifManager(
         connect(_device,&QOnvifDevice::presetsReceived,this,[this,_device](){
             emit devicePresetsReceived(d_ptr->idevicesMap.key(_device));
         });
+        connect(_device,&QOnvifDevice::getResultReceived,this,[this,_device](Data _data, MessageType _messageType){
+            emit deviceGetResultReceived(_data, _messageType, d_ptr->idevicesMap.key(_device));
+        });
         connect(_device,&QOnvifDevice::setResultReceived,this,[this,_device](bool _result, MessageType _messageType){
             emit deviceSetResultReceived(_result, _messageType, d_ptr->idevicesMap.key(_device));
         });

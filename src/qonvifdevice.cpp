@@ -68,6 +68,7 @@ QOnvifDevice::QOnvifDevice(
                 deviceInformationHash.value("hardware_id");
 
             emit informationReceived(d_ptr->idata.information);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::Scopes :
@@ -78,6 +79,7 @@ QOnvifDevice::QOnvifDevice(
             d_ptr->idata.scopes.hardware = deviceScopesHash.value("hardware");
 
             emit scopesReceived(d_ptr->idata.scopes);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::DateAndTime :
@@ -90,6 +92,7 @@ QOnvifDevice::QOnvifDevice(
             d_ptr->idata.dateTime.daylightSaving = systemDateAndTime->daylightSavings();
 
             emit dateAndTimeReceived(d_ptr->idata.dateTime);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::Users :
@@ -106,6 +109,7 @@ QOnvifDevice::QOnvifDevice(
             }
 
             emit usersReceived(d_ptr->idata.users);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::Capabilities :
@@ -161,6 +165,7 @@ QOnvifDevice::QOnvifDevice(
              des.rtpRtspTcp    = capabilities->rtpRtspTcp();
 
             emit capabilitiesReceived(d_ptr->idata.capabilities);
+             emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkInterfaces :
@@ -191,6 +196,7 @@ QOnvifDevice::QOnvifDevice(
                                  : false;
 
             emit networkInterfacesReceived(d_ptr->idata.network.interfaces);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkProtocols :
@@ -205,6 +211,7 @@ QOnvifDevice::QOnvifDevice(
             des.networkProtocolsPort    = src->getNetworkProtocolsPort();
 
             emit networkProtocolsReceived(d_ptr->idata.network.protocols);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkDefaultGateway :
@@ -218,6 +225,7 @@ QOnvifDevice::QOnvifDevice(
             des.ipv6Address = src->ipv6Address();
 
             emit networkDefaultGatewayReceived(d_ptr->idata.network.defaultGateway);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkDiscoveryMode :
@@ -230,6 +238,7 @@ QOnvifDevice::QOnvifDevice(
             des.discoveryMode = src->discoveryMode();
 
             emit networkDiscoveryModeReceived(d_ptr->idata.network.discoveryMode);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkDNS :
@@ -245,6 +254,7 @@ QOnvifDevice::QOnvifDevice(
             des.searchDomain = src->searchDomain();
 
             emit networkDNSReceived(d_ptr->idata.network.dns);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkHostname :
@@ -258,6 +268,7 @@ QOnvifDevice::QOnvifDevice(
             des.name = src->name();
 
             emit networkHostnameReceived(d_ptr->idata.network.hostname);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::NetworkNTP :
@@ -274,6 +285,7 @@ QOnvifDevice::QOnvifDevice(
             des.manualType  = src->manualType();
 
             emit networkNTPReceived(d_ptr->idata.network.ntp);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;  
         case MessageType::SetScopes :
@@ -378,6 +390,7 @@ QOnvifDevice::QOnvifDevice(
                 profiles->m_defaultContinuousZoomVelocitySpace;
 
             emit profilesReceived(d_ptr->idata.profiles);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::Profile720p :
@@ -457,6 +470,7 @@ QOnvifDevice::QOnvifDevice(
                 profile720p->m_defaultContinuousZoomVelocitySpace;
 
             emit profile720pReceived(d_ptr->idata.profile720p);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::ProfileD1 :
@@ -534,6 +548,7 @@ QOnvifDevice::QOnvifDevice(
                 profileD1->m_defaultContinuousZoomVelocitySpace;
 
             emit profileD1Received(d_ptr->idata.profileD1);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::VideoEncoderConfigurations :
@@ -564,6 +579,7 @@ QOnvifDevice::QOnvifDevice(
             des.useCount         = src->getUseCount();
 
             emit videoEncoderConfigurationsReceived(d_ptr->idata.mediaConfig.video.encodingConfigs);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::VideoSourceConfigurations :
@@ -578,6 +594,7 @@ QOnvifDevice::QOnvifDevice(
             des.bounds      = src->getBounds();
 
             emit videoSourceConfigurationsReceived(d_ptr->idata.mediaConfig.video.sourceConfig);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::VideoEncoderConfigurationOptions :
@@ -629,6 +646,7 @@ QOnvifDevice::QOnvifDevice(
             d_ptr->idata.mediaConfig.video.encodingConfigs.options.append(des);
 
             emit videoEncoderConfigurationOptionsReceived(d_ptr->idata.mediaConfig.video.encodingConfigs.options);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::StreamUri :
@@ -648,6 +666,7 @@ QOnvifDevice::QOnvifDevice(
             d_ptr->idata.profiles.streamUris.append(streamUriTemp);
 
             emit streamUrisReceived(d_ptr->idata.mediaConfig.video.streamUri);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::ImageSetting :
@@ -664,6 +683,7 @@ QOnvifDevice::QOnvifDevice(
             des.sharpness       = imageSetting->sharpness();
 
             emit imageSettingReceived(d_ptr->idata.mediaConfig.imageSetting);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::ImageSettingOptions :
@@ -684,6 +704,7 @@ QOnvifDevice::QOnvifDevice(
             des.sharpnessMin       = imageSettingOptions->sharpnessMin();
 
             emit imageSettingOptionsReceived(d_ptr->idata.mediaConfig.imageSetting.options);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::SetVideoEncoderConfiguration :
@@ -743,6 +764,7 @@ QOnvifDevice::QOnvifDevice(
                     config->defaultContinuousPanTiltVelocitySpace();
 
             emit ptzConfigurationReceived(d_ptr->idata.ptz.config);
+            emit getResultReceived(d_ptr->idata, messageType);
         }
             break;
         case MessageType::Nodes :

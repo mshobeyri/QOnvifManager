@@ -157,6 +157,7 @@ signals:
     void devicePtzConfigurationReceived(Data::Ptz::Config, QString);
     void devicePresetsReceived(QString);
 
+    void deviceGetResultReceived(Data, device::MessageType, QString);
     void deviceSetResultReceived(bool, device::MessageType, QString);
 };
 
