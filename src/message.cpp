@@ -72,10 +72,10 @@ Message::getOnvifSearchMessage() {
 #define SOAP_WSSE_NONCELEN (20)
 static bool
 CalcWssePassword(
-    const QDateTime& current,
-    const QString&   passwd,
-    QString&         passwdDigest,
-    QString&         nonceBase64) {
+    const QString& timeStr,
+    const QString& passwd,
+    QString&       passwdDigest,
+    QString&       nonceBase64) {
     char                buf[SOAP_WSSE_NONCELEN];
     int                 nonceInt = qrand();
     QByteArray          sha1Output;
@@ -88,21 +88,13 @@ CalcWssePassword(
     QString    nonceStr(nonce.toBase64());
     // qDebug() << "nonceStr:";
     // qDebug() <<  nonceStr;
-    QString timeStr(
-        current.toTimeSpec(Qt::UTC).toString("yyyy-MM-ddThh:mm:ssZ"));
-    // qDebug() << "timeStr:";
-    // qDebug() << timeStr;
-
-    // QString sha1Input = nonceStr + timeStr + passwd;
-    // qDebug() << "sha1Input:";
-    // qDebug() << sha1Input;
     hash = new QCryptographicHash(QCryptographicHash::Sha1);
     // QByteArray sha1Output = QCryptographicHash::hash(sha1Input.toLatin1(),
     // QCryptographicHash::Sha1);
 
     hash->addData(buf, SOAP_WSSE_NONCELEN);
-    hash->addData(timeStr.toLatin1().data(), strlen(timeStr.toLatin1().data()));
-    hash->addData(passwd.toLatin1().data(), strlen(passwd.toLatin1().data()));
+    hash->addData(timeStr.toLocal8Bit().data(), strlen(timeStr.toLocal8Bit().data()));
+    hash->addData(passwd.toLocal8Bit().data(), strlen(passwd.toLocal8Bit().data()));
     sha1Output = hash->result();
     QString passwdDigestStr(sha1Output.toBase64());
     QString sha1OutputStr(sha1Output.toHex());
@@ -123,17 +115,24 @@ Message::getMessageWithUserInfo(
     QHash<QString, QString>& namespaces,
     const QString& name,
     const QString& passwd) {
-    namespaces.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
-                              "oasis-200401-wss-wssecurity-secext-1.0.xsd");
-    namespaces.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/"
-                             "oasis-200401-wss-wssecurity-utility-1.0.xsd");
+    namespaces.insert(
+        "wsse",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-secext-1.0.xsd");
+    namespaces.insert(
+        "wsu",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
     Message*    msg      = new Message(namespaces);
     QDomElement security = newElement("wsse:Security");
 
     QDomElement usernameToken = newElement("wsse:UsernameToken");
     // usernameToken.setAttribute("wsu:Id", "UsernameToken-1");
     // QDateTime current = QDateTime::currentDateTime();
-    QDateTime current = QDateTime::currentDateTime();
+    QDateTime current = QDateTime::currentDateTimeUtc();
+    QString   timeString =
+        current.toString("yyyy-MM-ddThh:mm:ssZ");
+    timeString  ="2017-08-27T11:01:52Z";
 // current.setTime_t(0);
 #if 0 /* PasswordText */
     QDomElement username = newElement("wsse:Username", name);
@@ -147,19 +146,19 @@ Message::getMessageWithUserInfo(
     QString     passwdDigest;
     QString     nonceBase64;
     /* calc passwd Digest and nonce */
-    CalcWssePassword(current, passwd, passwdDigest, nonceBase64);
+    CalcWssePassword(timeString, passwd, passwdDigest, nonceBase64);
 
     QDomElement password = newElement("wsse:Password", passwdDigest);
     QDomElement nonce    = newElement("wsse:Nonce", nonceBase64);
-    password.setAttribute("Type", "http://docs.oasis-open.org/wss/2004/01/"
-                                  "oasis-200401-wss-username-token-profile-1.0#"
-                                  "PasswordDigest");
+    password.setAttribute(
+        "Type",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-username-token-profile-1.0#"
+        "PasswordDigest");
     usernameToken.appendChild(username);
     usernameToken.appendChild(password); // todo
     usernameToken.appendChild(nonce);
-    usernameToken.appendChild(newElement(
-        "wsu:Created",
-        current.toTimeSpec(Qt::UTC).toString("yyyy-MM-ddThh:mm:ssZ")));
+    usernameToken.appendChild(newElement("wsu:Created", timeString));
 #endif
 #if 0
     QDomElement timestamp = newElement("wsu:Timestamp");

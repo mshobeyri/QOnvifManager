@@ -34,13 +34,13 @@ public:
         m_result = result;
     }
 
-    bool isAddMode() const
+    int actionMode() const
     {
-        return m_isAddMode;
+        return m_actionMode;
     }
-    void setIsAddMode(bool isAddMode)
+    void setActionMode(int actionMode)
     {
-        m_isAddMode = isAddMode;
+        m_actionMode = actionMode;
     }
 
 public slots:
@@ -61,7 +61,7 @@ private:
     QStringList m_passWords;
     //Administrator, Operator, User, Anonymous, Extended
     QStringList m_userLevel;
-    bool m_isAddMode;
+    int m_actionMode;
     bool m_result;
 };
 }

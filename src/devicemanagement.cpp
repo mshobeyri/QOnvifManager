@@ -635,7 +635,8 @@ void DeviceManagement::setUsers(Users* users)
     MessageParser* result = sendMessage(msg);
     users->setResult(false);
     if (result != NULL) {
-        if (result->find("//tds:SetUserResponse"))
+        if (result->find("//tds:CreateUsersResponse")||
+                result->find("//tds:SetUserResponse"))
             users->setResult(true);
         else
             users->setResult(false);

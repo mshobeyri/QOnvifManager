@@ -129,7 +129,7 @@ public:
             users.setUserNames(_users[i].username);
             users.setPassWords(_users[i].password);
             users.setUserLevel(_users[i].userLevel);
-            users.setIsAddMode(_users[i].isAddMode);
+            users.setActionMode(_users[i].actionMode);
         }
         ideviceManagement->setUsers(&users);
         return users.result();
