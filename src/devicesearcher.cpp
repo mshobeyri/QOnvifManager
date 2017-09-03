@@ -5,6 +5,7 @@
 #include "messageparser.h"
 #include <QCoreApplication>
 #include <QNetworkInterface>
+#include <QTimer>
 
 #ifdef WIN32
 #include <WS2tcpip.h>
@@ -61,8 +62,16 @@ DeviceSearcher::DeviceSearcher(QHostAddress &addr, QObject *parent) : QObject(pa
 //        printf("Set ----> SO_RCVBUF error\n");
 //    }
 
-    connect(mUdpSocket, SIGNAL(readyRead()),
-            this, SLOT(readPendingDatagrams()));
+    auto timer = new QTimer(this);
+    timer->setSingleShot(true);
+    timer->setInterval(1000);
+    connect(mUdpSocket, &QUdpSocket::readyRead,
+            this, &DeviceSearcher::readPendingDatagrams);
+
+    connect(mUdpSocket, &QUdpSocket::readyRead,
+            timer, static_cast<void (QTimer::*)()>(&QTimer::start));
+
+    connect(timer,&QTimer::timeout,this,&DeviceSearcher::deviceSearchingEnded);
 }
 
 DeviceSearcher::~DeviceSearcher()
@@ -161,5 +170,4 @@ void DeviceSearcher::readPendingDatagrams()
         device_infos.insert("metadata_version", parser.getValue("//d:ProbeMatches/d:ProbeMatch/d:MetadataVersion"));
         emit receiveData(device_infos);
     } while((mUdpSocket->hasPendingDatagrams()));
-    emit deviceSearchingEnded();
 }
