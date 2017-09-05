@@ -580,6 +580,8 @@ QOnvifDevice::QOnvifDevice(
 
             emit videoEncoderConfigurationsReceived(d_ptr->idata.mediaConfig.video.encodingConfigs);
             emit getResultReceived(d_ptr->idata, messageType);
+
+            getVideoEncoderConfigurationOptions();
         }
             break;
         case MessageType::VideoSourceConfigurations :
