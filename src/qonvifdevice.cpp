@@ -1099,11 +1099,27 @@ QOnvifDevice::getVideoEncoderConfigurationOptions() {
     auto configToken  = d_ptr->idata.mediaConfig.video.encodingConfigs.token;
     auto profileToken = d_ptr->idata.profiles.toKenPro;
     auto size         = qMin(configToken.length(), profileToken.length());
-    for (int i = 0; i < size; i++) {
+
+    if(size>0)
+    {
         QVariantList parameters;
-        parameters.append(configToken[i]);
-        parameters.append(profileToken[i]);
+        parameters.append(configToken[0]);
+        parameters.append(profileToken[0]);
         d_ptr->imediaManagement->getData(MessageType::VideoEncoderConfigurationOptions, parameters);
+
+        auto obj = new QObject;
+        connect(this,&QOnvifDevice::videoEncoderConfigurationOptionsReceived,obj,[this,obj,configToken,profileToken,size, i=0]()mutable{
+            i++;
+            if(i==size)
+            {
+                obj->deleteLater();
+                return;
+            }
+            QVariantList parameters;
+            parameters.append(configToken[i]);
+            parameters.append(profileToken[i]);
+            d_ptr->imediaManagement->getData(MessageType::VideoEncoderConfigurationOptions, parameters);
+        });
     }
 }
 
@@ -1129,11 +1145,31 @@ QOnvifDevice::getStreamUris() {
     d_ptr->idata.profiles.streamUris.clear();
 
     // get video stream uri
-    for (int i = 0; i < d_ptr->idata.profiles.toKenPro.length(); i++) {
-        QVariantList parameters;
-        parameters.append(d_ptr->idata.profiles.toKenPro.value(i));
+//    for (int i = 0; i < d_ptr->idata.profiles.toKenPro.length(); i++) {
+//        QVariantList parameters;
+//        parameters.append(d_ptr->idata.profiles.toKenPro.value(i));
 
+//        d_ptr->imediaManagement->getData(MessageType::StreamUri, parameters);
+//    }
+
+    if(d_ptr->idata.profiles.toKenPro.length()>0)
+    {
+        QVariantList parameters;
+        parameters.append(d_ptr->idata.profiles.toKenPro.value(0));
         d_ptr->imediaManagement->getData(MessageType::StreamUri, parameters);
+
+        auto obj = new QObject;
+        connect(this,&QOnvifDevice::streamUrisReceived,obj,[this,obj, i=0]()mutable{
+            i++;
+            if(i==d_ptr->idata.profiles.toKenPro.length())
+            {
+                obj->deleteLater();
+                return;
+            }
+            QVariantList parameters;
+            parameters.append(d_ptr->idata.profiles.toKenPro.value(i));
+            d_ptr->imediaManagement->getData(MessageType::StreamUri, parameters);
+        });
     }
 }
 
