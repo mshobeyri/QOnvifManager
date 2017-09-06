@@ -647,8 +647,7 @@ QOnvifDevice::QOnvifDevice(
             }
             d_ptr->idata.mediaConfig.video.encodingConfigs.options.append(des);
 
-            emit videoEncoderConfigurationOptionsReceived(d_ptr->idata.mediaConfig.video.encodingConfigs.options);
-            emit getResultReceived(d_ptr->idata, messageType);
+            emit videoEncoderConfigurationOptionReceived(des);
         }
             break;
         case MessageType::StreamUri :
@@ -666,9 +665,7 @@ QOnvifDevice::QOnvifDevice(
                 d_ptr->idata.mediaConfig.video.streamUri = streamUriTemp;
 
             d_ptr->idata.profiles.streamUris.append(streamUriTemp);
-
-            emit streamUrisReceived(d_ptr->idata.mediaConfig.video.streamUri);
-            emit getResultReceived(d_ptr->idata, messageType);
+            emit streamUrisReceived(streamUriTemp);
         }
             break;
         case MessageType::ImageSetting :
@@ -1108,11 +1105,12 @@ QOnvifDevice::getVideoEncoderConfigurationOptions() {
         d_ptr->imediaManagement->getData(MessageType::VideoEncoderConfigurationOptions, parameters);
 
         auto obj = new QObject;
-        connect(this,&QOnvifDevice::videoEncoderConfigurationOptionsReceived,obj,[this,obj,configToken,profileToken,size, i=0]()mutable{
+        connect(this,&QOnvifDevice::videoEncoderConfigurationOptionReceived,obj,[this,obj,configToken,profileToken,size, i=0]()mutable{
             i++;
             if(i==size)
             {
                 obj->deleteLater();
+                emit getResultReceived(d_ptr->idata, MessageType::VideoEncoderConfigurationOptions);
                 return;
             }
             QVariantList parameters;
@@ -1164,6 +1162,7 @@ QOnvifDevice::getStreamUris() {
             if(i==d_ptr->idata.profiles.toKenPro.length())
             {
                 obj->deleteLater();
+                emit getResultReceived(d_ptr->idata, MessageType::StreamUri);
                 return;
             }
             QVariantList parameters;

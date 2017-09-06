@@ -149,7 +149,7 @@ signals:
     void deviceProfileD1Received(Data::Profiles, QString);
     void deviceVideoEncoderConfigurationsReceived(Data::MediaConfig::Video::EncoderConfigs, QString);
     void deviceVideoSourceConfigurationsReceived(Data::MediaConfig::Video::SourceConfig, QString);
-    void deviceVideoEncoderConfigurationOptionsReceived(Data::MediaConfig::Video::EncoderConfigs::Options, QString);
+    void deviceVideoEncoderConfigurationOptionReceived(Data::MediaConfig::Video::EncoderConfigs::Option, QString);
     void deviceStreamUrisReceived(Data::MediaConfig::Video::StreamUri, QString);
     void deviceImageSettingReceived(Data::MediaConfig::ImageSetting, QString);
     void deviceImageSettingOptionsReceived(Data::MediaConfig::ImageSetting::Options, QString);

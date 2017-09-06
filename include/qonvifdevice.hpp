@@ -176,7 +176,7 @@ signals:
     void profileD1Received(Data::Profiles);
     void videoEncoderConfigurationsReceived(Data::MediaConfig::Video::EncoderConfigs);
     void videoSourceConfigurationsReceived(Data::MediaConfig::Video::SourceConfig);
-    void videoEncoderConfigurationOptionsReceived(Data::MediaConfig::Video::EncoderConfigs::Options);
+    void videoEncoderConfigurationOptionReceived(Data::MediaConfig::Video::EncoderConfigs::Option);
     void streamUrisReceived(Data::MediaConfig::Video::StreamUri);
     void imageSettingReceived(Data::MediaConfig::ImageSetting);
     void imageSettingOptionsReceived(Data::MediaConfig::ImageSetting::Options);

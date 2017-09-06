@@ -93,8 +93,8 @@ QOnvifManager::QOnvifManager(
         connect(_device,&QOnvifDevice::videoSourceConfigurationsReceived,this,[this,_device](Data::MediaConfig::Video::SourceConfig d){
             emit deviceVideoSourceConfigurationsReceived(d, d_ptr->idevicesMap.key(_device));
         });
-        connect(_device,&QOnvifDevice::videoEncoderConfigurationOptionsReceived,this,[this,_device](Data::MediaConfig::Video::EncoderConfigs::Options d){
-            emit deviceVideoEncoderConfigurationOptionsReceived(d, d_ptr->idevicesMap.key(_device));
+        connect(_device,&QOnvifDevice::videoEncoderConfigurationOptionReceived,this,[this,_device](Data::MediaConfig::Video::EncoderConfigs::Option d){
+            emit deviceVideoEncoderConfigurationOptionReceived(d, d_ptr->idevicesMap.key(_device));
         });
         connect(_device,&QOnvifDevice::streamUrisReceived,this,[this,_device](Data::MediaConfig::Video::StreamUri d){
             emit deviceStreamUrisReceived(d, d_ptr->idevicesMap.key(_device));
