@@ -48,7 +48,7 @@ public:
         if (requestQueue.isEmpty())
             return;
 
-        QPair<MessageType, QVariant> request = requestQueue.dequeue();
+        auto& request = requestQueue.first();
 
         switch (request.first) {
         case MessageType::Information:
@@ -385,6 +385,7 @@ QOnvifDevice::QOnvifDevice(
                 break;
             }
 
+            d_ptr->requestQueue.dequeue();
             d_ptr->sendRequest();
         });
 
@@ -826,6 +827,7 @@ QOnvifDevice::QOnvifDevice(
                 break;
             }
 
+            d_ptr->requestQueue.dequeue();
             d_ptr->sendRequest();
         });
 
@@ -907,6 +909,7 @@ QOnvifDevice::QOnvifDevice(
                 break;
             }
 
+            d_ptr->requestQueue.dequeue();
             d_ptr->sendRequest();
         });
 }
@@ -1179,7 +1182,7 @@ void
 QOnvifDevice::getVideoEncoderConfigurationOptions() {
 
     if (d_ptr->idata.profiles.toKenPro.isEmpty()) {
-        d_ptr->imediaManagement->getData(MessageType::Profiles);
+        getProfiles();
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1194,8 +1197,7 @@ QOnvifDevice::getVideoEncoderConfigurationOptions() {
             return;
     }
     if (d_ptr->idata.mediaConfig.video.encodingConfigs.token.isEmpty()) {
-        d_ptr->imediaManagement->getData(
-            MessageType::VideoEncoderConfigurations);
+        getVideoEncoderConfigurations();
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1233,7 +1235,7 @@ void
 QOnvifDevice::getStreamUris() {
 
     if (d_ptr->idata.profiles.toKenPro.isEmpty()) {
-        d_ptr->imediaManagement->getData(MessageType::Profiles);
+        getProfiles();
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1249,15 +1251,6 @@ QOnvifDevice::getStreamUris() {
     }
 
     d_ptr->idata.profiles.streamUris.clear();
-
-    // get video stream uri
-    //    for (int i = 0; i < d_ptr->idata.profiles.toKenPro.length(); i++) {
-    //        QVariantList parameters;
-    //        parameters.append(d_ptr->idata.profiles.toKenPro.value(i));
-
-    //        d_ptr->imediaManagement->getData(MessageType::StreamUri,
-    //        parameters);
-    //    }
 
     for (int i = 0; i < d_ptr->idata.profiles.toKenPro.length(); ++i) {
         QVariantList parameters;
@@ -1279,7 +1272,7 @@ QOnvifDevice::getImageSetting() {
 void
 QOnvifDevice::getImageSettingOptions() {
     if (d_ptr->idata.profiles.sourceTokenVsc.isEmpty()) {
-        d_ptr->imediaManagement->getData(MessageType::Profiles);
+        getProfiles();
 
         QTimer timer;
         timer.setSingleShot(true);
