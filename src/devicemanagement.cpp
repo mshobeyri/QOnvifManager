@@ -472,7 +472,8 @@ DeviceManagement::onMessageParserReceived(
     } break;
     case device::MessageType::SetUsers: {
         bool r = false;
-        if (result->find("//tds:SetUserResponse"))
+        if (result->find("//tds:CreateUsersResponse") ||
+            result->find("//tds:SetUserResponse"))
             r = true;
         var   = qVariantFromValue(r);
     } break;

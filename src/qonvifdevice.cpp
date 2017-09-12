@@ -1023,7 +1023,7 @@ QOnvifDevice::setUsers(Data::Users _users) {
         data->setUserNames(_users[i].username);
         data->setPassWords(_users[i].password);
         data->setUserLevel(_users[i].userLevel);
-        data->setIsAddMode(_users[i].isAddMode);
+        data->setActionMode(_users[i].actionMode);
     }
 
     d_ptr->addRequest(
