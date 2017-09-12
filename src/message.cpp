@@ -131,8 +131,7 @@ Message::getMessageWithUserInfo(
     // QDateTime current = QDateTime::currentDateTime();
     QDateTime current = QDateTime::currentDateTimeUtc();
     QString   timeString =
-        current.toString("yyyy-MM-ddThh:mm:ssZ");
-    timeString  ="2017-08-27T11:01:52Z";
+        current.toString(Qt::ISODate);
 // current.setTime_t(0);
 #if 0 /* PasswordText */
     QDomElement username = newElement("wsse:Username", name);
