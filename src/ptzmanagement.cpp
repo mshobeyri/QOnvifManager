@@ -980,7 +980,6 @@ PtzManagement::getData(
     default:
         msg->deleteLater();
         return;
-        break;
     }
 
     sendMessage(msg, messageType);
@@ -1041,7 +1040,6 @@ PtzManagement::setData(device::MessageType messageType, QVariant data) {
     default:
         msg->deleteLater();
         return;
-        break;
     }
 
     msg->appendToBody(domElement);

@@ -55,7 +55,7 @@ DeviceSearcher::DeviceSearcher(QHostAddress& addr, QObject* parent)
     // QHostAddress host("192.168.0.1");
     // mUdpSocket->bind(QHostAddress::Any, 0, QUdpSocket::ShareAddress);
     mUdpSocket->bind(addr, 0, QUdpSocket::ShareAddress);
-    int opt = 4 * 1024 * 1024;
+    // int opt = 4 * 1024 * 1024;
 
     //    if (setsockopt(mUdpSocket->socketDescriptor(), SOL_SOCKET,
     //                   SO_RCVBUF, (char *)&opt, sizeof(int)) < 0) {
@@ -103,7 +103,7 @@ void
 DeviceSearcher::readPendingDatagrams() {
     do {
         QByteArray datagram;
-        datagram.resize(mUdpSocket->pendingDatagramSize());
+        datagram.resize(static_cast<int>(mUdpSocket->pendingDatagramSize()));
         QHostAddress sender;
         quint16      senderPort;
         mUdpSocket->readDatagram(

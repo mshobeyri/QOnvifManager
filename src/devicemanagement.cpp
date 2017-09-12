@@ -608,7 +608,6 @@ DeviceManagement::getData(device::MessageType messageType) {
     default:
         msg->deleteLater();
         return;
-        break;
     }
 
     sendMessage(msg, messageType);
@@ -689,7 +688,6 @@ DeviceManagement::setData(device::MessageType messageType, QVariant data) {
     default:
         msg->deleteLater();
         return;
-        break;
     }
 
     msg->appendToBody(domElement);
