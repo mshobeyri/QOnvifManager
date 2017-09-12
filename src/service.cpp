@@ -7,38 +7,48 @@ using namespace ONVIF;
 
 Service::Service(
     const QString& wsdlUrl, const QString& username, const QString& password) {
-    mUrl = wsdlUrl;
+    mUrl      = wsdlUrl;
     mUsername = username;
     mPassword = password;
 }
 
-Service::~Service() {
-}
+Service::~Service() {}
 
 void
-Service::sendMessage(Message &message, device::MessageType messageType, const QString& namespaceKey) {
+Service::sendMessage(
+    Message&            message,
+    device::MessageType messageType,
+    const QString&      namespaceKey) {
     sendMessage(&message, messageType, namespaceKey);
 }
 
 void
-Service::sendMessage(Message* message, device::MessageType messageType, const QString& namespaceKey) {
+Service::sendMessage(
+    Message*            message,
+    device::MessageType messageType,
+    const QString&      namespaceKey) {
     QString data = message->toXmlStr();
 
-    QUrl url(mUrl);
+    QUrl            url(mUrl);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader,"Content-Type: text/xml");
-    QNetworkReply *reply = networkManager.post(request, data.toUtf8());
-    connect(reply, &QNetworkReply::finished, reply, [this, reply, namespaceKey, messageType](){
-        QString result = reply->readAll();
+    request.setHeader(
+        QNetworkRequest::ContentTypeHeader, "Content-Type: text/xml");
+    QNetworkReply* reply = networkManager.post(request, data.toUtf8());
+    connect(
+        reply,
+        &QNetworkReply::finished,
+        reply,
+        [this, reply, namespaceKey, messageType]() {
+            QString result = reply->readAll();
 
-        if (result != "")
-        {
-            QHash<QString, QString> names = namespaces(namespaceKey);
-            emit messageParserReceived(new MessageParser(result, names), messageType);
-        }
+            if (result != "") {
+                QHash<QString, QString> names = namespaces(namespaceKey);
+                emit messageParserReceived(
+                    new MessageParser(result, names), messageType);
+            }
 
-        reply->deleteLater();
-    });
+            reply->deleteLater();
+        });
 }
 
 Message*

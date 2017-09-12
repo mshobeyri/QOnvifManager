@@ -42,7 +42,8 @@ public:
     void getDeviceInformation(QString _deviceEndPointAddress);
     void getDeviceScopes(QString _deviceEndPointAddress);
     void getDeviceVideoEncoderConfigurations(QString _deviceEndPointAddress);
-    void getDeviceVideoEncoderConfigurationOptions(QString _deviceEndPointAddress);
+    void
+    getDeviceVideoEncoderConfigurationOptions(QString _deviceEndPointAddress);
     void getDeviceStreamUris(QString _deviceEndPointAddress);
     void getDeviceProfiles(QString _deviceEndPointAddress);
     void getDeviceNetworkInterfaces(QString _deviceEndPointAddress);
@@ -60,46 +61,46 @@ public:
 
 
     void setDeviceDateAndTime(
-            QString   _deviceEndPointAddress,
-            QDateTime _dateTime,
-            QString   _zone,
-            bool      _daylightSaving,
-            bool      _isLocal);
+        QString   _deviceEndPointAddress,
+        QDateTime _dateTime,
+        QString   _zone,
+        bool      _daylightSaving,
+        bool      _isLocal);
     void setDeviceImageSetting(
-            QString                          _deviceEndPointAddress,
-            Data::MediaConfig::ImageSetting& _imageSetting);
+        QString                          _deviceEndPointAddress,
+        Data::MediaConfig::ImageSetting& _imageSetting);
 
     void setDefaulUsernameAndPassword(QString _username, QString _password);
     void setDeviceScopes(
-            QString _deviceEndPointAddress, QString _name, QString _location);
+        QString _deviceEndPointAddress, QString _name, QString _location);
     void setDeviceVideoEncoderConfiguration(
-            QString                                 _deviceEndPointAddress,
-            Data::MediaConfig::Video::EncoderConfig _videoConfig);
+        QString                                 _deviceEndPointAddress,
+        Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
     void setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users);
 
     void setDeviceNetworkInterfaces(
-            QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces);
+        QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces);
 
     void setDeviceNetworkProtocols(
-            QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
+        QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
 
     void setDeviceNetworkDefaultGateway(
-            QString                       _deviceEndPointAddress,
-            Data::Network::DefaultGateway _defaultGateway);
+        QString                       _deviceEndPointAddress,
+        Data::Network::DefaultGateway _defaultGateway);
 
     void setDeviceNetworkDiscoveryMode(
-            QString                      _deviceEndPointAddress,
-            Data::Network::DiscoveryMode _discoveryMode);
+        QString                      _deviceEndPointAddress,
+        Data::Network::DiscoveryMode _discoveryMode);
 
     void setDeviceNetworkDNS(
-            QString _deviceEndPointAddress, Data::Network::DNS _dns);
+        QString _deviceEndPointAddress, Data::Network::DNS _dns);
 
     void setDeviceNetworkHostname(
-            QString _deviceEndPointAddress, Data::Network::Hostname _hostname);
+        QString _deviceEndPointAddress, Data::Network::Hostname _hostname);
 
     void setDeviceNetworkNTP(
-            QString _deviceEndPointAddress, Data::Network::NTP _ntp);
+        QString _deviceEndPointAddress, Data::Network::NTP _ntp);
 
     void resetFactoryDevice(QString _deviceEndPointAddress, bool isHard);
     void rebootDevice(QString _deviceEndPointAddress);
@@ -107,10 +108,10 @@ public:
     // ptz
 
     void continuousMove(
-            QString     _deviceEndPointAddress,
-            const float _x,
-            const float _y,
-            const float _z);
+        QString     _deviceEndPointAddress,
+        const float _x,
+        const float _y,
+        const float _z);
 
     void stopMovement(QString _deviceEndPointAddress);
 
@@ -138,8 +139,10 @@ signals:
     void deviceCapabilitiesReceived(Data::Capabilities, QString);
     void deviceNetworkInterfacesReceived(Data::Network::Interfaces, QString);
     void deviceNetworkProtocolsReceived(Data::Network::Protocols, QString);
-    void deviceNetworkDefaultGatewayReceived(Data::Network::DefaultGateway, QString);
-    void deviceNetworkDiscoveryModeReceived(Data::Network::DiscoveryMode, QString);
+    void deviceNetworkDefaultGatewayReceived(
+        Data::Network::DefaultGateway, QString);
+    void deviceNetworkDiscoveryModeReceived(
+        Data::Network::DiscoveryMode, QString);
     void deviceNetworkDNSReceived(Data::Network::DNS, QString);
     void deviceNetworkHostnameReceived(Data::Network::Hostname, QString);
     void deviceNetworkNTPReceived(Data::Network::NTP, QString);
@@ -147,12 +150,16 @@ signals:
     void deviceProfilesReceived(Data::Profiles, QString);
     void deviceProfile720pReceived(Data::Profiles, QString);
     void deviceProfileD1Received(Data::Profiles, QString);
-    void deviceVideoEncoderConfigurationsReceived(Data::MediaConfig::Video::EncoderConfigs, QString);
-    void deviceVideoSourceConfigurationsReceived(Data::MediaConfig::Video::SourceConfig, QString);
-    void deviceVideoEncoderConfigurationOptionReceived(Data::MediaConfig::Video::EncoderConfigs::Option, QString);
+    void deviceVideoEncoderConfigurationsReceived(
+        Data::MediaConfig::Video::EncoderConfigs, QString);
+    void deviceVideoSourceConfigurationsReceived(
+        Data::MediaConfig::Video::SourceConfig, QString);
+    void deviceVideoEncoderConfigurationOptionReceived(
+        Data::MediaConfig::Video::EncoderConfigs::Option, QString);
     void deviceStreamUrisReceived(Data::MediaConfig::Video::StreamUri, QString);
     void deviceImageSettingReceived(Data::MediaConfig::ImageSetting, QString);
-    void deviceImageSettingOptionsReceived(Data::MediaConfig::ImageSetting::Options, QString);
+    void deviceImageSettingOptionsReceived(
+        Data::MediaConfig::ImageSetting::Options, QString);
 
     void devicePtzConfigurationReceived(Data::Ptz::Config, QString);
     void devicePresetsReceived(QString);

@@ -2,13 +2,6 @@
 
 using namespace ONVIF;
 
-StreamUri::StreamUri(QObject *parent):QObject(parent)
-{
+StreamUri::StreamUri(QObject* parent) : QObject(parent) {}
 
-}
-
-StreamUri::~StreamUri()
-{
-
-}
-
+StreamUri::~StreamUri() {}

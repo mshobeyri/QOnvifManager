@@ -9,7 +9,7 @@ NetworkDiscoveryMode::toxml() {
     setDiscoveryMode = newElement("SetDiscoveryMode");
     setDiscoveryMode.setAttribute(
         "xmlns", "http://www.onvif.org/ver10/device/wsdl");
-    discoveryMode    = newElement("DiscoveryMode",this->discoveryMode());
+    discoveryMode = newElement("DiscoveryMode", this->discoveryMode());
     setDiscoveryMode.appendChild(discoveryMode);
     return setDiscoveryMode;
 }

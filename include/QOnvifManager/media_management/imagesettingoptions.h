@@ -8,111 +8,87 @@ class ImageSettingOptions : public QObject
 public:
     ImageSettingOptions(QObject* parent = NULL);
 
-    double brightnessMax() const
-    {
+    double brightnessMax() const {
         return m_brightnessMax;
     }
-    void setBrightnessMax(double brightnessMax)
-    {
+    void setBrightnessMax(double brightnessMax) {
         m_brightnessMax = brightnessMax;
     }
 
-    double brightnessMin() const
-    {
+    double brightnessMin() const {
         return m_brightnessMin;
     }
-    void setBrightnessMin(double brightnessMin)
-    {
+    void setBrightnessMin(double brightnessMin) {
         m_brightnessMin = brightnessMin;
     }
 
-    double colorSaturationMax() const
-    {
+    double colorSaturationMax() const {
         return m_colorSaturationMax;
     }
-    void setColorSaturationMax(double colorSaturationMax)
-    {
+    void setColorSaturationMax(double colorSaturationMax) {
         m_colorSaturationMax = colorSaturationMax;
     }
 
-    double colorSaturationMin() const
-    {
+    double colorSaturationMin() const {
         return m_colorSaturationMin;
     }
-    void setColorSaturationMin(double colorSaturationMin)
-    {
+    void setColorSaturationMin(double colorSaturationMin) {
         m_colorSaturationMin = colorSaturationMin;
     }
 
-    double contrastMax() const
-    {
+    double contrastMax() const {
         return m_contrastMax;
     }
-    void setContrastMax(double contrastMax)
-    {
+    void setContrastMax(double contrastMax) {
         m_contrastMax = contrastMax;
     }
 
-    double contrastMin() const
-    {
+    double contrastMin() const {
         return m_contrastMin;
     }
-    void setContrastMin(double contrastMin)
-    {
+    void setContrastMin(double contrastMin) {
         m_contrastMin = contrastMin;
     }
 
-    double sharpnessMax() const
-    {
+    double sharpnessMax() const {
         return m_sharpnessMax;
     }
-    void setSharpnessMax(double sharpnessMax)
-    {
+    void setSharpnessMax(double sharpnessMax) {
         m_sharpnessMax = sharpnessMax;
     }
 
-    double sharpnessMin() const
-    {
+    double sharpnessMin() const {
         return m_sharpnessMin;
     }
-    void setSharpnessMin(double sharpnessMin)
-    {
+    void setSharpnessMin(double sharpnessMin) {
         m_sharpnessMin = sharpnessMin;
     }
 
-    double defaultSpeedMax() const
-    {
+    double defaultSpeedMax() const {
         return m_defaultSpeedMax;
     }
-    void setDefaultSpeedMax(double defaultSpeedMax)
-    {
+    void setDefaultSpeedMax(double defaultSpeedMax) {
         m_defaultSpeedMax = defaultSpeedMax;
     }
 
-    double defaultSpeedMin() const
-    {
+    double defaultSpeedMin() const {
         return m_defaultSpeedMin;
     }
-    void setDefaultSpeedMin(double defaultSpeedMin)
-    {
+    void setDefaultSpeedMin(double defaultSpeedMin) {
         m_defaultSpeedMin = defaultSpeedMin;
     }
 
-    double exposureIrisMax() const
-    {
+    double exposureIrisMax() const {
         return m_exposureIrisMax;
     }
-    void setExposureIrisMax(double exposureIrisMax)
-    {
+    void setExposureIrisMax(double exposureIrisMax) {
         m_exposureIrisMax = exposureIrisMax;
     }
 
-    double exposureIrisMin() const
-    {
+    double exposureIrisMin() const {
         return m_exposureIrisMin;
     }
-    void setExposureIrisMin(double exposureIrisMin)
-    {
+    void setExposureIrisMin(double exposureIrisMin) {
         m_exposureIrisMin = exposureIrisMin;
     }
 

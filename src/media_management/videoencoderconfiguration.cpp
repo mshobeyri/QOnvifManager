@@ -8,10 +8,10 @@ VideoEncoderConfiguration::~VideoEncoderConfiguration() {}
 QDomElement
 VideoEncoderConfiguration::toxml() {
     QDomElement setVideoConfiguration, configuration, width, height, name,
-        useCount, encoding, resolution, quality, rateControl,
-        frameRateLimit, encodingInterval, bitrateLimit, h264, h264profile,
-        govLength, multicast, address, type, ipv4Address, port, ttl, autoStart,
-        sessionTimeout, forcePresistence;
+        useCount, encoding, resolution, quality, rateControl, frameRateLimit,
+        encodingInterval, bitrateLimit, h264, h264profile, govLength, multicast,
+        address, type, ipv4Address, port, ttl, autoStart, sessionTimeout,
+        forcePresistence;
 
     setVideoConfiguration = newElement("SetVideoEncoderConfiguration");
     setVideoConfiguration.setAttribute(
@@ -19,19 +19,19 @@ VideoEncoderConfiguration::toxml() {
 
     configuration = newElement("Configuration");
     configuration.setAttribute("token", this->token());
-    name          = newElement("Name", this->name());
+    name = newElement("Name", this->name());
     name.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    useCount      = newElement("UseCount", QString::number(this->useCount()));
+    useCount = newElement("UseCount", QString::number(this->useCount()));
     useCount.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    encoding      = newElement("Encoding", this->encoding());
+    encoding = newElement("Encoding", this->encoding());
     encoding.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    resolution    = newElement("Resolution");
+    resolution = newElement("Resolution");
     resolution.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    width         = newElement("Width", QString::number(this->width()));
-    height        = newElement("Height", QString::number(this->height()));
-    quality       = newElement("Quality", QString::number(this->quality()));
+    width   = newElement("Width", QString::number(this->width()));
+    height  = newElement("Height", QString::number(this->height()));
+    quality = newElement("Quality", QString::number(this->quality()));
     quality.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
-    rateControl   = newElement("RateControl");
+    rateControl = newElement("RateControl");
     rateControl.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     frameRateLimit =
         newElement("FrameRateLimit", QString::number(this->frameRateLimit()));
@@ -39,7 +39,7 @@ VideoEncoderConfiguration::toxml() {
         "EncodingInterval", QString::number(this->encodingInterval()));
     bitrateLimit =
         newElement("BitrateLimit", QString::number(this->bitrateLimit()));
-    h264        = newElement("H264");
+    h264 = newElement("H264");
     h264.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     govLength   = newElement("GovLength", QString::number(this->govLength()));
     h264profile = newElement("H264Profile", this->h264Profile());
@@ -52,7 +52,7 @@ VideoEncoderConfiguration::toxml() {
     ttl         = newElement("TTL", QString::number(this->ttl()));
     autoStart =
         newElement("AutoStart", this->autoStart() == true ? "true" : "false");
-    sessionTimeout   = newElement("SessionTimeout", this->sessionTimeout());
+    sessionTimeout = newElement("SessionTimeout", this->sessionTimeout());
     sessionTimeout.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
     forcePresistence = newElement("ForcePersistence", "true");
 

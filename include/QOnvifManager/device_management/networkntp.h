@@ -44,21 +44,17 @@ public:
         m_ipv6Address = ipv6Address;
     }
 
-    bool result() const
-    {
+    bool result() const {
         return m_result;
     }
-    void setResult(bool result)
-    {
+    void setResult(bool result) {
         m_result = result;
     }
 
-    QString name() const
-    {
+    QString name() const {
         return m_name;
     }
-    void setName(const QString &name)
-    {
+    void setName(const QString& name) {
         m_name = name;
     }
 

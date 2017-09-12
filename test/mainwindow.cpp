@@ -17,10 +17,14 @@ MainWindow::MainWindow(QWidget* parent)
         &MainWindow::onNewDeviceFinded);
 
 
-    connect(ionvifManager,&QOnvifManager::deviceDateAndTimeReceived,this,[this](Data::DateTime _dataAndTime){
-        ui->dateTimeEditLocal->setDateTime(_dataAndTime.localTime);
-        ui->dateTimeEditUtc->setDateTime(_dataAndTime.utcTime);
-    });
+    connect(
+        ionvifManager,
+        &QOnvifManager::deviceDateAndTimeReceived,
+        this,
+        [this](Data::DateTime _dataAndTime) {
+            ui->dateTimeEditLocal->setDateTime(_dataAndTime.localTime);
+            ui->dateTimeEditUtc->setDateTime(_dataAndTime.utcTime);
+        });
 
     on_btnRefresh_clicked();
 }

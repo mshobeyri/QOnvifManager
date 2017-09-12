@@ -2,13 +2,7 @@
 
 using namespace ONVIF;
 
-AudioEncoderConfigurations::AudioEncoderConfigurations(QObject *parent):QObject(parent)
-{
+AudioEncoderConfigurations::AudioEncoderConfigurations(QObject* parent)
+    : QObject(parent) {}
 
-}
-
-AudioEncoderConfigurations::~AudioEncoderConfigurations()
-{
-
-}
-
+AudioEncoderConfigurations::~AudioEncoderConfigurations() {}

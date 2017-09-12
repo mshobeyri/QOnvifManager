@@ -12,8 +12,8 @@ public:
         : iuserName(_username), ipassword(_password) {}
     ~QOnvifManagerPrivate() {}
 
-    QString                              iuserName;
-    QString                              ipassword;
+    QString iuserName;
+    QString ipassword;
     QMap<QString, QOnvifDevice*> idevicesMap;
     QHostAddress           ihostAddress;
     ONVIF::DeviceSearcher* ideviceSearcher;
@@ -40,84 +40,213 @@ QOnvifManager::QOnvifManager(
         &ONVIF::DeviceSearcher::deviceSearchingEnded,
         [this]() { emit deviceSearchingEnded(); });
 
-    connect(this,&QOnvifManager::newDeviceFound,this,[this](device::QOnvifDevice* _device){
+    connect(
+        this,
+        &QOnvifManager::newDeviceFound,
+        this,
+        [this](device::QOnvifDevice* _device) {
 
-        connect(_device,&QOnvifDevice::informationReceived,this,[this,_device](Data::Information d){
-            emit deviceInformationReceived(d, d_ptr->idevicesMap.key(_device));
+            connect(
+                _device,
+                &QOnvifDevice::informationReceived,
+                this,
+                [this, _device](Data::Information d) {
+                    emit deviceInformationReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::scopesReceived,
+                this,
+                [this, _device](Data::Scopes d) {
+                    emit deviceScopesReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::dateAndTimeReceived,
+                this,
+                [this, _device](Data::DateTime d) {
+                    emit deviceDateAndTimeReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::usersReceived,
+                this,
+                [this, _device](Data::Users d) {
+                    emit deviceUsersReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::capabilitiesReceived,
+                this,
+                [this, _device](Data::Capabilities d) {
+                    emit deviceCapabilitiesReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkInterfacesReceived,
+                this,
+                [this, _device](Data::Network::Interfaces d) {
+                    emit deviceNetworkInterfacesReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkProtocolsReceived,
+                this,
+                [this, _device](Data::Network::Protocols d) {
+                    emit deviceNetworkProtocolsReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkDefaultGatewayReceived,
+                this,
+                [this, _device](Data::Network::DefaultGateway d) {
+                    emit deviceNetworkDefaultGatewayReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkDiscoveryModeReceived,
+                this,
+                [this, _device](Data::Network::DiscoveryMode d) {
+                    emit deviceNetworkDiscoveryModeReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkDNSReceived,
+                this,
+                [this, _device](Data::Network::DNS d) {
+                    emit deviceNetworkDNSReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkHostnameReceived,
+                this,
+                [this, _device](Data::Network::Hostname d) {
+                    emit deviceNetworkHostnameReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::networkNTPReceived,
+                this,
+                [this, _device](Data::Network::NTP d) {
+                    emit deviceNetworkNTPReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::profilesReceived,
+                this,
+                [this, _device](Data::Profiles d) {
+                    emit deviceProfilesReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::profile720pReceived,
+                this,
+                [this, _device](Data::Profiles d) {
+                    emit deviceProfile720pReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::profileD1Received,
+                this,
+                [this, _device](Data::Profiles d) {
+                    emit deviceProfileD1Received(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::videoEncoderConfigurationsReceived,
+                this,
+                [this, _device](Data::MediaConfig::Video::EncoderConfigs d) {
+                    emit deviceVideoEncoderConfigurationsReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::videoSourceConfigurationsReceived,
+                this,
+                [this, _device](Data::MediaConfig::Video::SourceConfig d) {
+                    emit deviceVideoSourceConfigurationsReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::videoEncoderConfigurationOptionReceived,
+                this,
+                [this,
+                 _device](Data::MediaConfig::Video::EncoderConfigs::Option d) {
+                    emit deviceVideoEncoderConfigurationOptionReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::streamUrisReceived,
+                this,
+                [this, _device](Data::MediaConfig::Video::StreamUri d) {
+                    emit deviceStreamUrisReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::imageSettingReceived,
+                this,
+                [this, _device](Data::MediaConfig::ImageSetting d) {
+                    emit deviceImageSettingReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::imageSettingOptionsReceived,
+                this,
+                [this, _device](Data::MediaConfig::ImageSetting::Options d) {
+                    emit deviceImageSettingOptionsReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::ptzConfigurationReceived,
+                this,
+                [this, _device](Data::Ptz::Config d) {
+                    emit devicePtzConfigurationReceived(
+                        d, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::presetsReceived,
+                this,
+                [this, _device]() {
+                    emit devicePresetsReceived(d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::getResultReceived,
+                this,
+                [this, _device](Data _data, MessageType _messageType) {
+                    emit deviceGetResultReceived(
+                        _data, _messageType, d_ptr->idevicesMap.key(_device));
+                });
+            connect(
+                _device,
+                &QOnvifDevice::setResultReceived,
+                this,
+                [this, _device](bool _result, MessageType _messageType) {
+                    emit deviceSetResultReceived(
+                        _result, _messageType, d_ptr->idevicesMap.key(_device));
+                });
         });
-        connect(_device,&QOnvifDevice::scopesReceived,this,[this,_device](Data::Scopes d){
-            emit deviceScopesReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::dateAndTimeReceived,this,[this,_device](Data::DateTime d){
-            emit deviceDateAndTimeReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::usersReceived,this,[this,_device](Data::Users d){
-            emit deviceUsersReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::capabilitiesReceived,this,[this,_device](Data::Capabilities d){
-            emit deviceCapabilitiesReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkInterfacesReceived,this,[this,_device](Data::Network::Interfaces d){
-            emit deviceNetworkInterfacesReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkProtocolsReceived,this,[this,_device](Data::Network::Protocols d){
-            emit deviceNetworkProtocolsReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkDefaultGatewayReceived,this,[this,_device](Data::Network::DefaultGateway d){
-            emit deviceNetworkDefaultGatewayReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkDiscoveryModeReceived,this,[this,_device](Data::Network::DiscoveryMode d){
-            emit deviceNetworkDiscoveryModeReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkDNSReceived,this,[this,_device](Data::Network::DNS d){
-            emit deviceNetworkDNSReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkHostnameReceived,this,[this,_device](Data::Network::Hostname d){
-            emit deviceNetworkHostnameReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::networkNTPReceived,this,[this,_device](Data::Network::NTP d){
-            emit deviceNetworkNTPReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::profilesReceived,this,[this,_device](Data::Profiles d){
-            emit deviceProfilesReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::profile720pReceived,this,[this,_device](Data::Profiles d){
-            emit deviceProfile720pReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::profileD1Received,this,[this,_device](Data::Profiles d){
-            emit deviceProfileD1Received(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::videoEncoderConfigurationsReceived,this,[this,_device](Data::MediaConfig::Video::EncoderConfigs d){
-            emit deviceVideoEncoderConfigurationsReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::videoSourceConfigurationsReceived,this,[this,_device](Data::MediaConfig::Video::SourceConfig d){
-            emit deviceVideoSourceConfigurationsReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::videoEncoderConfigurationOptionReceived,this,[this,_device](Data::MediaConfig::Video::EncoderConfigs::Option d){
-            emit deviceVideoEncoderConfigurationOptionReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::streamUrisReceived,this,[this,_device](Data::MediaConfig::Video::StreamUri d){
-            emit deviceStreamUrisReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::imageSettingReceived,this,[this,_device](Data::MediaConfig::ImageSetting d){
-            emit deviceImageSettingReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::imageSettingOptionsReceived,this,[this,_device](Data::MediaConfig::ImageSetting::Options d){
-            emit deviceImageSettingOptionsReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::ptzConfigurationReceived,this,[this,_device](Data::Ptz::Config d){
-            emit devicePtzConfigurationReceived(d, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::presetsReceived,this,[this,_device](){
-            emit devicePresetsReceived(d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::getResultReceived,this,[this,_device](Data _data, MessageType _messageType){
-            emit deviceGetResultReceived(_data, _messageType, d_ptr->idevicesMap.key(_device));
-        });
-        connect(_device,&QOnvifDevice::setResultReceived,this,[this,_device](bool _result, MessageType _messageType){
-            emit deviceSetResultReceived(_result, _messageType, d_ptr->idevicesMap.key(_device));
-        });
-    });
 
     refreshDevicesList();
 }
@@ -155,10 +284,12 @@ QOnvifManager::getDeviceScopes(QString _deviceEndPointAddress) {
 }
 
 void
-QOnvifManager::getDeviceVideoEncoderConfigurations(QString _deviceEndPointAddress) {
+QOnvifManager::getDeviceVideoEncoderConfigurations(
+    QString _deviceEndPointAddress) {
     if (!cameraExist(_deviceEndPointAddress))
         return;
-    d_ptr->idevicesMap.value(_deviceEndPointAddress)->getVideoEncoderConfigurations();
+    d_ptr->idevicesMap.value(_deviceEndPointAddress)
+        ->getVideoEncoderConfigurations();
 }
 
 void
@@ -167,7 +298,7 @@ QOnvifManager::getDeviceVideoEncoderConfigurationOptions(
     if (!cameraExist(_deviceEndPointAddress))
         return;
     d_ptr->idevicesMap.value(_deviceEndPointAddress)
-            ->getVideoEncoderConfigurationOptions();
+        ->getVideoEncoderConfigurationOptions();
 }
 
 void
@@ -249,21 +380,17 @@ QOnvifManager::getDeviceDateAndTime(QString _deviceEndPointAddress) {
 
 void
 QOnvifManager::getDevicePtzConfiguration(QString _deviceEndPointAddress) {
-    d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->getPtzConfiguration();
+    d_ptr->idevicesMap.value(_deviceEndPointAddress)->getPtzConfiguration();
 }
 
 void
 QOnvifManager::getDeviceImageSetting(QString _deviceEndPointAddress) {
-    d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->getImageSetting();
+    d_ptr->idevicesMap.value(_deviceEndPointAddress)->getImageSetting();
 }
 
 void
-QOnvifManager::getDeviceImageSettingOptions(
-    QString _deviceEndPointAddress) {
-    d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->getImageSettingOptions();
+QOnvifManager::getDeviceImageSettingOptions(QString _deviceEndPointAddress) {
+    d_ptr->idevicesMap.value(_deviceEndPointAddress)->getImageSettingOptions();
 }
 
 void
@@ -382,8 +509,7 @@ QOnvifManager::setDeviceNetworkNTP(
 
 void
 QOnvifManager::resetFactoryDevice(QString _deviceEndPointAddress, bool isHard) {
-    d_ptr->idevicesMap.value(_deviceEndPointAddress)
-        ->resetFactory(isHard);
+    d_ptr->idevicesMap.value(_deviceEndPointAddress)->resetFactory(isHard);
 }
 
 void
@@ -401,7 +527,8 @@ QOnvifManager::continuousMove(
         ->continuousMove(_x, _y, _z);
 }
 
-void QOnvifManager::stopMovement(QString _deviceEndPointAddress) {
+void
+QOnvifManager::stopMovement(QString _deviceEndPointAddress) {
     d_ptr->idevicesMap.value(_deviceEndPointAddress)->stopMovement();
 }
 

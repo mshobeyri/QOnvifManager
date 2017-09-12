@@ -33,8 +33,8 @@ class NetworkInterfaces : public QObject
     Q_PROPERTY(int ipv4FromDHCPPrefixLength READ ipv4FromDHCPPrefixLength WRITE
                                                                           setIpv4FromDHCPPrefixLength)
 
-    Q_PROPERTY(QString interfaceToken READ interfaceToken WRITE
-                                                                      setInterfaceToken)
+    Q_PROPERTY(
+        QString interfaceToken READ interfaceToken WRITE setInterfaceToken)
 public:
     explicit NetworkInterfaces(QObject* parent = NULL);
     virtual ~NetworkInterfaces();

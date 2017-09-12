@@ -5,9 +5,12 @@ using namespace ONVIF;
 
 DeviceManagement::DeviceManagement(
     const QString& wsdlUrl, const QString& username, const QString& password)
-    : Service(wsdlUrl, username, password)
-{
-    connect(this,&DeviceManagement::messageParserReceived,this,&DeviceManagement::onMessageParserReceived);
+    : Service(wsdlUrl, username, password) {
+    connect(
+        this,
+        &DeviceManagement::messageParserReceived,
+        this,
+        &DeviceManagement::onMessageParserReceived);
 }
 
 Message*
@@ -103,16 +106,15 @@ DeviceManagement::namespaces(const QString& key) {
 }
 
 void
-DeviceManagement::onMessageParserReceived(MessageParser *result, device::MessageType messageType)
-{
+DeviceManagement::onMessageParserReceived(
+    MessageParser* result, device::MessageType messageType) {
     if (result == NULL)
         return;
 
     QVariant var;
 
     switch (messageType) {
-    case device::MessageType::Information :
-    {
+    case device::MessageType::Information: {
         QHash<QString, QString> device_info;
         device_info.insert("mf", result->getValue("//tds:Manufacturer"));
         device_info.insert("model", result->getValue("//tds:Model"));
@@ -122,10 +124,8 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             "serial_number", result->getValue("//tds:SerialNumber"));
         device_info.insert("hardware_id", result->getValue("//tds:HardwareId"));
         var = qVariantFromValue(device_info);
-    }
-        break;
-    case device::MessageType::Scopes :
-    {
+    } break;
+    case device::MessageType::Scopes: {
         QHash<QString, QString> device_scopes;
         device_scopes.insert(
             "name",
@@ -152,35 +152,31 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
                     "starts-with(text(),'onvif://www.onvif.org/hardware/')]")
                 .remove(0, 31));
         var = qVariantFromValue(device_scopes);
-    }
-        break;
-    case device::MessageType::DateAndTime :
-    {
-         SystemDateAndTime* systemDateAndTime = new SystemDateAndTime();
-         systemDateAndTime->setProperty(
-             "dateTimeType", result->getValue("//tt:DateTimeType"));
-         systemDateAndTime->setDaylightSavings(
-             result->getValue("//tt:DaylightSavings") == "true");
-         systemDateAndTime->setTz(result->getValue("//tt:TimeZone/tt:TZ"));
-         systemDateAndTime->setUtcTime(
-             result->getValue("//tt:UTCDateTime/tt:Date/tt:Year").toInt(),
-             result->getValue("//tt:UTCDateTime/tt:Date/tt:Month").toInt(),
-             result->getValue("//tt:UTCDateTime/tt:Date/tt:Day").toInt(),
-             result->getValue("//tt:UTCDateTime/tt:Time/tt:Hour").toInt(),
-             result->getValue("//tt:UTCDateTime/tt:Time/tt:Minute").toInt(),
-             result->getValue("//tt:UTCDateTime/tt:Time/tt:Second").toInt());
-         systemDateAndTime->setLocalTime(
-             result->getValue("//tt:LocalDateTime/tt:Date/tt:Year").toInt(),
-             result->getValue("//tt:LocalDateTime/tt:Date/tt:Month").toInt(),
-             result->getValue("//tt:LocalDateTime/tt:Date/tt:Day").toInt(),
-             result->getValue("//tt:LocalDateTime/tt:Time/tt:Hour").toInt(),
-             result->getValue("//tt:LocalDateTime/tt:Time/tt:Minute").toInt(),
-             result->getValue("//tt:LocalDateTime/tt:Time/tt:Second").toInt());
-         var = VPtr<SystemDateAndTime>::asQVariant(systemDateAndTime);
-    }
-        break;
-    case device::MessageType::Users :
-    {
+    } break;
+    case device::MessageType::DateAndTime: {
+        SystemDateAndTime* systemDateAndTime = new SystemDateAndTime();
+        systemDateAndTime->setProperty(
+            "dateTimeType", result->getValue("//tt:DateTimeType"));
+        systemDateAndTime->setDaylightSavings(
+            result->getValue("//tt:DaylightSavings") == "true");
+        systemDateAndTime->setTz(result->getValue("//tt:TimeZone/tt:TZ"));
+        systemDateAndTime->setUtcTime(
+            result->getValue("//tt:UTCDateTime/tt:Date/tt:Year").toInt(),
+            result->getValue("//tt:UTCDateTime/tt:Date/tt:Month").toInt(),
+            result->getValue("//tt:UTCDateTime/tt:Date/tt:Day").toInt(),
+            result->getValue("//tt:UTCDateTime/tt:Time/tt:Hour").toInt(),
+            result->getValue("//tt:UTCDateTime/tt:Time/tt:Minute").toInt(),
+            result->getValue("//tt:UTCDateTime/tt:Time/tt:Second").toInt());
+        systemDateAndTime->setLocalTime(
+            result->getValue("//tt:LocalDateTime/tt:Date/tt:Year").toInt(),
+            result->getValue("//tt:LocalDateTime/tt:Date/tt:Month").toInt(),
+            result->getValue("//tt:LocalDateTime/tt:Date/tt:Day").toInt(),
+            result->getValue("//tt:LocalDateTime/tt:Time/tt:Hour").toInt(),
+            result->getValue("//tt:LocalDateTime/tt:Time/tt:Minute").toInt(),
+            result->getValue("//tt:LocalDateTime/tt:Time/tt:Second").toInt());
+        var = VPtr<SystemDateAndTime>::asQVariant(systemDateAndTime);
+    } break;
+    case device::MessageType::Users: {
         Users* user = new Users();
 
         //        user->setProperty("userName",
@@ -209,15 +205,13 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             item = items.next();
         }
         var = VPtr<Users>::asQVariant(user);
-    }
-        break;
-    case device::MessageType::Capabilities :
-    {
+    } break;
+    case device::MessageType::Capabilities: {
         Capabilities* capabilities = new Capabilities();
-        //PTZ
+        // PTZ
         capabilities->setProperty(
             "ptzXAddr", result->getValue("//tt:PTZ/tt:XAddr"));
-        //Imaging
+        // Imaging
         capabilities->setProperty(
             "imagingXAddr", result->getValue("//tt:Imaging/tt:XAddr"));
         capabilities->setProperty(
@@ -231,7 +225,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
         capabilities->setProperty(
             "rtpRtspTcp",
             result->getValue("//tt:RTP_RTSP_TCP") == "true" ? true : false);
-        //Device
+        // Device
         capabilities->setProperty(
             "deviceXAddr", result->getValue("//tt:Device/tt:XAddr"));
         capabilities->setProperty(
@@ -321,10 +315,8 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             result->getValue("//tt:RemoteUserHanding") == "true" ? true
                                                                  : false);
         var = VPtr<Capabilities>::asQVariant(capabilities);
-    }
-        break;
-    case device::MessageType::NetworkInterfaces :
-    {
+    } break;
+    case device::MessageType::NetworkInterfaces: {
         NetworkInterfaces* networkInterfaces = new NetworkInterfaces();
         networkInterfaces->setProperty(
             "interfaceToken",
@@ -361,10 +353,8 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
         networkInterfaces->setProperty(
             "ipv4DHCP", result->getValue("//tt:DHCP"));
         var = VPtr<NetworkInterfaces>::asQVariant(networkInterfaces);
-    }
-        break;
-    case device::MessageType::NetworkProtocols :
-    {
+    } break;
+    case device::MessageType::NetworkProtocols: {
         NetworkProtocols* networkProtocols = new NetworkProtocols();
 
         QXmlQuery* query = result->query();
@@ -392,30 +382,25 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             item = items.next();
         }
         var = VPtr<NetworkProtocols>::asQVariant(networkProtocols);
-    }
-        break;
-    case device::MessageType::NetworkDefaultGateway :
-    {
-        NetworkDefaultGateway* networkDefaultGateway = new NetworkDefaultGateway();
-       networkDefaultGateway->setProperty(
-           "ipv4Address",
-           result->getValue("//tds:NetworkGateway/tt:IPv4Address"));
-       networkDefaultGateway->setProperty(
-           "ipv6Address",
-           result->getValue("//tds:NetworkGateway/tt:IPv6Address"));
-       var = VPtr<NetworkDefaultGateway>::asQVariant(networkDefaultGateway);
-    }
-        break;
-    case device::MessageType::NetworkDiscoveryMode :
-    {
+    } break;
+    case device::MessageType::NetworkDefaultGateway: {
+        NetworkDefaultGateway* networkDefaultGateway =
+            new NetworkDefaultGateway();
+        networkDefaultGateway->setProperty(
+            "ipv4Address",
+            result->getValue("//tds:NetworkGateway/tt:IPv4Address"));
+        networkDefaultGateway->setProperty(
+            "ipv6Address",
+            result->getValue("//tds:NetworkGateway/tt:IPv6Address"));
+        var = VPtr<NetworkDefaultGateway>::asQVariant(networkDefaultGateway);
+    } break;
+    case device::MessageType::NetworkDiscoveryMode: {
         NetworkDiscoveryMode* networkDiscoveryMode = new NetworkDiscoveryMode();
         networkDiscoveryMode->setProperty(
             "discoveryMode", result->getValue("//tds:DiscoveryMode"));
         var = VPtr<NetworkDiscoveryMode>::asQVariant(networkDiscoveryMode);
-    }
-        break;
-    case device::MessageType::NetworkDNS :
-    {
+    } break;
+    case device::MessageType::NetworkDNS: {
         NetworkDNS* networkDNS = new NetworkDNS();
         networkDNS->setProperty(
             "dhcp", result->getValue("//tds:DNSInformation/tt:FromDHCP"));
@@ -444,20 +429,16 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             item = items.next();
         }
         var = VPtr<NetworkDNS>::asQVariant(networkDNS);
-    }
-        break;
-    case device::MessageType::NetworkHostname :
-    {
+    } break;
+    case device::MessageType::NetworkHostname: {
         NetworkHostname* networkHostname = new NetworkHostname();
         networkHostname->setProperty(
             "dhcp", result->getValue("//tds:HostnameInformation/tt:FromDHCP"));
         networkHostname->setProperty(
             "name", result->getValue("//tds:HostnameInformation/tt:Name"));
         var = VPtr<NetworkHostname>::asQVariant(networkHostname);
-    }
-        break;
-    case device::MessageType::NetworkNTP :
-    {
+    } break;
+    case device::MessageType::NetworkNTP: {
         NetworkNTP* networkNTP = new NetworkNTP();
         networkNTP->setProperty(
             "dhcp", result->getValue("//tds:NTPInformation/tt:fromDHCP"));
@@ -476,104 +457,79 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
             result->getValue(
                 "//tds:NTPInformation/tt:NTPManual/tt:IPv6Address"));
         var = VPtr<NetworkNTP>::asQVariant(networkNTP);
-    }
-        break;
-    case device::MessageType::SetScopes :
-    {
+    } break;
+    case device::MessageType::SetScopes: {
         bool r = false;
         if (result->find("//tds:SetScopesResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetDateAndTime :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetDateAndTime: {
         bool r = false;
         if (result->find("//tds:SetSystemDateAndTimeResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetUsers :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetUsers: {
         bool r = false;
         if (result->find("//tds:SetUserResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetSystemFactoryDefault :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetSystemFactoryDefault: {
         bool r = false;
         if (result->find("//tds:SetSystemFactoryDefaultResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetSystemReboot :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetSystemReboot: {
         bool r = false;
         if (result->find("//tds:SystemRebootResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkInterfaces :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkInterfaces: {
         bool r = false;
         if (result->find("//tds:SetNetworkInterfacesResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkProtocols :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkProtocols: {
         bool r = false;
         if (result->find("//tds:SetNetworkProtocolsResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkDefaultGateway :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkDefaultGateway: {
         bool r = false;
         if (result->find("//tds:SetNetworkDefaultGatewayResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkDiscoveryMode :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkDiscoveryMode: {
         bool r = false;
         if (result->find("//tds:SetDiscoveryModeResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkDNS :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkDNS: {
         bool r = false;
         if (result->find("//tds:SetDNSResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkHostname :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkHostname: {
         bool r = false;
         if (result->find("//tds:SetHostnameResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
-    case device::MessageType::SetNetworkNTP :
-    {
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetNetworkNTP: {
         bool r = false;
         if (result->find("//tds:SetNTPResponse"))
             r = true;
-        var = qVariantFromValue(r);
-    }
-        break;
+        var   = qVariantFromValue(r);
+    } break;
     default:
         break;
     }
@@ -584,8 +540,7 @@ DeviceManagement::onMessageParserReceived(MessageParser *result, device::Message
 }
 
 void
-DeviceManagement::getData(device::MessageType messageType)
-{
+DeviceManagement::getData(device::MessageType messageType) {
     Message* msg = newMessage();
 
     switch (messageType) {
@@ -610,13 +565,11 @@ DeviceManagement::getData(device::MessageType messageType)
         msg->appendToBody(newElement("wsdl:GetUsers"));
 
         break;
-    case device::MessageType::Capabilities:
-    {
+    case device::MessageType::Capabilities: {
         QDomElement cap = newElement("wsdl:GetCapabilities");
         cap.appendChild(newElement("wsdl:Category", "All"));
         msg->appendToBody(cap);
-    }
-        break;
+    } break;
     case device::MessageType::NetworkInterfaces:
 
         msg->appendToBody(newElement("wsdl:GetNetworkInterfaces"));
@@ -663,84 +616,64 @@ DeviceManagement::getData(device::MessageType messageType)
 }
 
 void
-DeviceManagement::setData(QVariant data, device::MessageType messageType)
-{
-    Message* msg = newMessage();
+DeviceManagement::setData(QVariant data, device::MessageType messageType) {
+    Message*    msg = newMessage();
     QDomElement domElement;
 
     switch (messageType) {
-    case device::MessageType::SetScopes:
-    {
+    case device::MessageType::SetScopes: {
         SystemScopes* d = ONVIF::VPtr<ONVIF::SystemScopes>::asPtr(data);
+        domElement      = d->toxml();
+    } break;
+    case device::MessageType::SetDateAndTime: {
+        SystemDateAndTime* d =
+            ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(data);
         domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetDateAndTime:
-    {
-        SystemDateAndTime* d = ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(data);
+    } break;
+    case device::MessageType::SetUsers: {
+        Users* d   = ONVIF::VPtr<ONVIF::Users>::asPtr(data);
         domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetUsers:
-    {
-        Users* d = ONVIF::VPtr<ONVIF::Users>::asPtr(data);
+    } break;
+    case device::MessageType::SetSystemFactoryDefault: {
+        SystemFactoryDefault* d =
+            ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asPtr(data);
         domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetSystemFactoryDefault:
-    {
-        SystemFactoryDefault* d = ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asPtr(data);
-        domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetSystemReboot:
-    {
+    } break;
+    case device::MessageType::SetSystemReboot: {
         SystemReboot* d = ONVIF::VPtr<ONVIF::SystemReboot>::asPtr(data);
+        domElement      = d->toxml();
+    } break;
+    case device::MessageType::SetNetworkInterfaces: {
+        NetworkInterfaces* d =
+            ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(data);
         domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkInterfaces:
-    {
-        NetworkInterfaces* d = ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(data);
-        domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkProtocols:
-    {
+    } break;
+    case device::MessageType::SetNetworkProtocols: {
         NetworkProtocols* d = ONVIF::VPtr<ONVIF::NetworkProtocols>::asPtr(data);
+        domElement          = d->toxml();
+    } break;
+    case device::MessageType::SetNetworkDefaultGateway: {
+        NetworkDefaultGateway* d =
+            ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(data);
         domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkDefaultGateway:
-    {
-        NetworkDefaultGateway* d = ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(data);
+    } break;
+    case device::MessageType::SetNetworkDiscoveryMode: {
+        NetworkDiscoveryMode* d =
+            ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(data);
         domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkDiscoveryMode:
-    {
-        NetworkDiscoveryMode* d = ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(data);
-        domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkDNS:
-    {
+    } break;
+    case device::MessageType::SetNetworkDNS: {
         NetworkDNS* d = ONVIF::VPtr<ONVIF::NetworkDNS>::asPtr(data);
-        domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkHostname:
-    {
+        domElement    = d->toxml();
+    } break;
+    case device::MessageType::SetNetworkHostname: {
         NetworkHostname* d = ONVIF::VPtr<ONVIF::NetworkHostname>::asPtr(data);
-        domElement = d->toxml();
-    }
-        break;
-    case device::MessageType::SetNetworkNTP:
-    {
+        domElement         = d->toxml();
+    } break;
+    case device::MessageType::SetNetworkNTP: {
         NetworkNTP* d = ONVIF::VPtr<ONVIF::NetworkNTP>::asPtr(data);
-        domElement = d->toxml();
-    }
-        break;
+        domElement    = d->toxml();
+    } break;
     default:
         msg->deleteLater();
         return;

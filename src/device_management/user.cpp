@@ -9,10 +9,10 @@ Users::~Users() {}
 QDomElement
 Users::toxml() {
     QDomElement setUsers;
-    setUsers = newElement(this->isAddMode()?"AddUsers":"SetUser");
+    setUsers = newElement(this->isAddMode() ? "AddUsers" : "SetUser");
     setUsers.setAttribute("xmlns", "http://www.onvif.org/ver10/device/wsdl");
     for (int i = 0; i < m_userNames.length(); i++) {
-        QDomElement user = newElement("User");
+        QDomElement user     = newElement("User");
         QDomElement username = newElement("Username", m_userNames[i]);
         username.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
         QDomElement password = newElement("Password", m_passWords[i]);
@@ -27,7 +27,3 @@ Users::toxml() {
     }
     return setUsers;
 }
-
-
-
-

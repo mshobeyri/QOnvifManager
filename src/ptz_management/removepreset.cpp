@@ -3,21 +3,17 @@
 
 using namespace ONVIF;
 
-RemovePreset::RemovePreset(QObject *parent):QObject(parent)
-{
+RemovePreset::RemovePreset(QObject* parent) : QObject(parent) {}
 
-}
+RemovePreset::~RemovePreset() {}
 
-RemovePreset::~RemovePreset()
-{
-
-}
-
-QDomElement RemovePreset::toxml()
-{
+QDomElement
+RemovePreset::toxml() {
     QDomElement removePreset = newElement("wsdl:RemovePreset");
-    QDomElement profileToken = newElement("wsdl:ProfileToken",this->profileToken());
-    QDomElement presetToken = newElement("wsdl:PresetToken",this->presetToken());
+    QDomElement profileToken =
+        newElement("wsdl:ProfileToken", this->profileToken());
+    QDomElement presetToken =
+        newElement("wsdl:PresetToken", this->presetToken());
     removePreset.appendChild(profileToken);
     removePreset.appendChild(presetToken);
     return removePreset;

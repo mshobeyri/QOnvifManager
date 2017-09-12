@@ -23,9 +23,9 @@ class DeviceManagement : public Service
     Q_OBJECT
 public:
     explicit DeviceManagement(
-            const QString& wsdlUrl,
-            const QString& username,
-            const QString& password);
+        const QString& wsdlUrl,
+        const QString& username,
+        const QString& password);
 
     void getData(device::MessageType);
     void setData(QVariant, device::MessageType);

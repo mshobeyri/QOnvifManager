@@ -2,17 +2,15 @@
 
 using namespace ONVIF;
 
-Capabilities::Capabilities(QObject *parent) : QObject(parent) {
+Capabilities::Capabilities(QObject* parent) : QObject(parent) {}
+Capabilities::~Capabilities() {}
+QDomElement
+Capabilities::toxml() {
+    QDomElement fake;
+    return fake;
 }
-Capabilities::~Capabilities(){
-}
-QDomElement Capabilities::toxml()
-{
-	QDomElement fake;
-	return fake;
-}
-QString Capabilities::enumToString(Category category)
-{
+QString
+Capabilities::enumToString(Category category) {
     switch (category) {
     case Capabilities::All:
         return "All";
@@ -40,4 +38,3 @@ QString Capabilities::enumToString(Category category)
     }
     return "";
 }
-

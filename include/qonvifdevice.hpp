@@ -15,8 +15,8 @@ class MediaManagement;
 namespace device {
 
 
-enum class MessageType{
-    //device
+enum class MessageType {
+    // device
     Information,
     Scopes,
     DateAndTime,
@@ -43,7 +43,7 @@ enum class MessageType{
     SetNetworkHostname,
     SetNetworkNTP,
 
-    //media
+    // media
     Profiles,
     Profile720p,
     ProfileD1,
@@ -63,7 +63,7 @@ enum class MessageType{
     SetVideoEncoderConfiguration,
     SetImageSettings,
 
-    //ptz
+    // ptz
     Configurations,
     Configuration,
     Nodes,
@@ -80,8 +80,6 @@ enum class MessageType{
     GotoHomePosition,
     SetHomePosition
 };
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 class QOnvifDevicePrivate;
@@ -117,14 +115,15 @@ public:
 
     void setScopes(QString _name, QString _location);
     void setDateAndTime(
-            QDateTime _dateAndTime,
-            QString   _zone,
-            bool      _daylightSaving,
-            bool      _isLocal);
+        QDateTime _dateAndTime,
+        QString   _zone,
+        bool      _daylightSaving,
+        bool      _isLocal);
     void setUsers(Data::Users _users);
     void setNetworkInterfaces(Data::Network::Interfaces _interfaces);
     void setNetworkProtocols(Data::Network::Protocols _protocols);
-    void setNetworkDefaultGateway(Data::Network::DefaultGateway _defaultGateway);
+    void
+    setNetworkDefaultGateway(Data::Network::DefaultGateway _defaultGateway);
     void setNetworkDiscoveryMode(Data::Network::DiscoveryMode _discoveryMode);
     void setNetworkDNS(Data::Network::DNS _dns);
     void setNetworkHostname(Data::Network::Hostname _hostname);
@@ -144,8 +143,9 @@ public:
     void getImageSetting();
     void getImageSettingOptions();
 
-    void setVideoEncoderConfiguration(Data::MediaConfig::Video::EncoderConfig _videoConfig);
-    void setImageSetting(Data::MediaConfig::ImageSetting  _imageSetting);
+    void setVideoEncoderConfiguration(
+        Data::MediaConfig::Video::EncoderConfig _videoConfig);
+    void setImageSetting(Data::MediaConfig::ImageSetting _imageSetting);
 
     // ptz management
     void getPtzConfiguration();
@@ -174,9 +174,12 @@ signals:
     void profilesReceived(Data::Profiles);
     void profile720pReceived(Data::Profiles);
     void profileD1Received(Data::Profiles);
-    void videoEncoderConfigurationsReceived(Data::MediaConfig::Video::EncoderConfigs);
-    void videoSourceConfigurationsReceived(Data::MediaConfig::Video::SourceConfig);
-    void videoEncoderConfigurationOptionReceived(Data::MediaConfig::Video::EncoderConfigs::Option);
+    void videoEncoderConfigurationsReceived(
+        Data::MediaConfig::Video::EncoderConfigs);
+    void videoSourceConfigurationsReceived(
+        Data::MediaConfig::Video::SourceConfig);
+    void videoEncoderConfigurationOptionReceived(
+        Data::MediaConfig::Video::EncoderConfigs::Option);
     void streamUrisReceived(Data::MediaConfig::Video::StreamUri);
     void imageSettingReceived(Data::MediaConfig::ImageSetting);
     void imageSettingOptionsReceived(Data::MediaConfig::ImageSetting::Options);
@@ -186,6 +189,7 @@ signals:
 
     void getResultReceived(Data, MessageType);
     void setResultReceived(bool, MessageType);
+
 private:
     Q_DECLARE_PRIVATE(QOnvifDevice)
     QScopedPointer<QOnvifDevicePrivate> d_ptr;

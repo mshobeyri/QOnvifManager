@@ -123,10 +123,14 @@ Message::getMessageWithUserInfo(
     QHash<QString, QString>& namespaces,
     const QString& name,
     const QString& passwd) {
-    namespaces.insert("wsse", "http://docs.oasis-open.org/wss/2004/01/"
-                              "oasis-200401-wss-wssecurity-secext-1.0.xsd");
-    namespaces.insert("wsu", "http://docs.oasis-open.org/wss/2004/01/"
-                             "oasis-200401-wss-wssecurity-utility-1.0.xsd");
+    namespaces.insert(
+        "wsse",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-secext-1.0.xsd");
+    namespaces.insert(
+        "wsu",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-wssecurity-utility-1.0.xsd");
     Message*    msg      = new Message(namespaces);
     QDomElement security = newElement("wsse:Security");
 
@@ -151,9 +155,11 @@ Message::getMessageWithUserInfo(
 
     QDomElement password = newElement("wsse:Password", passwdDigest);
     QDomElement nonce    = newElement("wsse:Nonce", nonceBase64);
-    password.setAttribute("Type", "http://docs.oasis-open.org/wss/2004/01/"
-                                  "oasis-200401-wss-username-token-profile-1.0#"
-                                  "PasswordDigest");
+    password.setAttribute(
+        "Type",
+        "http://docs.oasis-open.org/wss/2004/01/"
+        "oasis-200401-wss-username-token-profile-1.0#"
+        "PasswordDigest");
     usernameToken.appendChild(username);
     usernameToken.appendChild(password); // todo
     usernameToken.appendChild(nonce);
