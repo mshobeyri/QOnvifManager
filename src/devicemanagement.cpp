@@ -616,7 +616,7 @@ DeviceManagement::getData(device::MessageType messageType) {
 }
 
 void
-DeviceManagement::setData(QVariant data, device::MessageType messageType) {
+DeviceManagement::setData(device::MessageType messageType, QVariant data) {
     Message*    msg = newMessage();
     QDomElement domElement;
 

@@ -3,6 +3,7 @@
 #include "mediamanagement.h"
 #include "ptzmanagement.h"
 #include <QEventLoop>
+#include <QQueue>
 #include <QString>
 #include <QTimer>
 
@@ -36,10 +37,84 @@ public:
     QString ipassword;
     Data    idata;
 
+    void addRequest(MessageType _messageType, QVariant _data) {
+        requestQueue.enqueue(qMakePair(_messageType, _data));
+        if (requestQueue.count() == 1)
+            sendRequest();
+    }
+
+    void sendRequest() {
+
+        if (requestQueue.isEmpty())
+            return;
+
+        QPair<MessageType, QVariant> request = requestQueue.dequeue();
+
+        switch (request.first) {
+        case MessageType::Information:
+        case MessageType::Scopes:
+        case MessageType::DateAndTime:
+        case MessageType::Users:
+        case MessageType::Capabilities:
+        case MessageType::NetworkInterfaces:
+        case MessageType::NetworkProtocols:
+        case MessageType::NetworkDefaultGateway:
+        case MessageType::NetworkDiscoveryMode:
+        case MessageType::NetworkDNS:
+        case MessageType::NetworkHostname:
+        case MessageType::NetworkNTP:
+            ideviceManagement->getData(request.first);
+            break;
+        case MessageType::SetScopes:
+        case MessageType::SetDateAndTime:
+        case MessageType::SetUsers:
+        case MessageType::SetNetworkInterfaces:
+        case MessageType::SetNetworkProtocols:
+        case MessageType::SetNetworkDefaultGateway:
+        case MessageType::SetNetworkDiscoveryMode:
+        case MessageType::SetNetworkDNS:
+        case MessageType::SetNetworkHostname:
+        case MessageType::SetNetworkNTP:
+        case MessageType::SetSystemFactoryDefault:
+        case MessageType::SetSystemReboot:
+            ideviceManagement->setData(request.first, request.second);
+            break;
+        case MessageType::Profiles:
+        case MessageType::Profile720p:
+        case MessageType::ProfileD1:
+        case MessageType::VideoEncoderConfigurations:
+        case MessageType::VideoSourceConfigurations:
+        case MessageType::VideoEncoderConfigurationOptions:
+        case MessageType::StreamUri:
+        case MessageType::ImageSetting:
+        case MessageType::ImageSettingOptions:
+            imediaManagement->getData(request.first, request.second.toList());
+            break;
+        case MessageType::SetVideoEncoderConfiguration:
+        case MessageType::SetImageSettings:
+            imediaManagement->setData(request.first, request.second);
+            break;
+        case MessageType::Configuration:
+        case MessageType::Presets:
+            iptzManagement->getData(request.first, request.second.toList());
+            break;
+        case MessageType::GotoHomePosition:
+        case MessageType::SetHomePosition:
+        case MessageType::ContinuousMove:
+        case MessageType::Stop:
+            iptzManagement->setData(request.first, request.second);
+            break;
+        default:
+            break;
+        }
+    }
+
     // onvif managers
     ONVIF::DeviceManagement* ideviceManagement;
     ONVIF::MediaManagement*  imediaManagement;
     ONVIF::PtzManagement*    iptzManagement;
+
+    QQueue<QPair<MessageType, QVariant>> requestQueue;
 };
 
 // QOnvifDevice::QOnvifDevice() {}
@@ -309,6 +384,8 @@ QOnvifDevice::QOnvifDevice(
             default:
                 break;
             }
+
+            d_ptr->sendRequest();
         });
 
     connect(
@@ -670,6 +747,14 @@ QOnvifDevice::QOnvifDevice(
                     des);
 
                 emit videoEncoderConfigurationOptionReceived(des);
+
+                auto configToken =
+                    d_ptr->idata.mediaConfig.video.encodingConfigs.token;
+                auto profileToken = d_ptr->idata.profiles.toKenPro;
+                auto size = qMin(configToken.length(), profileToken.length());
+                if (d_ptr->idata.mediaConfig.video.encodingConfigs.options
+                        .count() >= size)
+                    emit getResultReceived(d_ptr->idata, messageType);
             } break;
             case MessageType::StreamUri: {
                 QScopedPointer<ONVIF::StreamUri> streamUri(
@@ -688,6 +773,9 @@ QOnvifDevice::QOnvifDevice(
 
                 d_ptr->idata.profiles.streamUris.append(streamUriTemp);
                 emit streamUrisReceived(streamUriTemp);
+                if (d_ptr->idata.profiles.streamUris.count() >=
+                    d_ptr->idata.profiles.toKenPro.length())
+                    emit getResultReceived(d_ptr->idata, messageType);
             } break;
             case MessageType::ImageSetting: {
                 QScopedPointer<ONVIF::ImageSetting> imageSetting(
@@ -737,6 +825,8 @@ QOnvifDevice::QOnvifDevice(
             default:
                 break;
             }
+
+            d_ptr->sendRequest();
         });
 
     connect(
@@ -816,6 +906,8 @@ QOnvifDevice::QOnvifDevice(
             default:
                 break;
             }
+
+            d_ptr->sendRequest();
         });
 }
 
@@ -828,61 +920,61 @@ QOnvifDevice::data() {
 
 void
 QOnvifDevice::getInformation() {
-    d_ptr->ideviceManagement->getData(MessageType::Information);
+    d_ptr->addRequest(MessageType::Information, QVariant());
 }
 
 void
 QOnvifDevice::getScopes() {
-    d_ptr->ideviceManagement->getData(MessageType::Scopes);
+    d_ptr->addRequest(MessageType::Scopes, QVariant());
 }
 
 void
 QOnvifDevice::getDateAndTime() {
-    d_ptr->ideviceManagement->getData(MessageType::DateAndTime);
+    d_ptr->addRequest(MessageType::DateAndTime, QVariant());
 }
 
 void
 QOnvifDevice::getUsers() {
-    d_ptr->ideviceManagement->getData(MessageType::Users);
+    d_ptr->addRequest(MessageType::Users, QVariant());
 }
 
 void
 QOnvifDevice::getCapabilities() {
-    d_ptr->ideviceManagement->getData(MessageType::Capabilities);
+    d_ptr->addRequest(MessageType::Capabilities, QVariant());
 }
 
 void
 QOnvifDevice::getInterfaces() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkInterfaces);
+    d_ptr->addRequest(MessageType::NetworkInterfaces, QVariant());
 }
 void
 QOnvifDevice::getProtocols() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkProtocols);
+    d_ptr->addRequest(MessageType::NetworkProtocols, QVariant());
 }
 
 void
 QOnvifDevice::getDefaultGateway() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkDefaultGateway);
+    d_ptr->addRequest(MessageType::NetworkDefaultGateway, QVariant());
 }
 
 void
 QOnvifDevice::getDiscoveryMode() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkDiscoveryMode);
+    d_ptr->addRequest(MessageType::NetworkDiscoveryMode, QVariant());
 }
 
 void
 QOnvifDevice::getDNS() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkDNS);
+    d_ptr->addRequest(MessageType::NetworkDNS, QVariant());
 }
 
 void
 QOnvifDevice::getHostname() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkHostname);
+    d_ptr->addRequest(MessageType::NetworkHostname, QVariant());
 }
 
 void
 QOnvifDevice::getNTP() {
-    d_ptr->ideviceManagement->getData(MessageType::NetworkNTP);
+    d_ptr->addRequest(MessageType::NetworkNTP, QVariant());
 }
 
 void
@@ -892,11 +984,12 @@ QOnvifDevice::setProbeData(Data::ProbeData _probeData) {
 
 void
 QOnvifDevice::setScopes(QString _name, QString _location) {
-    ONVIF::SystemScopes systemScopes;
-    systemScopes.setScopes(_name, _location);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::SystemScopes>::asQVariant(&systemScopes),
-        MessageType::SetScopes);
+    auto data = new ONVIF::SystemScopes;
+    data->setScopes(_name, _location);
+
+    d_ptr->addRequest(
+        MessageType::SetScopes,
+        ONVIF::VPtr<ONVIF::SystemScopes>::asQVariant(data));
 }
 
 void
@@ -905,182 +998,188 @@ QOnvifDevice::setDateAndTime(
     QString   _zone,
     bool      _daylightSaving,
     bool      _isLocal) {
-    ONVIF::SystemDateAndTime systemDateAndTime;
-    systemDateAndTime.setIsLocal(_isLocal);
+    auto data = new ONVIF::SystemDateAndTime;
+    data->setIsLocal(_isLocal);
     if (_isLocal) {
-        systemDateAndTime.setlocalTime(_dateAndTime);
+        data->setlocalTime(_dateAndTime);
     } else {
-        systemDateAndTime.setutcTime(_dateAndTime);
+        data->setutcTime(_dateAndTime);
     }
-    systemDateAndTime.setTz(_zone);
-    systemDateAndTime.setDaylightSavings(_daylightSaving);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::SystemDateAndTime>::asQVariant(&systemDateAndTime),
-        MessageType::SetDateAndTime);
+    data->setTz(_zone);
+    data->setDaylightSavings(_daylightSaving);
+
+    d_ptr->addRequest(
+        MessageType::SetDateAndTime,
+        ONVIF::VPtr<ONVIF::SystemDateAndTime>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setUsers(Data::Users _users) {
-    ONVIF::Users users;
+    auto data = new ONVIF::Users;
     for (int i = 0; i < _users.length(); i++) {
-        users.setUserNames(_users[i].username);
-        users.setPassWords(_users[i].password);
-        users.setUserLevel(_users[i].userLevel);
-        users.setIsAddMode(_users[i].isAddMode);
+        data->setUserNames(_users[i].username);
+        data->setPassWords(_users[i].password);
+        data->setUserLevel(_users[i].userLevel);
+        data->setIsAddMode(_users[i].isAddMode);
     }
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::Users>::asQVariant(&users), MessageType::SetUsers);
+
+    d_ptr->addRequest(
+        MessageType::SetUsers, ONVIF::VPtr<ONVIF::Users>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkInterfaces(Data::Network::Interfaces _interfaces) {
-    ONVIF::NetworkInterfaces networkInterface;
-    auto&                    des = networkInterface;
-    des.setAutoNegotiation(_interfaces.autoNegotiation);
-    des.setDuplex(
+    auto data = new ONVIF::NetworkInterfaces;
+    data->setAutoNegotiation(_interfaces.autoNegotiation);
+    data->setDuplex(
         _interfaces.duplexFull ? ONVIF::NetworkInterfaces::Duplex::Full
                                : ONVIF::NetworkInterfaces::Duplex::Half);
 
-    des.setHwAaddress(_interfaces.hwAaddress);
-    des.setIpv4DHCP(_interfaces.ipv4DHCP);
-    des.setIpv4Enabled(_interfaces.ipv4Enabled);
-    des.setIpv4FromDHCPAddress(_interfaces.ipv4FromDHCPAddress);
-    des.setIpv4FromDHCPPrefixLength(_interfaces.ipv4FromDHCPPrefixLength);
-    des.setIpv4LinkLocalAddress(_interfaces.ipv4LinkLocalAddress);
-    des.setIpv4ManualAddress(_interfaces.ipv4ManualAddress);
-    des.setIpv4ManualPrefixLength(_interfaces.ipv4ManualPrefixLength);
-    des.setIpvLinkLocalPrefixLength(_interfaces.ipvLinkLocalPrefixLength);
-    des.setMtu(_interfaces.mtu);
-    des.setNetworkInfacesEnabled(_interfaces.networkInfacesEnabled);
-    des.setNetworkInfacesName(_interfaces.networkInfacesName);
-    des.setSpeed(_interfaces.speed);
-    des.setInterfaceToken(_interfaces.interfaceToken);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkInterfaces>::asQVariant(&networkInterface),
-        MessageType::SetNetworkInterfaces);
+    data->setHwAaddress(_interfaces.hwAaddress);
+    data->setIpv4DHCP(_interfaces.ipv4DHCP);
+    data->setIpv4Enabled(_interfaces.ipv4Enabled);
+    data->setIpv4FromDHCPAddress(_interfaces.ipv4FromDHCPAddress);
+    data->setIpv4FromDHCPPrefixLength(_interfaces.ipv4FromDHCPPrefixLength);
+    data->setIpv4LinkLocalAddress(_interfaces.ipv4LinkLocalAddress);
+    data->setIpv4ManualAddress(_interfaces.ipv4ManualAddress);
+    data->setIpv4ManualPrefixLength(_interfaces.ipv4ManualPrefixLength);
+    data->setIpvLinkLocalPrefixLength(_interfaces.ipvLinkLocalPrefixLength);
+    data->setMtu(_interfaces.mtu);
+    data->setNetworkInfacesEnabled(_interfaces.networkInfacesEnabled);
+    data->setNetworkInfacesName(_interfaces.networkInfacesName);
+    data->setSpeed(_interfaces.speed);
+    data->setInterfaceToken(_interfaces.interfaceToken);
+
+    d_ptr->addRequest(
+        MessageType::SetNetworkInterfaces,
+        ONVIF::VPtr<ONVIF::NetworkInterfaces>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkProtocols(Data::Network::Protocols _protocols) {
-    ONVIF::NetworkProtocols networkProtocols;
-    auto&                   des = networkProtocols;
+    auto data = new ONVIF::NetworkProtocols;
     for (int i = 0; i < _protocols.networkProtocolsName.length(); i++) {
-        des.setNetworkProtocolsEnabled(_protocols.networkProtocolsEnabled[i]);
-        des.setNetworkProtocolsPort(_protocols.networkProtocolsPort[i]);
-        des.setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
+        data->setNetworkProtocolsEnabled(_protocols.networkProtocolsEnabled[i]);
+        data->setNetworkProtocolsPort(_protocols.networkProtocolsPort[i]);
+        data->setNetworkProtocolsName(_protocols.networkProtocolsName[i]);
     }
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkProtocols>::asQVariant(&networkProtocols),
-        MessageType::SetNetworkProtocols);
+
+    d_ptr->addRequest(
+        MessageType::SetNetworkProtocols,
+        ONVIF::VPtr<ONVIF::NetworkProtocols>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkDefaultGateway(
     Data::Network::DefaultGateway _defaultGateway) {
-    ONVIF::NetworkDefaultGateway networkDefaultGateway;
-    networkDefaultGateway.setIpv4Address(_defaultGateway.ipv4Address);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asQVariant(
-            &networkDefaultGateway),
-        MessageType::SetNetworkDefaultGateway);
+    auto data = new ONVIF::NetworkDefaultGateway;
+    data->setIpv4Address(_defaultGateway.ipv4Address);
+
+    d_ptr->addRequest(
+        MessageType::SetNetworkDefaultGateway,
+        ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkDiscoveryMode(
     Data::Network::DiscoveryMode _discoveryMode) {
-    ONVIF::NetworkDiscoveryMode networkDiscoveryMode;
-    networkDiscoveryMode.setDiscoveryMode(_discoveryMode.discoveryMode);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asQVariant(
-            &networkDiscoveryMode),
-        MessageType::SetNetworkDiscoveryMode);
+    auto data = new ONVIF::NetworkDiscoveryMode;
+    data->setDiscoveryMode(_discoveryMode.discoveryMode);
+
+    d_ptr->addRequest(
+        MessageType::SetNetworkDiscoveryMode,
+        ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkDNS(Data::Network::DNS _dns) {
-    ONVIF::NetworkDNS networkDNS;
-    networkDNS.setDhcp(_dns.dhcp);
+    auto data = new ONVIF::NetworkDNS;
+    data->setDhcp(_dns.dhcp);
     foreach (QString ipAddress, _dns.ipv4Address)
-        networkDNS.setIpv4Address(ipAddress);
+        data->setIpv4Address(ipAddress);
     foreach (QString manualType, _dns.manualType)
-        networkDNS.setManualType(manualType);
-    networkDNS.setSearchDomain(_dns.searchDomain);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkDNS>::asQVariant(&networkDNS),
-        MessageType::SetNetworkDNS);
+        data->setManualType(manualType);
+    data->setSearchDomain(_dns.searchDomain);
+
+    d_ptr->addRequest(
+        MessageType::NetworkDNS,
+        ONVIF::VPtr<ONVIF::NetworkDNS>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkHostname(Data::Network::Hostname _hostname) {
-    ONVIF::NetworkHostname networkHostname;
-    networkHostname.setDhcp(_hostname.dhcp);
-    networkHostname.setName(_hostname.name);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkHostname>::asQVariant(&networkHostname),
-        MessageType::SetNetworkHostname);
+    auto data = new ONVIF::NetworkHostname;
+    data->setDhcp(_hostname.dhcp);
+    data->setName(_hostname.name);
+
+    d_ptr->addRequest(
+        MessageType::SetNetworkHostname,
+        ONVIF::VPtr<ONVIF::NetworkHostname>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setNetworkNTP(Data::Network::NTP _ntp) {
-    ONVIF::NetworkNTP networkNTP;
-    networkNTP.setDhcp(_ntp.dhcp);
-    networkNTP.setIpv4Address(_ntp.ipv4Address);
-    networkNTP.setManualType(_ntp.ipv6Address);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::NetworkNTP>::asQVariant(&networkNTP),
-        MessageType::SetNetworkNTP);
+    auto data = new ONVIF::NetworkNTP;
+    data->setDhcp(_ntp.dhcp);
+    data->setIpv4Address(_ntp.ipv4Address);
+    data->setManualType(_ntp.ipv6Address);
+
+    d_ptr->addRequest(
+        MessageType::SetNetworkNTP,
+        ONVIF::VPtr<ONVIF::NetworkNTP>::asQVariant(data));
 }
 
 void
 QOnvifDevice::resetFactory(bool isHard) {
-    ONVIF::SystemFactoryDefault systemFactoryDefault;
-    systemFactoryDefault.setFactoryDefault(
+    auto data = new ONVIF::SystemFactoryDefault;
+    data->setFactoryDefault(
         isHard ? ONVIF::SystemFactoryDefault::Hard
                : ONVIF::SystemFactoryDefault::Soft);
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asQVariant(
-            &systemFactoryDefault),
-        MessageType::SetSystemFactoryDefault);
+
+    d_ptr->addRequest(
+        MessageType::SetSystemFactoryDefault,
+        ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asQVariant(data));
 }
 
 void
 QOnvifDevice::reboot() {
-    ONVIF::SystemReboot systemReboot;
-    d_ptr->ideviceManagement->setData(
-        ONVIF::VPtr<ONVIF::SystemReboot>::asQVariant(&systemReboot),
-        MessageType::SetSystemReboot);
+    auto data = new ONVIF::SystemReboot;
+
+    d_ptr->addRequest(
+        MessageType::SetSystemReboot,
+        ONVIF::VPtr<ONVIF::SystemReboot>::asQVariant(data));
 }
 
 void
 QOnvifDevice::getProfiles() {
-    d_ptr->imediaManagement->getData(MessageType::Profiles);
+    d_ptr->addRequest(MessageType::Profiles, QVariant());
 }
 
 void
 QOnvifDevice::getProfile720p() {
-    d_ptr->imediaManagement->getData(MessageType::Profile720p);
+    d_ptr->addRequest(MessageType::Profile720p, QVariant());
 }
 
 void
 QOnvifDevice::getProfileD1() {
-    d_ptr->imediaManagement->getData(MessageType::ProfileD1);
+    d_ptr->addRequest(MessageType::ProfileD1, QVariant());
 }
 
 void
 QOnvifDevice::getVideoEncoderConfigurations() {
-    d_ptr->imediaManagement->getData(MessageType::VideoEncoderConfigurations);
+    d_ptr->addRequest(MessageType::VideoEncoderConfigurations, QVariant());
 }
 
 void
 QOnvifDevice::getVideoSourceConfigurations() {
-    d_ptr->imediaManagement->getData(MessageType::VideoSourceConfigurations);
+    d_ptr->addRequest(MessageType::VideoSourceConfigurations, QVariant());
 }
 
 void
 QOnvifDevice::getVideoEncoderConfigurationOptions() {
 
     if (d_ptr->idata.profiles.toKenPro.isEmpty()) {
-        getProfiles();
+        d_ptr->imediaManagement->getData(MessageType::Profiles);
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1095,7 +1194,8 @@ QOnvifDevice::getVideoEncoderConfigurationOptions() {
             return;
     }
     if (d_ptr->idata.mediaConfig.video.encodingConfigs.token.isEmpty()) {
-        getVideoEncoderConfigurations();
+        d_ptr->imediaManagement->getData(
+            MessageType::VideoEncoderConfigurations);
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1119,33 +1219,13 @@ QOnvifDevice::getVideoEncoderConfigurationOptions() {
     auto profileToken = d_ptr->idata.profiles.toKenPro;
     auto size         = qMin(configToken.length(), profileToken.length());
 
-    if (size > 0) {
-        QVariantList parameters;
-        parameters.append(configToken[0]);
-        parameters.append(profileToken[0]);
-        d_ptr->imediaManagement->getData(
-            MessageType::VideoEncoderConfigurationOptions, parameters);
+    for (int i = 0; i < size; ++i) {
 
-        auto obj = new QObject;
-        connect(
-            this,
-            &QOnvifDevice::videoEncoderConfigurationOptionReceived,
-            obj,
-            [ this, obj, configToken, profileToken, size, i = 0 ]() mutable {
-                i++;
-                if (i == size) {
-                    obj->deleteLater();
-                    emit getResultReceived(
-                        d_ptr->idata,
-                        MessageType::VideoEncoderConfigurationOptions);
-                    return;
-                }
-                QVariantList parameters;
-                parameters.append(configToken[i]);
-                parameters.append(profileToken[i]);
-                d_ptr->imediaManagement->getData(
-                    MessageType::VideoEncoderConfigurationOptions, parameters);
-            });
+        QVariantList parameters;
+        parameters.append(configToken[i]);
+        parameters.append(profileToken[i]);
+        d_ptr->addRequest(
+            MessageType::VideoEncoderConfigurationOptions, parameters);
     }
 }
 
@@ -1153,7 +1233,7 @@ void
 QOnvifDevice::getStreamUris() {
 
     if (d_ptr->idata.profiles.toKenPro.isEmpty()) {
-        getProfiles();
+        d_ptr->imediaManagement->getData(MessageType::Profiles);
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1179,28 +1259,10 @@ QOnvifDevice::getStreamUris() {
     //        parameters);
     //    }
 
-    if (d_ptr->idata.profiles.toKenPro.length() > 0) {
+    for (int i = 0; i < d_ptr->idata.profiles.toKenPro.length(); ++i) {
         QVariantList parameters;
-        parameters.append(d_ptr->idata.profiles.toKenPro.value(0));
-        d_ptr->imediaManagement->getData(MessageType::StreamUri, parameters);
-
-        auto obj = new QObject;
-        connect(this, &QOnvifDevice::streamUrisReceived, obj, [
-            this,
-            obj,
-            i = 0
-        ]() mutable {
-            i++;
-            if (i == d_ptr->idata.profiles.toKenPro.length()) {
-                obj->deleteLater();
-                emit getResultReceived(d_ptr->idata, MessageType::StreamUri);
-                return;
-            }
-            QVariantList parameters;
-            parameters.append(d_ptr->idata.profiles.toKenPro.value(i));
-            d_ptr->imediaManagement->getData(
-                MessageType::StreamUri, parameters);
-        });
+        parameters.append(d_ptr->idata.profiles.toKenPro.value(i));
+        d_ptr->addRequest(MessageType::StreamUri, parameters);
     }
 }
 
@@ -1210,13 +1272,14 @@ QOnvifDevice::getImageSetting() {
 
     QVariantList parameters;
     parameters.append(d_ptr->idata.profiles.sourceTokenVsc[0]);
-    d_ptr->imediaManagement->getData(MessageType::ImageSetting, parameters);
+
+    d_ptr->addRequest(MessageType::ImageSetting, parameters);
 }
 
 void
 QOnvifDevice::getImageSettingOptions() {
     if (d_ptr->idata.profiles.sourceTokenVsc.isEmpty()) {
-        getProfiles();
+        d_ptr->imediaManagement->getData(MessageType::Profiles);
 
         QTimer timer;
         timer.setSingleShot(true);
@@ -1233,107 +1296,111 @@ QOnvifDevice::getImageSettingOptions() {
 
     QVariantList parameters;
     parameters.append(d_ptr->idata.profiles.sourceTokenVsc[0]);
-    d_ptr->imediaManagement->getData(
-        MessageType::ImageSettingOptions, parameters);
+
+    d_ptr->addRequest(MessageType::ImageSettingOptions, parameters);
 }
 
 void
 QOnvifDevice::setVideoEncoderConfiguration(
     Data::MediaConfig::Video::EncoderConfig _videoConfig) {
-    ONVIF::VideoEncoderConfiguration videoEncoderConfiguration;
-    videoEncoderConfiguration.setToken(_videoConfig.token);
-    videoEncoderConfiguration.setName(_videoConfig.name);
-    videoEncoderConfiguration.setUseCount(_videoConfig.useCount);
-    videoEncoderConfiguration.setEncoding(_videoConfig.encoding);
-    videoEncoderConfiguration.setWidth(_videoConfig.width);
-    videoEncoderConfiguration.setHeight(_videoConfig.height);
-    videoEncoderConfiguration.setQuality(_videoConfig.quality);
-    videoEncoderConfiguration.setFrameRateLimit(_videoConfig.frameRateLimit);
-    videoEncoderConfiguration.setEncodingInterval(
-        _videoConfig.encodingInterval);
-    videoEncoderConfiguration.setBitrateLimit(_videoConfig.bitrateLimit);
-    videoEncoderConfiguration.setGovLength(_videoConfig.govLength);
-    videoEncoderConfiguration.setH264Profile(_videoConfig.h264Profile);
-    videoEncoderConfiguration.setType(_videoConfig.type);
-    videoEncoderConfiguration.setIpv4Address(_videoConfig.ipv4Address);
-    videoEncoderConfiguration.setPort(_videoConfig.port);
-    videoEncoderConfiguration.setTtl(_videoConfig.ttl);
-    videoEncoderConfiguration.setAutoStart(_videoConfig.autoStart);
-    videoEncoderConfiguration.setSessionTimeout(_videoConfig.sessionTimeout);
-    d_ptr->imediaManagement->setData(
-        ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asQVariant(
-            &videoEncoderConfiguration),
-        MessageType::SetVideoEncoderConfiguration);
+    auto data = new ONVIF::VideoEncoderConfiguration;
+    data->setToken(_videoConfig.token);
+    data->setName(_videoConfig.name);
+    data->setUseCount(_videoConfig.useCount);
+    data->setEncoding(_videoConfig.encoding);
+    data->setWidth(_videoConfig.width);
+    data->setHeight(_videoConfig.height);
+    data->setQuality(_videoConfig.quality);
+    data->setFrameRateLimit(_videoConfig.frameRateLimit);
+    data->setEncodingInterval(_videoConfig.encodingInterval);
+    data->setBitrateLimit(_videoConfig.bitrateLimit);
+    data->setGovLength(_videoConfig.govLength);
+    data->setH264Profile(_videoConfig.h264Profile);
+    data->setType(_videoConfig.type);
+    data->setIpv4Address(_videoConfig.ipv4Address);
+    data->setPort(_videoConfig.port);
+    data->setTtl(_videoConfig.ttl);
+    data->setAutoStart(_videoConfig.autoStart);
+    data->setSessionTimeout(_videoConfig.sessionTimeout);
+
+    d_ptr->addRequest(
+        MessageType::SetVideoEncoderConfiguration,
+        ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setImageSetting(Data::MediaConfig::ImageSetting _imageSetting) {
-    ONVIF::ImageSetting imageSetting;
-    imageSetting.setAutofocusManual(_imageSetting.autofocusManual);
-    imageSetting.setBrightness(_imageSetting.brightness);
-    imageSetting.setColorSaturation(_imageSetting.colorSaturation);
-    imageSetting.setContrast(_imageSetting.contrast);
-    imageSetting.setDefaultSpeed(_imageSetting.defaultSpeed);
-    imageSetting.setExposureIris(_imageSetting.exposureIris);
-    imageSetting.setExposureManual(_imageSetting.exposureManual);
-    imageSetting.setForcePersistence(_imageSetting.forcePersistence);
-    imageSetting.setSharpness(_imageSetting.sharpness);
-    imageSetting.setToken(_imageSetting.token);
-    d_ptr->imediaManagement->setData(
-        ONVIF::VPtr<ONVIF::ImageSetting>::asQVariant(&imageSetting),
-        MessageType::SetImageSettings);
+    auto data = new ONVIF::ImageSetting;
+    data->setAutofocusManual(_imageSetting.autofocusManual);
+    data->setBrightness(_imageSetting.brightness);
+    data->setColorSaturation(_imageSetting.colorSaturation);
+    data->setContrast(_imageSetting.contrast);
+    data->setDefaultSpeed(_imageSetting.defaultSpeed);
+    data->setExposureIris(_imageSetting.exposureIris);
+    data->setExposureManual(_imageSetting.exposureManual);
+    data->setForcePersistence(_imageSetting.forcePersistence);
+    data->setSharpness(_imageSetting.sharpness);
+    data->setToken(_imageSetting.token);
+
+    d_ptr->addRequest(
+        MessageType::SetImageSettings,
+        ONVIF::VPtr<ONVIF::ImageSetting>::asQVariant(data));
 }
 
 void
 QOnvifDevice::getPtzConfiguration() {
-    d_ptr->iptzManagement->getData(MessageType::Configuration);
+    d_ptr->addRequest(MessageType::Configuration, QVariant());
 }
 
 void
 QOnvifDevice::getPresets() {
     QVariantList parameters;
     parameters.append("MediaProfile000");
-    d_ptr->iptzManagement->getData(MessageType::Presets, parameters);
+    d_ptr->addRequest(MessageType::Presets, parameters);
 }
 
 void
 QOnvifDevice::goHomePosition() {
-    ONVIF::GotoHomePosition gotoHomePosition;
-    gotoHomePosition.setProfileToken("MediaProfile000");
-    d_ptr->iptzManagement->setData(
-        ONVIF::VPtr<ONVIF::GotoHomePosition>::asQVariant(&gotoHomePosition),
-        MessageType::GotoHomePosition);
+    auto data = new ONVIF::GotoHomePosition;
+    data->setProfileToken("MediaProfile000");
+
+    d_ptr->addRequest(
+        MessageType::GotoHomePosition,
+        ONVIF::VPtr<ONVIF::GotoHomePosition>::asQVariant(data));
 }
 
 void
 QOnvifDevice::setHomePosition() {
-    ONVIF::HomePosition homePosition;
-    homePosition.setProfileToken("MediaProfile000");
-    d_ptr->iptzManagement->setData(
-        ONVIF::VPtr<ONVIF::HomePosition>::asQVariant(&homePosition),
-        MessageType::SetHomePosition);
+    auto data = new ONVIF::HomePosition;
+    data->setProfileToken("MediaProfile000");
+
+    d_ptr->addRequest(
+        MessageType::SetHomePosition,
+        ONVIF::VPtr<ONVIF::HomePosition>::asQVariant(data));
 }
 
 void
 QOnvifDevice::continuousMove(const float x, const float y, const float z) {
-    ONVIF::ContinuousMove continuousMove;
-    continuousMove.setProfileToken("MediaProfile000");
-    continuousMove.setPanTiltX(x);
-    continuousMove.setPanTiltY(y);
-    continuousMove.setZoomX(z);
-    d_ptr->iptzManagement->setData(
-        ONVIF::VPtr<ONVIF::ContinuousMove>::asQVariant(&continuousMove),
-        MessageType::ContinuousMove);
+    auto data = new ONVIF::ContinuousMove;
+    data->setProfileToken("MediaProfile000");
+    data->setPanTiltX(x);
+    data->setPanTiltY(y);
+    data->setZoomX(z);
+
+    d_ptr->addRequest(
+        MessageType::ContinuousMove,
+        ONVIF::VPtr<ONVIF::ContinuousMove>::asQVariant(data));
 }
 
 void
 QOnvifDevice::stopMovement() {
-    ONVIF::Stop stop;
-    stop.setProfileToken("MediaProfile000");
-    stop.setPanTilt(true);
-    stop.setZoom(true);
-    d_ptr->iptzManagement->setData(
-        ONVIF::VPtr<ONVIF::Stop>::asQVariant(&stop), MessageType::Stop);
+    auto data = new ONVIF::Stop;
+    data->setProfileToken("MediaProfile000");
+    data->setPanTilt(true);
+    data->setZoom(true);
+
+    d_ptr->addRequest(
+        MessageType::Stop, ONVIF::VPtr<ONVIF::Stop>::asQVariant(data));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

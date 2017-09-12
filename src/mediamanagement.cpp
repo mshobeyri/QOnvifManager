@@ -2365,7 +2365,7 @@ MediaManagement::getData(
 }
 
 void
-MediaManagement::setData(QVariant data, device::MessageType messageType) {
+MediaManagement::setData(device::MessageType messageType, QVariant data) {
     Message*    msg = newMessage();
     QDomElement domElement;
 

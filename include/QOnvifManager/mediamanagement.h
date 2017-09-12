@@ -28,7 +28,7 @@ public:
         const QString& password);
 
     void getData(device::MessageType, QVariantList = QVariantList());
-    void setData(QVariant, device::MessageType);
+    void setData(device::MessageType, QVariant);
 
 signals:
 

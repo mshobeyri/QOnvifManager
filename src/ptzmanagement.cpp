@@ -988,7 +988,7 @@ PtzManagement::getData(
 }
 
 void
-PtzManagement::setData(QVariant data, device::MessageType messageType) {
+PtzManagement::setData(device::MessageType messageType, QVariant data) {
     Message*    msg = newMessage();
     QDomElement domElement;
 
