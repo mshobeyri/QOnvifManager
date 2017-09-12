@@ -996,38 +996,47 @@ PtzManagement::setData(device::MessageType messageType, QVariant data) {
     case device::MessageType::RemovePreset: {
         RemovePreset* d = ONVIF::VPtr<ONVIF::RemovePreset>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetPreset: {
         Preset* d  = ONVIF::VPtr<ONVIF::Preset>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::ContinuousMove: {
         ContinuousMove* d = ONVIF::VPtr<ONVIF::ContinuousMove>::asPtr(data);
         domElement        = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::AbsoluteMove: {
         AbsoluteMove* d = ONVIF::VPtr<ONVIF::AbsoluteMove>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::RelativeMove: {
         RelativeMove* d = ONVIF::VPtr<ONVIF::RelativeMove>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::Stop: {
         Stop* d    = ONVIF::VPtr<ONVIF::Stop>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::GotoPreset: {
         GotoPreset* d = ONVIF::VPtr<ONVIF::GotoPreset>::asPtr(data);
         domElement    = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::GotoHomePosition: {
         GotoHomePosition* d = ONVIF::VPtr<ONVIF::GotoHomePosition>::asPtr(data);
         domElement          = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetHomePosition: {
         HomePosition* d = ONVIF::VPtr<ONVIF::HomePosition>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     default:
         msg->deleteLater();

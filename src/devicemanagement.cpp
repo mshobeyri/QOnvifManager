@@ -624,55 +624,67 @@ DeviceManagement::setData(device::MessageType messageType, QVariant data) {
     case device::MessageType::SetScopes: {
         SystemScopes* d = ONVIF::VPtr<ONVIF::SystemScopes>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetDateAndTime: {
         SystemDateAndTime* d =
             ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetUsers: {
         Users* d   = ONVIF::VPtr<ONVIF::Users>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetSystemFactoryDefault: {
         SystemFactoryDefault* d =
             ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetSystemReboot: {
         SystemReboot* d = ONVIF::VPtr<ONVIF::SystemReboot>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkInterfaces: {
         NetworkInterfaces* d =
             ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkProtocols: {
         NetworkProtocols* d = ONVIF::VPtr<ONVIF::NetworkProtocols>::asPtr(data);
         domElement          = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkDefaultGateway: {
         NetworkDefaultGateway* d =
             ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkDiscoveryMode: {
         NetworkDiscoveryMode* d =
             ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkDNS: {
         NetworkDNS* d = ONVIF::VPtr<ONVIF::NetworkDNS>::asPtr(data);
         domElement    = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkHostname: {
         NetworkHostname* d = ONVIF::VPtr<ONVIF::NetworkHostname>::asPtr(data);
         domElement         = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetNetworkNTP: {
         NetworkNTP* d = ONVIF::VPtr<ONVIF::NetworkNTP>::asPtr(data);
         domElement    = d->toxml();
+        d->deleteLater();
     } break;
     default:
         msg->deleteLater();

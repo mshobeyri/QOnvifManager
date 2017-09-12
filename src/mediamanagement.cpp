@@ -2374,10 +2374,12 @@ MediaManagement::setData(device::MessageType messageType, QVariant data) {
         VideoEncoderConfiguration* d =
             ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asPtr(data);
         domElement = d->toxml();
+        d->deleteLater();
     } break;
     case device::MessageType::SetImageSettings: {
         ImageSetting* d = ONVIF::VPtr<ONVIF::ImageSetting>::asPtr(data);
         domElement      = d->toxml();
+        d->deleteLater();
     } break;
     default:
         msg->deleteLater();
