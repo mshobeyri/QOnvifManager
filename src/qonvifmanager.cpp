@@ -26,13 +26,12 @@ QOnvifManager::QOnvifManager(
     // device finding
     d->ideviceSearcher = ONVIF::DeviceSearcher::instance(d->ihostAddress);
 
-    // when one device finded
+    // when one device found
     connect(
         d->ideviceSearcher,
-        SIGNAL(receiveData(QHash<QString, QString>)),
+        &ONVIF::DeviceSearcher::receiveData,
         this,
-        SLOT(onReceiveData(QHash<QString, QString>)),
-        Qt::UniqueConnection);
+        &QOnvifManager::onReceiveData);
 
     // when device searching ended
     connect(
