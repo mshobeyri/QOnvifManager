@@ -731,11 +731,9 @@ QOnvifDevice::QOnvifDevice(
                 des.resAvailableHeightJpeg = src->resAvailableHeightJpeg();
                 des.resAvailableWidthJpeg  = src->resAvailableWidthJpeg();
 
-                foreach (
-                    ONVIF::VideoEncoderConfigurationOptions::
-                        H264ProfilesSupported h264ProfilesSupporte,
-                    src->getH264ProfilesSupported()) {
-                    int intCastTemp = static_cast<int>(h264ProfilesSupporte);
+                for (const auto& h264ProfilesSupported :
+                     src->getH264ProfilesSupported()) {
+                    int intCastTemp = static_cast<int>(h264ProfilesSupported);
 
                     Data::MediaConfig::Video::EncoderConfigs::Option::
                         H264ProfilesSupported enumCastTemp = static_cast<
@@ -1098,9 +1096,9 @@ void
 QOnvifDevice::setNetworkDNS(Data::Network::DNS _dns) {
     auto data = new ONVIF::NetworkDNS;
     data->setDhcp(_dns.dhcp);
-    foreach (QString ipAddress, _dns.ipv4Address)
+    for (const auto& ipAddress : _dns.ipv4Address)
         data->setIpv4Address(ipAddress);
-    foreach (QString manualType, _dns.manualType)
+    for (const auto& manualType : _dns.manualType)
         data->setManualType(manualType);
     data->setSearchDomain(_dns.searchDomain);
 
