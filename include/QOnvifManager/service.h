@@ -6,21 +6,21 @@
 #include "qonvifdevice.hpp"
 #include <QNetworkAccessManager>
 
+template <typename T>
+T*
+toPtr(QVariant v) {
+    return static_cast<T*>(v.value<void*>());
+    //        QObject *object = qvariant_cast<QObject*>(v);
+    //        return qobject_cast<T*>(object);
+}
+
+template <typename T>
+QVariant
+toQVariant(T* ptr) {
+    return qVariantFromValue(static_cast<void*>(ptr));
+}
+
 namespace ONVIF {
-
-template <class T> class VPtr
-{
-public:
-    static T* asPtr(QVariant v) {
-        return (T*)v.value<void*>();
-        //        QObject *object = qvariant_cast<QObject*>(v);
-        //        return qobject_cast<T*>(object);
-    }
-
-    static QVariant asQVariant(T* ptr) {
-        return qVariantFromValue((void*)ptr);
-    }
-};
 
 class Service : public QObject
 {

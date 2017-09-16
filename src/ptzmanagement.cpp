@@ -282,7 +282,7 @@ PtzManagement::onMessageParserReceived(
 
             item = items.next();
         }
-        var = VPtr<Configurations>::asQVariant(configurations);
+        var = toQVariant<Configurations>(configurations);
     } break;
     case device::MessageType::Configuration: {
         Configuration* configuration = new Configuration();
@@ -383,7 +383,7 @@ PtzManagement::onMessageParserReceived(
             result->getValue("//tt:ZoomLimits/tt:Range/tt:XRange/tt:Max")
                 .trimmed()
                 .toFloat());
-        var = VPtr<Configuration>::asQVariant(configuration);
+        var = toQVariant<Configuration>(configuration);
     } break;
     case device::MessageType::Nodes: {
         Nodes*          nodes = new Nodes();
@@ -648,7 +648,7 @@ PtzManagement::onMessageParserReceived(
             nodes->setHomeSupported(value.trimmed() == "true" ? true : false);
             item = items.next();
         }
-        var = VPtr<Nodes>::asQVariant(nodes);
+        var = toQVariant<Nodes>(nodes);
     } break;
     case device::MessageType::Node: {
         Node*        node  = new Node();
@@ -842,7 +842,7 @@ PtzManagement::onMessageParserReceived(
         node->setHomeSupport(
             result->getValue("//tt:HomeSupported").trimmed() == "true" ? true
                                                                        : false);
-        var = VPtr<Node>::asQVariant(node);
+        var = toQVariant<Node>(node);
     } break;
     case device::MessageType::Presets: {
         Presets*        presets = new Presets();
@@ -873,7 +873,7 @@ PtzManagement::onMessageParserReceived(
             presets->setName(value.trimmed());
             item = items.next();
         }
-        var = VPtr<Presets>::asQVariant(presets);
+        var = toQVariant<Presets>(presets);
     } break;
     case device::MessageType::RemovePreset: {
         bool r = false;
@@ -993,47 +993,47 @@ PtzManagement::setData(device::MessageType messageType, QVariant data) {
 
     switch (messageType) {
     case device::MessageType::RemovePreset: {
-        RemovePreset* d = ONVIF::VPtr<ONVIF::RemovePreset>::asPtr(data);
+        RemovePreset* d = toPtr<ONVIF::RemovePreset>(data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetPreset: {
-        Preset* d  = ONVIF::VPtr<ONVIF::Preset>::asPtr(data);
+        Preset* d  = toPtr<ONVIF::Preset>(data);
         domElement = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::ContinuousMove: {
-        ContinuousMove* d = ONVIF::VPtr<ONVIF::ContinuousMove>::asPtr(data);
+        ContinuousMove* d = toPtr<ONVIF::ContinuousMove>(data);
         domElement        = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::AbsoluteMove: {
-        AbsoluteMove* d = ONVIF::VPtr<ONVIF::AbsoluteMove>::asPtr(data);
+        AbsoluteMove* d = toPtr<ONVIF::AbsoluteMove>(data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::RelativeMove: {
-        RelativeMove* d = ONVIF::VPtr<ONVIF::RelativeMove>::asPtr(data);
+        RelativeMove* d = toPtr<ONVIF::RelativeMove>(data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::Stop: {
-        Stop* d    = ONVIF::VPtr<ONVIF::Stop>::asPtr(data);
+        Stop* d    = toPtr<ONVIF::Stop>(data);
         domElement = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::GotoPreset: {
-        GotoPreset* d = ONVIF::VPtr<ONVIF::GotoPreset>::asPtr(data);
+        GotoPreset* d = toPtr<ONVIF::GotoPreset>(data);
         domElement    = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::GotoHomePosition: {
-        GotoHomePosition* d = ONVIF::VPtr<ONVIF::GotoHomePosition>::asPtr(data);
+        GotoHomePosition* d = toPtr<ONVIF::GotoHomePosition>(data);
         domElement          = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetHomePosition: {
-        HomePosition* d = ONVIF::VPtr<ONVIF::HomePosition>::asPtr(data);
+        HomePosition* d = toPtr<ONVIF::HomePosition>(data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;

@@ -174,7 +174,7 @@ DeviceManagement::onMessageParserReceived(
             result->getValue("//tt:LocalDateTime/tt:Time/tt:Hour").toInt(),
             result->getValue("//tt:LocalDateTime/tt:Time/tt:Minute").toInt(),
             result->getValue("//tt:LocalDateTime/tt:Time/tt:Second").toInt());
-        var = VPtr<SystemDateAndTime>::asQVariant(systemDateAndTime);
+        var = toQVariant<SystemDateAndTime>(systemDateAndTime);
     } break;
     case device::MessageType::Users: {
         Users* user = new Users();
@@ -204,7 +204,7 @@ DeviceManagement::onMessageParserReceived(
             user->setUserLevel(userLevel.trimmed());
             item = items.next();
         }
-        var = VPtr<Users>::asQVariant(user);
+        var = toQVariant<Users>(user);
     } break;
     case device::MessageType::Capabilities: {
         Capabilities* capabilities = new Capabilities();
@@ -314,7 +314,7 @@ DeviceManagement::onMessageParserReceived(
             "remoteUserHanding",
             result->getValue("//tt:RemoteUserHanding") == "true" ? true
                                                                  : false);
-        var = VPtr<Capabilities>::asQVariant(capabilities);
+        var = toQVariant<Capabilities>(capabilities);
     } break;
     case device::MessageType::NetworkInterfaces: {
         NetworkInterfaces* networkInterfaces = new NetworkInterfaces();
@@ -352,7 +352,7 @@ DeviceManagement::onMessageParserReceived(
             result->getValue("//tt:FromDHCP/tt:PrefixLength").toInt());
         networkInterfaces->setProperty(
             "ipv4DHCP", result->getValue("//tt:DHCP"));
-        var = VPtr<NetworkInterfaces>::asQVariant(networkInterfaces);
+        var = toQVariant<NetworkInterfaces>(networkInterfaces);
     } break;
     case device::MessageType::NetworkProtocols: {
         NetworkProtocols* networkProtocols = new NetworkProtocols();
@@ -381,7 +381,7 @@ DeviceManagement::onMessageParserReceived(
                 protocolsPort.trimmed().toInt());
             item = items.next();
         }
-        var = VPtr<NetworkProtocols>::asQVariant(networkProtocols);
+        var = toQVariant<NetworkProtocols>(networkProtocols);
     } break;
     case device::MessageType::NetworkDefaultGateway: {
         NetworkDefaultGateway* networkDefaultGateway =
@@ -392,13 +392,13 @@ DeviceManagement::onMessageParserReceived(
         networkDefaultGateway->setProperty(
             "ipv6Address",
             result->getValue("//tds:NetworkGateway/tt:IPv6Address"));
-        var = VPtr<NetworkDefaultGateway>::asQVariant(networkDefaultGateway);
+        var = toQVariant<NetworkDefaultGateway>(networkDefaultGateway);
     } break;
     case device::MessageType::NetworkDiscoveryMode: {
         NetworkDiscoveryMode* networkDiscoveryMode = new NetworkDiscoveryMode();
         networkDiscoveryMode->setProperty(
             "discoveryMode", result->getValue("//tds:DiscoveryMode"));
-        var = VPtr<NetworkDiscoveryMode>::asQVariant(networkDiscoveryMode);
+        var = toQVariant<NetworkDiscoveryMode>(networkDiscoveryMode);
     } break;
     case device::MessageType::NetworkDNS: {
         NetworkDNS* networkDNS = new NetworkDNS();
@@ -428,7 +428,7 @@ DeviceManagement::onMessageParserReceived(
             networkDNS->setIpv4Address(dnsIPv4Address.trimmed());
             item = items.next();
         }
-        var = VPtr<NetworkDNS>::asQVariant(networkDNS);
+        var = toQVariant<NetworkDNS>(networkDNS);
     } break;
     case device::MessageType::NetworkHostname: {
         NetworkHostname* networkHostname = new NetworkHostname();
@@ -436,7 +436,7 @@ DeviceManagement::onMessageParserReceived(
             "dhcp", result->getValue("//tds:HostnameInformation/tt:FromDHCP"));
         networkHostname->setProperty(
             "name", result->getValue("//tds:HostnameInformation/tt:Name"));
-        var = VPtr<NetworkHostname>::asQVariant(networkHostname);
+        var = toQVariant<NetworkHostname>(networkHostname);
     } break;
     case device::MessageType::NetworkNTP: {
         NetworkNTP* networkNTP = new NetworkNTP();
@@ -456,7 +456,7 @@ DeviceManagement::onMessageParserReceived(
             "ipv6Address",
             result->getValue(
                 "//tds:NTPInformation/tt:NTPManual/tt:IPv6Address"));
-        var = VPtr<NetworkNTP>::asQVariant(networkNTP);
+        var = toQVariant<NetworkNTP>(networkNTP);
     } break;
     case device::MessageType::SetScopes: {
         bool r = false;
@@ -622,67 +622,62 @@ DeviceManagement::setData(device::MessageType messageType, QVariant data) {
 
     switch (messageType) {
     case device::MessageType::SetScopes: {
-        SystemScopes* d = ONVIF::VPtr<ONVIF::SystemScopes>::asPtr(data);
+        SystemScopes* d = toPtr<ONVIF::SystemScopes>(data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetDateAndTime: {
-        SystemDateAndTime* d =
-            ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(data);
-        domElement = d->toxml();
+        SystemDateAndTime* d =toPtr <ONVIF::SystemDateAndTime> (data);
+        domElement           = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetUsers: {
-        Users* d   = ONVIF::VPtr<ONVIF::Users>::asPtr(data);
+        Users* d   = toPtr<ONVIF::Users> (data);
         domElement = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetSystemFactoryDefault: {
-        SystemFactoryDefault* d =
-            ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asPtr(data);
-        domElement = d->toxml();
+        SystemFactoryDefault* d = toPtr<ONVIF::SystemFactoryDefault> (data);
+        domElement              = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetSystemReboot: {
-        SystemReboot* d = ONVIF::VPtr<ONVIF::SystemReboot>::asPtr(data);
+        SystemReboot* d = toPtr<ONVIF::SystemReboot> (data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkInterfaces: {
-        NetworkInterfaces* d =
-            ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(data);
-        domElement = d->toxml();
+        NetworkInterfaces* d = toPtr<ONVIF::NetworkInterfaces> (data);
+        domElement           = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkProtocols: {
-        NetworkProtocols* d = ONVIF::VPtr<ONVIF::NetworkProtocols>::asPtr(data);
+        NetworkProtocols* d = toPtr<ONVIF::NetworkProtocols> (data);
         domElement          = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkDefaultGateway: {
-        NetworkDefaultGateway* d =
-            ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(data);
-        domElement = d->toxml();
+        NetworkDefaultGateway* d = toPtr<ONVIF::NetworkDefaultGateway> (data);
+        domElement               = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkDiscoveryMode: {
-        NetworkDiscoveryMode* d =
-            ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(data);
-        domElement = d->toxml();
+        NetworkDiscoveryMode* d = toPtr<ONVIF::NetworkDiscoveryMode> (data);
+        domElement              = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkDNS: {
-        NetworkDNS* d = ONVIF::VPtr<ONVIF::NetworkDNS>::asPtr(data);
+        NetworkDNS* d = toPtr<ONVIF::NetworkDNS> (data);
         domElement    = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkHostname: {
-        NetworkHostname* d = ONVIF::VPtr<ONVIF::NetworkHostname>::asPtr(data);
+        NetworkHostname* d = toPtr<ONVIF::NetworkHostname> (data);
         domElement         = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetNetworkNTP: {
-        NetworkNTP* d = ONVIF::VPtr<ONVIF::NetworkNTP>::asPtr(data);
+        NetworkNTP* d = toPtr<ONVIF::NetworkNTP> (data);
         domElement    = d->toxml();
         d->deleteLater();
     } break;

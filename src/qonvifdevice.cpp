@@ -165,7 +165,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::DateAndTime: {
                 QScopedPointer<ONVIF::SystemDateAndTime> systemDateAndTime(
-                    ONVIF::VPtr<ONVIF::SystemDateAndTime>::asPtr(var));
+                    toPtr<ONVIF::SystemDateAndTime>(var));
 
                 d_ptr->idata.dateTime.localTime =
                     systemDateAndTime->localTime();
@@ -178,8 +178,7 @@ QOnvifDevice::QOnvifDevice(
                 emit getResultReceived(d_ptr->idata, messageType);
             } break;
             case MessageType::Users: {
-                QScopedPointer<ONVIF::Users> users(
-                    ONVIF::VPtr<ONVIF::Users>::asPtr(var));
+                QScopedPointer<ONVIF::Users> users(toPtr<ONVIF::Users>(var));
 
                 d_ptr->idata.users.clear();
                 for (int i = 0; i < users->userNames().length(); i++) {
@@ -195,7 +194,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::Capabilities: {
                 QScopedPointer<ONVIF::Capabilities> capabilities(
-                    ONVIF::VPtr<ONVIF::Capabilities>::asPtr(var));
+                    toPtr<ONVIF::Capabilities>(var));
 
                 auto& src = capabilities;
                 auto& des = d_ptr->idata.capabilities;
@@ -250,7 +249,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::NetworkInterfaces: {
                 QScopedPointer<ONVIF::NetworkInterfaces> networkInterfaces(
-                    ONVIF::VPtr<ONVIF::NetworkInterfaces>::asPtr(var));
+                    toPtr<ONVIF::NetworkInterfaces>(var));
 
                 auto& des = d_ptr->idata.network.interfaces;
                 auto& src = networkInterfaces;
@@ -281,7 +280,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::NetworkProtocols: {
                 QScopedPointer<ONVIF::NetworkProtocols> networkProtocols(
-                    ONVIF::VPtr<ONVIF::NetworkProtocols>::asPtr(var));
+                    toPtr<ONVIF::NetworkProtocols>(var));
 
                 auto& des = d_ptr->idata.network.protocols;
                 auto& src = networkProtocols;
@@ -296,7 +295,7 @@ QOnvifDevice::QOnvifDevice(
             case MessageType::NetworkDefaultGateway: {
                 QScopedPointer<ONVIF::NetworkDefaultGateway>
                     networkDefaultGateway(
-                        ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asPtr(var));
+                        toPtr<ONVIF::NetworkDefaultGateway>(var));
 
                 auto& des = d_ptr->idata.network.defaultGateway;
                 auto& src = networkDefaultGateway;
@@ -311,7 +310,7 @@ QOnvifDevice::QOnvifDevice(
             case MessageType::NetworkDiscoveryMode: {
                 QScopedPointer<ONVIF::NetworkDiscoveryMode>
                     networkDiscoveryMode(
-                        ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asPtr(var));
+                        toPtr<ONVIF::NetworkDiscoveryMode>(var));
 
                 auto& des = d_ptr->idata.network.discoveryMode;
                 auto& src = networkDiscoveryMode;
@@ -324,7 +323,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::NetworkDNS: {
                 QScopedPointer<ONVIF::NetworkDNS> networkDNS(
-                    ONVIF::VPtr<ONVIF::NetworkDNS>::asPtr(var));
+                    toPtr<ONVIF::NetworkDNS>(var));
 
                 auto& des = d_ptr->idata.network.dns;
                 auto& src = networkDNS;
@@ -339,7 +338,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::NetworkHostname: {
                 QScopedPointer<ONVIF::NetworkHostname> networkHostname(
-                    ONVIF::VPtr<ONVIF::NetworkHostname>::asPtr(var));
+                    toPtr<ONVIF::NetworkHostname>(var));
 
                 auto& des = d_ptr->idata.network.hostname;
                 auto& src = networkHostname;
@@ -352,7 +351,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::NetworkNTP: {
                 QScopedPointer<ONVIF::NetworkNTP> networkNTP(
-                    ONVIF::VPtr<ONVIF::NetworkNTP>::asPtr(var));
+                    toPtr<ONVIF::NetworkNTP>(var));
 
                 auto& des = d_ptr->idata.network.ntp;
                 auto& src = networkNTP;
@@ -398,7 +397,7 @@ QOnvifDevice::QOnvifDevice(
             switch (messageType) {
             case MessageType::Profiles: {
                 QScopedPointer<ONVIF::Profiles> profiles(
-                    ONVIF::VPtr<ONVIF::Profiles>::asPtr(var));
+                    toPtr<ONVIF::Profiles>(var));
 
                 auto& des = d_ptr->idata.profiles;
 
@@ -477,7 +476,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::Profile720p: {
                 QScopedPointer<ONVIF::Profile> profile720p(
-                    ONVIF::VPtr<ONVIF::Profile>::asPtr(var));
+                    toPtr<ONVIF::Profile>(var));
 
                 auto& des = d_ptr->idata.profile720p;
 
@@ -556,7 +555,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::ProfileD1: {
                 QScopedPointer<ONVIF::Profile> profileD1(
-                    ONVIF::VPtr<ONVIF::Profile>::asPtr(var));
+                    toPtr<ONVIF::Profile>(var));
 
                 d_ptr->idata.profileD1.analytics   = profileD1->m_analytics;
                 d_ptr->idata.profileD1.toKenPro    = profileD1->m_toKenPro;
@@ -647,8 +646,7 @@ QOnvifDevice::QOnvifDevice(
             case MessageType::VideoEncoderConfigurations: {
                 QScopedPointer<ONVIF::VideoEncoderConfigurations>
                     videoEncoderConfigurations(
-                        ONVIF::VPtr<ONVIF::VideoEncoderConfigurations>::asPtr(
-                            var));
+                        toPtr<ONVIF::VideoEncoderConfigurations>(var));
 
                 auto& des = d_ptr->idata.mediaConfig.video.encodingConfigs;
                 auto& src = videoEncoderConfigurations;
@@ -682,8 +680,7 @@ QOnvifDevice::QOnvifDevice(
             case MessageType::VideoSourceConfigurations: {
                 QScopedPointer<ONVIF::VideoSourceConfigurations>
                     videoSourceConfigurations(
-                        ONVIF::VPtr<ONVIF::VideoSourceConfigurations>::asPtr(
-                            var));
+                        toPtr<ONVIF::VideoSourceConfigurations>(var));
 
                 auto& des       = d_ptr->idata.mediaConfig.video.sourceConfig;
                 auto& src       = videoSourceConfigurations;
@@ -699,8 +696,7 @@ QOnvifDevice::QOnvifDevice(
             case MessageType::VideoEncoderConfigurationOptions: {
                 QScopedPointer<ONVIF::VideoEncoderConfigurationOptions>
                     videoEncoderConfigurationOptions(
-                        ONVIF::VPtr<ONVIF::VideoEncoderConfigurationOptions>::
-                            asPtr(var));
+                        toPtr<ONVIF::VideoEncoderConfigurationOptions>(var));
 
                 Data::MediaConfig::Video::EncoderConfigs::Option
                     encodingOptions;
@@ -757,7 +753,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::StreamUri: {
                 QScopedPointer<ONVIF::StreamUri> streamUri(
-                    ONVIF::VPtr<ONVIF::StreamUri>::asPtr(var));
+                    toPtr<ONVIF::StreamUri>(var));
 
                 Data::MediaConfig::Video::StreamUri streamUriTemp;
                 streamUriTemp.uri = streamUri->uri();
@@ -778,7 +774,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::ImageSetting: {
                 QScopedPointer<ONVIF::ImageSetting> imageSetting(
-                    ONVIF::VPtr<ONVIF::ImageSetting>::asPtr(var));
+                    toPtr<ONVIF::ImageSetting>(var));
 
                 auto& des = d_ptr->idata.mediaConfig.imageSetting;
 
@@ -795,7 +791,7 @@ QOnvifDevice::QOnvifDevice(
             } break;
             case MessageType::ImageSettingOptions: {
                 QScopedPointer<ONVIF::ImageSettingOptions> imageSettingOptions(
-                    ONVIF::VPtr<ONVIF::ImageSettingOptions>::asPtr(var));
+                    toPtr<ONVIF::ImageSettingOptions>(var));
 
                 auto& des = d_ptr->idata.mediaConfig.imageSetting.options;
 
@@ -838,11 +834,11 @@ QOnvifDevice::QOnvifDevice(
             switch (messageType) {
             case MessageType::Configurations: {
                 QScopedPointer<ONVIF::Configurations> config(
-                    ONVIF::VPtr<ONVIF::Configurations>::asPtr(var));
+                    toPtr<ONVIF::Configurations>(var));
             } break;
             case MessageType::Configuration: {
                 QScopedPointer<ONVIF::Configuration> config(
-                    ONVIF::VPtr<ONVIF::Configuration>::asPtr(var));
+                    toPtr<ONVIF::Configuration>(var));
 
                 auto& des = d_ptr->idata.ptz.config;
 
@@ -880,16 +876,14 @@ QOnvifDevice::QOnvifDevice(
                 emit getResultReceived(d_ptr->idata, messageType);
             } break;
             case MessageType::Nodes: {
-                QScopedPointer<ONVIF::Nodes> nodes(
-                    ONVIF::VPtr<ONVIF::Nodes>::asPtr(var));
+                QScopedPointer<ONVIF::Nodes> nodes(toPtr<ONVIF::Nodes>(var));
             } break;
             case MessageType::Node: {
-                QScopedPointer<ONVIF::Node> node(
-                    ONVIF::VPtr<ONVIF::Node>::asPtr(var));
+                QScopedPointer<ONVIF::Node> node(toPtr<ONVIF::Node>(var));
             } break;
             case MessageType::Presets: {
                 QScopedPointer<ONVIF::Presets> presets(
-                    ONVIF::VPtr<ONVIF::Presets>::asPtr(var));
+                    toPtr<ONVIF::Presets>(var));
             } break;
             case MessageType::RemovePreset:
             case MessageType::SetPreset:
@@ -989,8 +983,7 @@ QOnvifDevice::setScopes(QString _name, QString _location) {
     data->setScopes(_name, _location);
 
     d_ptr->addRequest(
-        MessageType::SetScopes,
-        ONVIF::VPtr<ONVIF::SystemScopes>::asQVariant(data));
+        MessageType::SetScopes, toQVariant<ONVIF::SystemScopes>(data));
 }
 
 void
@@ -1011,7 +1004,7 @@ QOnvifDevice::setDateAndTime(
 
     d_ptr->addRequest(
         MessageType::SetDateAndTime,
-        ONVIF::VPtr<ONVIF::SystemDateAndTime>::asQVariant(data));
+        toQVariant<ONVIF::SystemDateAndTime>(data));
 }
 
 void
@@ -1024,8 +1017,7 @@ QOnvifDevice::setUsers(Data::Users _users) {
         data->setActionMode(_users[i].actionMode);
     }
 
-    d_ptr->addRequest(
-        MessageType::SetUsers, ONVIF::VPtr<ONVIF::Users>::asQVariant(data));
+    d_ptr->addRequest(MessageType::SetUsers, toQVariant<ONVIF::Users>(data));
 }
 
 void
@@ -1053,7 +1045,7 @@ QOnvifDevice::setNetworkInterfaces(Data::Network::Interfaces _interfaces) {
 
     d_ptr->addRequest(
         MessageType::SetNetworkInterfaces,
-        ONVIF::VPtr<ONVIF::NetworkInterfaces>::asQVariant(data));
+        toQVariant<ONVIF::NetworkInterfaces>(data));
 }
 
 void
@@ -1067,7 +1059,7 @@ QOnvifDevice::setNetworkProtocols(Data::Network::Protocols _protocols) {
 
     d_ptr->addRequest(
         MessageType::SetNetworkProtocols,
-        ONVIF::VPtr<ONVIF::NetworkProtocols>::asQVariant(data));
+        toQVariant<ONVIF::NetworkProtocols>(data));
 }
 
 void
@@ -1078,7 +1070,7 @@ QOnvifDevice::setNetworkDefaultGateway(
 
     d_ptr->addRequest(
         MessageType::SetNetworkDefaultGateway,
-        ONVIF::VPtr<ONVIF::NetworkDefaultGateway>::asQVariant(data));
+        toQVariant<ONVIF::NetworkDefaultGateway>(data));
 }
 
 void
@@ -1089,7 +1081,7 @@ QOnvifDevice::setNetworkDiscoveryMode(
 
     d_ptr->addRequest(
         MessageType::SetNetworkDiscoveryMode,
-        ONVIF::VPtr<ONVIF::NetworkDiscoveryMode>::asQVariant(data));
+        toQVariant<ONVIF::NetworkDiscoveryMode>(data));
 }
 
 void
@@ -1103,8 +1095,7 @@ QOnvifDevice::setNetworkDNS(Data::Network::DNS _dns) {
     data->setSearchDomain(_dns.searchDomain);
 
     d_ptr->addRequest(
-        MessageType::NetworkDNS,
-        ONVIF::VPtr<ONVIF::NetworkDNS>::asQVariant(data));
+        MessageType::NetworkDNS, toQVariant<ONVIF::NetworkDNS>(data));
 }
 
 void
@@ -1115,7 +1106,7 @@ QOnvifDevice::setNetworkHostname(Data::Network::Hostname _hostname) {
 
     d_ptr->addRequest(
         MessageType::SetNetworkHostname,
-        ONVIF::VPtr<ONVIF::NetworkHostname>::asQVariant(data));
+        toQVariant<ONVIF::NetworkHostname>(data));
 }
 
 void
@@ -1126,8 +1117,7 @@ QOnvifDevice::setNetworkNTP(Data::Network::NTP _ntp) {
     data->setManualType(_ntp.ipv6Address);
 
     d_ptr->addRequest(
-        MessageType::SetNetworkNTP,
-        ONVIF::VPtr<ONVIF::NetworkNTP>::asQVariant(data));
+        MessageType::SetNetworkNTP, toQVariant<ONVIF::NetworkNTP>(data));
 }
 
 void
@@ -1139,7 +1129,7 @@ QOnvifDevice::resetFactory(bool isHard) {
 
     d_ptr->addRequest(
         MessageType::SetSystemFactoryDefault,
-        ONVIF::VPtr<ONVIF::SystemFactoryDefault>::asQVariant(data));
+        toQVariant<ONVIF::SystemFactoryDefault>(data));
 }
 
 void
@@ -1147,8 +1137,7 @@ QOnvifDevice::reboot() {
     auto data = new ONVIF::SystemReboot;
 
     d_ptr->addRequest(
-        MessageType::SetSystemReboot,
-        ONVIF::VPtr<ONVIF::SystemReboot>::asQVariant(data));
+        MessageType::SetSystemReboot, toQVariant<ONVIF::SystemReboot>(data));
 }
 
 void
@@ -1316,7 +1305,7 @@ QOnvifDevice::setVideoEncoderConfiguration(
 
     d_ptr->addRequest(
         MessageType::SetVideoEncoderConfiguration,
-        ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asQVariant(data));
+        toQVariant<ONVIF::VideoEncoderConfiguration>(data));
 }
 
 void
@@ -1334,8 +1323,7 @@ QOnvifDevice::setImageSetting(Data::MediaConfig::ImageSetting _imageSetting) {
     data->setToken(_imageSetting.token);
 
     d_ptr->addRequest(
-        MessageType::SetImageSettings,
-        ONVIF::VPtr<ONVIF::ImageSetting>::asQVariant(data));
+        MessageType::SetImageSettings, toQVariant<ONVIF::ImageSetting>(data));
 }
 
 void
@@ -1357,7 +1345,7 @@ QOnvifDevice::goHomePosition() {
 
     d_ptr->addRequest(
         MessageType::GotoHomePosition,
-        ONVIF::VPtr<ONVIF::GotoHomePosition>::asQVariant(data));
+        toQVariant<ONVIF::GotoHomePosition>(data));
 }
 
 void
@@ -1366,8 +1354,7 @@ QOnvifDevice::setHomePosition() {
     data->setProfileToken("MediaProfile000");
 
     d_ptr->addRequest(
-        MessageType::SetHomePosition,
-        ONVIF::VPtr<ONVIF::HomePosition>::asQVariant(data));
+        MessageType::SetHomePosition, toQVariant<ONVIF::HomePosition>(data));
 }
 
 void
@@ -1379,8 +1366,7 @@ QOnvifDevice::continuousMove(const float x, const float y, const float z) {
     data->setZoomX(z);
 
     d_ptr->addRequest(
-        MessageType::ContinuousMove,
-        ONVIF::VPtr<ONVIF::ContinuousMove>::asQVariant(data));
+        MessageType::ContinuousMove, toQVariant<ONVIF::ContinuousMove>(data));
 }
 
 void
@@ -1390,8 +1376,7 @@ QOnvifDevice::stopMovement() {
     data->setPanTilt(true);
     data->setZoom(true);
 
-    d_ptr->addRequest(
-        MessageType::Stop, ONVIF::VPtr<ONVIF::Stop>::asQVariant(data));
+    d_ptr->addRequest(MessageType::Stop, toQVariant<ONVIF::Stop>(data));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

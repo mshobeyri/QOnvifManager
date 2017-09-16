@@ -161,8 +161,7 @@ MediaManagement::onMessageParserReceived(
             videoSourceConfigurations->setBounds(rect);
             item = items.next();
         }
-        var = VPtr<VideoSourceConfigurations>::asQVariant(
-            videoSourceConfigurations);
+        var = toQVariant<VideoSourceConfigurations>(videoSourceConfigurations);
     } break;
     case device::MessageType::VideoEncoderConfigurations: {
         VideoEncoderConfigurations* videoEncoderConfigurations =
@@ -293,8 +292,8 @@ MediaManagement::onMessageParserReceived(
                 autoStart.trimmed() == "true" ? true : false);
             item = items.next();
         }
-        var = VPtr<VideoEncoderConfigurations>::asQVariant(
-            videoEncoderConfigurations);
+        var =
+            toQVariant<VideoEncoderConfigurations>(videoEncoderConfigurations);
     } break;
     case device::MessageType::Profiles: {
         Profiles*  profiles = new Profiles();
@@ -739,7 +738,7 @@ MediaManagement::onMessageParserReceived(
 
             item = items.next();
         }
-        var = VPtr<Profiles>::asQVariant(profiles);
+        var = toQVariant<Profiles>(profiles);
     } break;
     case device::MessageType::Profile720p: {
         Profile*   profile = new Profile();
@@ -1183,7 +1182,7 @@ MediaManagement::onMessageParserReceived(
 
             item = items.next();
         }
-        var = VPtr<Profile>::asQVariant(profile);
+        var = toQVariant<Profile>(profile);
     } break;
     case device::MessageType::ProfileD1: {
         Profile*   profile = new Profile();
@@ -1628,7 +1627,7 @@ MediaManagement::onMessageParserReceived(
 
             item = items.next();
         }
-        var = VPtr<Profile>::asQVariant(profile);
+        var = toQVariant<Profile>(profile);
     } break;
     case device::MessageType::AudioSourceConfigurations: {
         AudioSourceConfigurations* audioSourceConfigurations =
@@ -1665,8 +1664,7 @@ MediaManagement::onMessageParserReceived(
             audioSourceConfigurations->setSourceToken(value.trimmed());
             item = items.next();
         }
-        var = VPtr<AudioSourceConfigurations>::asQVariant(
-            audioSourceConfigurations);
+        var = toQVariant<AudioSourceConfigurations>(audioSourceConfigurations);
     } break;
     case device::MessageType::AudioEncoderConfigurations: {
         AudioEncoderConfigurations* audioEncoderConfigurations =
@@ -1753,8 +1751,8 @@ MediaManagement::onMessageParserReceived(
             audioEncoderConfigurations->setSessionTimeout(value.trimmed());
             item = items.next();
         }
-        var = VPtr<AudioEncoderConfigurations>::asQVariant(
-            audioEncoderConfigurations);
+        var =
+            toQVariant<AudioEncoderConfigurations>(audioEncoderConfigurations);
     } break;
     case device::MessageType::VideoSourceConfiguration: {
         VideoSourceConfiguration* videoSourceConfiguration =
@@ -1796,8 +1794,7 @@ MediaManagement::onMessageParserReceived(
             rect.setTop(value.trimmed().toInt());
         }
         videoSourceConfiguration->setBounds(rect);
-        var = VPtr<VideoSourceConfiguration>::asQVariant(
-            videoSourceConfiguration);
+        var = toQVariant<VideoSourceConfiguration>(videoSourceConfiguration);
     } break;
     case device::MessageType::VideoEncoderConfiguration: {
         VideoEncoderConfiguration* videoEncoderConfiguration =
@@ -1863,8 +1860,7 @@ MediaManagement::onMessageParserReceived(
                                                                       : false);
         videoEncoderConfiguration->setSessionTimeout(
             result->getValue("//tt:SessionTimeout").trimmed());
-        var = VPtr<VideoEncoderConfiguration>::asQVariant(
-            videoEncoderConfiguration);
+        var = toQVariant<VideoEncoderConfiguration>(videoEncoderConfiguration);
     } break;
     case device::MessageType::AudioEncoderConfiguration: {
         AudioEncoderConfiguration* audioEncoderConfiguration =
@@ -1912,8 +1908,7 @@ MediaManagement::onMessageParserReceived(
                 : false);
         audioEncoderConfiguration->setSessionTimeout(
             result->getValue("//tt:SessionTimeout").trimmed());
-        var = VPtr<AudioEncoderConfiguration>::asQVariant(
-            audioEncoderConfiguration);
+        var = toQVariant<AudioEncoderConfiguration>(audioEncoderConfiguration);
     } break;
     case device::MessageType::AudioEncoderConfigurationOptions: {
         AudioEncoderConfigurationOptions* audioEncoderConfigurationOptions =
@@ -1960,7 +1955,7 @@ MediaManagement::onMessageParserReceived(
             audioEncoderConfigurationOptions->setSampleRateList(sampleRateList);
             item = items.next();
         }
-        var = VPtr<AudioEncoderConfigurationOptions>::asQVariant(
+        var = toQVariant<AudioEncoderConfigurationOptions>(
             audioEncoderConfigurationOptions);
     } break;
     case device::MessageType::VideoEncoderConfigurationOptions: {
@@ -2083,7 +2078,7 @@ MediaManagement::onMessageParserReceived(
                     value.trimmed()));
             item = items.next();
         }
-        var = VPtr<VideoEncoderConfigurationOptions>::asQVariant(
+        var = toQVariant<VideoEncoderConfigurationOptions>(
             videoEncoderConfigurationOptions);
     } break;
     case device::MessageType::StreamUri: {
@@ -2098,7 +2093,7 @@ MediaManagement::onMessageParserReceived(
                 ? true
                 : false);
         streamUri->setTimeout(result->getValue("//tt:Timeout").trimmed());
-        var = VPtr<StreamUri>::asQVariant(streamUri);
+        var = toQVariant<StreamUri>(streamUri);
     } break;
     case device::MessageType::ImageSetting: {
         ImageSetting* imageSetting = new ImageSetting();
@@ -2132,7 +2127,7 @@ MediaManagement::onMessageParserReceived(
         imageSetting->setDefaultSpeed(
             result->getValue("//timg:ImagingSettings/tt:Focus/tt:DefaultSpeed")
                 .toInt());
-        var = VPtr<ImageSetting>::asQVariant(imageSetting);
+        var = toQVariant<ImageSetting>(imageSetting);
     } break;
     case device::MessageType::ImageSettingOptions: {
         ImageSettingOptions* imageSettingOptions = new ImageSettingOptions();
@@ -2184,7 +2179,7 @@ MediaManagement::onMessageParserReceived(
                 ->getValue(
                     "//timg:ImagingOptions/tt:Focus/tt:DefaultSpeed/tt:Max")
                 .toDouble());
-        var = VPtr<ImageSettingOptions>::asQVariant(imageSettingOptions);
+        var = toQVariant<ImageSettingOptions>(imageSettingOptions);
     } break;
     case device::MessageType::SetVideoEncoderConfiguration: {
         bool r = false;
@@ -2371,12 +2366,12 @@ MediaManagement::setData(device::MessageType messageType, QVariant data) {
     switch (messageType) {
     case device::MessageType::SetVideoEncoderConfiguration: {
         VideoEncoderConfiguration* d =
-            ONVIF::VPtr<ONVIF::VideoEncoderConfiguration>::asPtr(data);
+            toPtr<ONVIF::VideoEncoderConfiguration>(data);
         domElement = d->toxml();
         d->deleteLater();
     } break;
     case device::MessageType::SetImageSettings: {
-        ImageSetting* d = ONVIF::VPtr<ONVIF::ImageSetting>::asPtr(data);
+        ImageSetting* d = toPtr<ONVIF::ImageSetting>(data);
         domElement      = d->toxml();
         d->deleteLater();
     } break;
