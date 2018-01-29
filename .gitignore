@@ -38,6 +38,7 @@ moc_*
 
 *.user
 bin*/
+debug/
 build*/
 xbin/
 3rdparty/

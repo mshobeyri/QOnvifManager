@@ -11,14 +11,8 @@ CONFIG += staticlib
 
 #DEFINES += QT_DLL QT_NETWORK_LIB QT_HELP_LIB QT_SCRIPT_LIB QT_WIDGETS_LIB QT_XML_LIB QT_XMLPATTERNS_LIB ONVIFC_LIB
 
-DESTDIR  = $$PWD/../../../bin/
-contains(QT_ARCH, i386): {
-    CONFIG(release, debug|release): DESTDIR = $$PWD/../../../bin/32
-    else:CONFIG(debug, debug|release): DESTDIR = $$PWD/../../../debug/32
-}else{
-    CONFIG(release, debug|release): DESTDIR = $$PWD/../../../bin/64
-    else:CONFIG(debug, debug|release): DESTDIR = $$PWD/../../../debug/64
-}
+CONFIG(release, debug|release): DESTDIR = $$PWD/../bin
+else:CONFIG(debug, debug|release): DESTDIR = $$PWD/../debug
 
 TARGET = QOnvifManager
 
