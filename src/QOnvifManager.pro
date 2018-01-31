@@ -6,7 +6,6 @@
 
 QT       += core network xml xmlpatterns
 
-CONFIG += c++17
 CONFIG += staticlib
 
 #DEFINES += QT_DLL QT_NETWORK_LIB QT_HELP_LIB QT_SCRIPT_LIB QT_WIDGETS_LIB QT_XML_LIB QT_XMLPATTERNS_LIB ONVIFC_LIB
