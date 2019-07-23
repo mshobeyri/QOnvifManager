@@ -25,15 +25,14 @@ public:
         m_name.push_back(name);
     }
 
-    QString getProfileToken() const
-    {
+    QString getProfileToken() const {
         return m_profileToken;
     }
 
-    void setProfileToken(const QString &profileToken)
-    {
+    void setProfileToken(const QString& profileToken) {
         m_profileToken = profileToken;
     }
+
 private:
     QString        m_profileToken;
     QList<QString> m_token;

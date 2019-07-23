@@ -68,14 +68,14 @@ public:
         return (tailBuffer == 0 ? tail : buffers.first().size()) - head;
     }
 
-    inline const char *readPointer() const {
+    inline const char* readPointer() const {
         return buffers.isEmpty() ? 0 : (buffers.first().constData() + head);
     }
 
     // access the bytes at a specified position
     // the out-variable length will contain the amount of bytes readable
     // from there, e.g. the amount still the same QByteArray
-    inline const char *readPointerAtPosition(qint64 pos, qint64 &length) const {
+    inline const char* readPointerAtPosition(qint64 pos, qint64& length) const {
         if (buffers.isEmpty()) {
             length = 0;
             return 0;
@@ -102,7 +102,8 @@ public:
         // skip the first
         pos -= nextDataBlockSizeValue;
 
-        // normal case: it is somewhere in the second to the-one-before-the-tailBuffer
+        // normal case: it is somewhere in the second to
+        // the-one-before-the-tailBuffer
         for (int i = 1; i < tailBuffer; i++) {
             if (pos >= buffers[i].size()) {
                 pos -= buffers[i].size();
@@ -137,7 +138,7 @@ public:
                 if (buffers.at(0).size() != basicBlockSize)
                     buffers[0].resize(basicBlockSize);
                 head = tail = 0;
-                tailBuffer = 0;
+                tailBuffer  = 0;
                 break;
             }
 
@@ -150,7 +151,7 @@ public:
             clear(); // try to minify/squeeze us
     }
 
-    inline char *reserve(int bytes) {
+    inline char* reserve(int bytes) {
         // if this is a fresh empty QRingBuffer
         if (bufferSize == 0) {
             buffers[0].resize(qMax(basicBlockSize, bytes));
@@ -163,7 +164,7 @@ public:
 
         // if there is already enough space, simply return.
         if (tail + bytes <= buffers.at(tailBuffer).size()) {
-            char *writePtr = buffers[tailBuffer].data() + tail;
+            char* writePtr = buffers[tailBuffer].data() + tail;
             tail += bytes;
             return writePtr;
         }
@@ -171,7 +172,7 @@ public:
         // if our buffer isn't half full yet, simply resize it.
         if (tail < buffers.at(tailBuffer).size() / 2) {
             buffers[tailBuffer].resize(tail + bytes);
-            char *writePtr = buffers[tailBuffer].data() + tail;
+            char* writePtr = buffers[tailBuffer].data() + tail;
             tail += bytes;
             return writePtr;
         }
@@ -235,8 +236,8 @@ public:
     }
 
     inline void putChar(char c) {
-        char *ptr = reserve(1);
-        *ptr = c;
+        char* ptr = reserve(1);
+        *ptr      = c;
     }
 
     inline void ungetChar(char c) {
@@ -261,21 +262,21 @@ public:
         buffers[0].squeeze();
 
         head = tail = 0;
-        tailBuffer = 0;
-        bufferSize = 0;
+        tailBuffer  = 0;
+        bufferSize  = 0;
     }
 
     inline int indexOf(char c) const {
         int index = 0;
         for (int i = 0; i < buffers.size(); ++i) {
             int start = 0;
-            int end = buffers.at(i).size();
+            int end   = buffers.at(i).size();
 
             if (i == 0)
                 start = head;
             if (i == tailBuffer)
-                end = tail;
-            const char *ptr = buffers.at(i).data() + start;
+                end         = tail;
+            const char* ptr = buffers.at(i).data() + start;
             for (int j = start; j < end; ++j) {
                 if (*ptr++ == c)
                     return index;
@@ -286,23 +287,23 @@ public:
     }
 
     inline int indexOf(char c, int maxLength) const {
-        int index = 0;
+        int index  = 0;
         int remain = qMin(size(), maxLength);
         for (int i = 0; remain && i < buffers.size(); ++i) {
             int start = 0;
-            int end = buffers.at(i).size();
+            int end   = buffers.at(i).size();
 
             if (i == 0)
                 start = head;
             if (i == tailBuffer)
                 end = tail;
             if (remain < end - start) {
-                end = start + remain;
+                end    = start + remain;
                 remain = 0;
             } else {
                 remain -= end - start;
             }
-            const char *ptr = buffers.at(i).data() + start;
+            const char* ptr = buffers.at(i).data() + start;
             for (int j = start; j < end; ++j) {
                 if (*ptr++ == c)
                     return index;
@@ -312,12 +313,13 @@ public:
         return -1;
     }
 
-    inline int read(char *data, int maxLength) {
+    inline int read(char* data, int maxLength) {
         int bytesToRead = qMin(size(), maxLength);
-        int readSoFar = 0;
+        int readSoFar   = 0;
         while (readSoFar < bytesToRead) {
-            const char *ptr = readPointer();
-            int bytesToReadFromThisBlock = qMin(bytesToRead - readSoFar, nextDataBlockSize());
+            const char* ptr = readPointer();
+            int         bytesToReadFromThisBlock =
+                qMin(bytesToRead - readSoFar, nextDataBlockSize());
             if (data)
                 memcpy(data + readSoFar, ptr, bytesToReadFromThisBlock);
             readSoFar += bytesToReadFromThisBlock;
@@ -356,7 +358,7 @@ public:
             qba.resize(tail);
             buffers << QByteArray();
             bufferSize = 0;
-            tail = 0;
+            tail       = 0;
             return qba;
         }
 
@@ -373,11 +375,11 @@ public:
             --tailBuffer;
         }
         bufferSize -= qba.length();
-        return qba;        
+        return qba;
     }
 
     // append a new buffer to the end
-    inline void append(const QByteArray &qba) {
+    inline void append(const QByteArray& qba) {
         buffers[tailBuffer].resize(tail);
         buffers << qba;
         ++tailBuffer;
@@ -387,20 +389,21 @@ public:
 
     inline QByteArray peek(int maxLength) const {
         int bytesToRead = qMin(size(), maxLength);
-        if(maxLength <= 0)
+        if (maxLength <= 0)
             return QByteArray();
         QByteArray ret;
         ret.resize(bytesToRead);
         int readSoFar = 0;
         for (int i = 0; readSoFar < bytesToRead && i < buffers.size(); ++i) {
             int start = 0;
-            int end = buffers.at(i).size();
+            int end   = buffers.at(i).size();
             if (i == 0)
                 start = head;
             if (i == tailBuffer)
-                end = tail;
-            const int len = qMin(ret.size()-readSoFar, end-start);
-            memcpy(ret.data()+readSoFar, buffers.at(i).constData()+start, len);
+                end       = tail;
+            const int len = qMin(ret.size() - readSoFar, end - start);
+            memcpy(
+                ret.data() + readSoFar, buffers.at(i).constData() + start, len);
             readSoFar += len;
         }
         Q_ASSERT(readSoFar == ret.size());
@@ -411,7 +414,7 @@ public:
         return read(0, length);
     }
 
-    inline int readLine(char *data, int maxLength) {
+    inline int readLine(char* data, int maxLength) {
         int index = indexOf('\n');
         if (index == -1)
             return read(data, maxLength);
@@ -420,7 +423,8 @@ public:
 
         int readSoFar = 0;
         while (readSoFar < index + 1 && readSoFar < maxLength - 1) {
-            int bytesToRead = qMin((index + 1) - readSoFar, nextDataBlockSize());
+            int bytesToRead =
+                qMin((index + 1) - readSoFar, nextDataBlockSize());
             bytesToRead = qMin(bytesToRead, (maxLength - 1) - readSoFar);
             memcpy(data + readSoFar, readPointer(), bytesToRead);
             readSoFar += bytesToRead;
@@ -438,10 +442,10 @@ public:
 
 private:
     QList<QByteArray> buffers;
-    int head, tail;
-    int tailBuffer; // always buffers.size() - 1
-    int basicBlockSize;
-    int bufferSize;
+    int               head, tail;
+    int               tailBuffer; // always buffers.size() - 1
+    int               basicBlockSize;
+    int               bufferSize;
 };
 
 #endif // QRINGBUFFER_P_H

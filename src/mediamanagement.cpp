@@ -5,7 +5,23 @@
 using namespace ONVIF;
 MediaManagement::MediaManagement(
     const QString& wsdlUrl, const QString& username, const QString& password)
-    : Service(wsdlUrl, username, password) {}
+    : Service(wsdlUrl, username, password) {
+    connect(
+        this,
+        &MediaManagement::messageParserReceived,
+        this,
+        &MediaManagement::onMessageParserReceived);
+}
+
+Message*
+MediaManagement::newMessage() {
+    QHash<QString, QString> names;
+    names.insert("wsdl", "http://www.onvif.org/ver10/media/wsdl");
+    names.insert("tt", "http://www.onvif.org/ver10/schema");
+    names.insert("trt", "http://www.onvif.org/ver10/media/wsdl");
+    names.insert("sch", "http://www.onvif.org/ver10/schema");
+    return createMessage(names);
+}
 
 QHash<QString, QString>
 MediaManagement::namespaces(const QString& key) {
@@ -90,24 +106,20 @@ MediaManagement::namespaces(const QString& key) {
 
     return names;
 }
-Message*
-MediaManagement::newMessage() {
-    QHash<QString, QString> names;
-    names.insert("wsdl", "http://www.onvif.org/ver10/media/wsdl");
-    names.insert("tt", "http://www.onvif.org/ver10/schema");
-    names.insert("trt", "http://www.onvif.org/ver10/media/wsdl");
-    names.insert("sch", "http://www.onvif.org/ver10/schema");
-    return createMessage(names);
-}
-VideoSourceConfigurations*
-MediaManagement::getVideoSourceConfigurations() {
-    VideoSourceConfigurations* videoSourceConfigurations = NULL;
-    Message*                   msg                       = newMessage();
-    msg->appendToBody(newElement("wsdl:GetVideoSourceConfigurations"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        videoSourceConfigurations = new VideoSourceConfigurations();
-        QXmlQuery* query          = result->query();
+
+void
+MediaManagement::onMessageParserReceived(
+    MessageParser* result, device::MessageType messageType) {
+    if (result == NULL)
+        return;
+
+    QVariant var;
+
+    switch (messageType) {
+    case device::MessageType::VideoSourceConfigurations: {
+        VideoSourceConfigurations* videoSourceConfigurations =
+            new VideoSourceConfigurations();
+        QXmlQuery* query = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//trt:Configurations");
 
@@ -149,21 +161,12 @@ MediaManagement::getVideoSourceConfigurations() {
             videoSourceConfigurations->setBounds(rect);
             item = items.next();
         }
-    }
-    delete result;
-    delete msg;
-    return videoSourceConfigurations;
-}
-
-VideoEncoderConfigurations*
-MediaManagement::getVideoEncoderConfigurations() {
-    VideoEncoderConfigurations* videoEncoderConfigurations = NULL;
-    Message*                    msg                        = newMessage();
-    msg->appendToBody(newElement("wsdl:GetVideoEncoderConfigurations"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        videoEncoderConfigurations = new VideoEncoderConfigurations();
-        QXmlQuery* query           = result->query();
+        var = toQVariant<VideoSourceConfigurations>(videoSourceConfigurations);
+    } break;
+    case device::MessageType::VideoEncoderConfigurations: {
+        VideoEncoderConfigurations* videoEncoderConfigurations =
+            new VideoEncoderConfigurations();
+        QXmlQuery* query = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//trt:Configurations");
         QXmlResultItems items;
@@ -289,21 +292,12 @@ MediaManagement::getVideoEncoderConfigurations() {
                 autoStart.trimmed() == "true" ? true : false);
             item = items.next();
         }
-    }
-    delete result;
-    delete msg;
-    return videoEncoderConfigurations;
-}
-
-Profiles*
-MediaManagement::getProfiles() {
-    Profiles* profiles = NULL;
-    Message*  msg      = newMessage();
-    msg->appendToBody(newElement("wsdl:GetProfiles"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        profiles         = new Profiles();
-        QXmlQuery* query = result->query();
+        var =
+            toQVariant<VideoEncoderConfigurations>(videoEncoderConfigurations);
+    } break;
+    case device::MessageType::Profiles: {
+        Profiles*  profiles = new Profiles();
+        QXmlQuery* query    = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//trt:Profiles");
         QXmlResultItems items;
@@ -744,22 +738,11 @@ MediaManagement::getProfiles() {
 
             item = items.next();
         }
-    }
-    delete msg;
-    delete result;
-    return profiles;
-}
-
-Profile*
-MediaManagement::getProfile720P() {
-    Profile* profile = NULL;
-    Message* msg     = newMessage();
-    msg->appendToBody(
-        newElement("<wsdl:ProfileToken>profile_720P</wsdl:ProfileToken>"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        profile          = new Profile();
-        QXmlQuery* query = result->query();
+        var = toQVariant<Profiles>(profiles);
+    } break;
+    case device::MessageType::Profile720p: {
+        Profile*   profile = new Profile();
+        QXmlQuery* query   = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//trt:Profile");
         QXmlResultItems items;
@@ -1199,22 +1182,11 @@ MediaManagement::getProfile720P() {
 
             item = items.next();
         }
-    }
-    delete msg;
-    delete result;
-    return profile;
-}
-
-Profile*
-MediaManagement::getProfileD1() {
-    Profile* profile = NULL;
-    Message* msg     = newMessage();
-    msg->appendToBody(
-        newElement("<wsdl:ProfileToken>profile_D1</wsdl:ProfileToken>"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        profile          = new Profile();
-        QXmlQuery* query = result->query();
+        var = toQVariant<Profile>(profile);
+    } break;
+    case device::MessageType::ProfileD1: {
+        Profile*   profile = new Profile();
+        QXmlQuery* query   = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//trt:Profiles");
         QXmlResultItems items;
@@ -1655,20 +1627,11 @@ MediaManagement::getProfileD1() {
 
             item = items.next();
         }
-    }
-    delete msg;
-    delete result;
-    return profile;
-}
-
-AudioSourceConfigurations*
-MediaManagement::getAudioSourceConfigurations() {
-    AudioSourceConfigurations* audioSourceConfigurations = NULL;
-    Message*                   msg                       = newMessage();
-    msg->appendToBody(newElement("wsdl:GetAudioSourceConfigurations"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        audioSourceConfigurations = new AudioSourceConfigurations();
+        var = toQVariant<Profile>(profile);
+    } break;
+    case device::MessageType::AudioSourceConfigurations: {
+        AudioSourceConfigurations* audioSourceConfigurations =
+            new AudioSourceConfigurations();
         QString         xml, value;
         QDomDocument    doc;
         QDomNodeList    itemNodeList;
@@ -1701,22 +1664,12 @@ MediaManagement::getAudioSourceConfigurations() {
             audioSourceConfigurations->setSourceToken(value.trimmed());
             item = items.next();
         }
-    }
-
-    delete msg;
-    delete result;
-    return audioSourceConfigurations;
-}
-
-AudioEncoderConfigurations*
-MediaManagement::getAudioEncoderConfigurations() {
-    AudioEncoderConfigurations* audioEncoderConfigurations = NULL;
-    Message*                    msg                        = newMessage();
-    msg->appendToBody(newElement("wsdl:GetAudioEncoderConfigurations"));
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        audioEncoderConfigurations = new AudioEncoderConfigurations();
-        QXmlQuery* query           = result->query();
+        var = toQVariant<AudioSourceConfigurations>(audioSourceConfigurations);
+    } break;
+    case device::MessageType::AudioEncoderConfigurations: {
+        AudioEncoderConfigurations* audioEncoderConfigurations =
+            new AudioEncoderConfigurations();
+        QXmlQuery* query = result->query();
         query->setQuery(
             result->nameSpace() + "doc($inputDocument)//trt:Configurations");
         QXmlResultItems items;
@@ -1798,25 +1751,13 @@ MediaManagement::getAudioEncoderConfigurations() {
             audioEncoderConfigurations->setSessionTimeout(value.trimmed());
             item = items.next();
         }
-    }
-    delete msg;
-    delete result;
-    return audioEncoderConfigurations;
-}
-
-VideoSourceConfiguration*
-MediaManagement::getVideoSourceConfiguration() {
-    VideoSourceConfiguration* videoSourceConfiguration = NULL;
-    Message*                  msg                      = newMessage();
-    QDomElement               token =
-        newElement("wsdl:ConfigurationToken", "profile_VideoSource_1");
-    QDomElement body = newElement("wsdl:GetVideoSourceConfiguration");
-    body.appendChild(token);
-    msg->appendToBody(body);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        videoSourceConfiguration = new VideoSourceConfiguration();
-        QXmlQuery*   query       = result->query();
+        var =
+            toQVariant<AudioEncoderConfigurations>(audioEncoderConfigurations);
+    } break;
+    case device::MessageType::VideoSourceConfiguration: {
+        VideoSourceConfiguration* videoSourceConfiguration =
+            new VideoSourceConfiguration();
+        QXmlQuery*   query = result->query();
         QString      value, xml;
         QDomDocument doc;
         QDomNodeList itemNodeList;
@@ -1853,25 +1794,12 @@ MediaManagement::getVideoSourceConfiguration() {
             rect.setTop(value.trimmed().toInt());
         }
         videoSourceConfiguration->setBounds(rect);
-    }
-    delete msg;
-    delete result;
-    return videoSourceConfiguration;
-}
-
-VideoEncoderConfiguration*
-MediaManagement::getVideoEncoderConfiguration() {
-    VideoEncoderConfiguration* videoEncoderConfiguration = NULL;
-    Message*                   msg                       = newMessage();
-    QDomElement                token =
-        newElement("wsdl:ConfigurationToken", "profile_video_stream_D1");
-    QDomElement body = newElement("wsdl:GetVideoEncoderConfiguration");
-    body.appendChild(token);
-    msg->appendToBody(body);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        videoEncoderConfiguration = new VideoEncoderConfiguration();
-        QXmlQuery*   query        = result->query();
+        var = toQVariant<VideoSourceConfiguration>(videoSourceConfiguration);
+    } break;
+    case device::MessageType::VideoEncoderConfiguration: {
+        VideoEncoderConfiguration* videoEncoderConfiguration =
+            new VideoEncoderConfiguration();
+        QXmlQuery*   query = result->query();
         QString      value, xml;
         QDomDocument doc;
         QDomNodeList itemNodeList;
@@ -1932,26 +1860,12 @@ MediaManagement::getVideoEncoderConfiguration() {
                                                                       : false);
         videoEncoderConfiguration->setSessionTimeout(
             result->getValue("//tt:SessionTimeout").trimmed());
-    }
-
-    delete msg;
-    delete result;
-    return videoEncoderConfiguration;
-}
-
-AudioEncoderConfiguration*
-MediaManagement::getAudioEncoderConfiguration() {
-    AudioEncoderConfiguration* audioEncoderConfiguration = NULL;
-    Message*                   msg                       = newMessage();
-    QDomElement                token =
-        newElement("wsdl:ConfigurationToken", "profile_audio_stream_1");
-    QDomElement body = newElement("wsdl:GetAudioEncoderConfiguration");
-    body.appendChild(token);
-    msg->appendToBody(body);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        audioEncoderConfiguration = new AudioEncoderConfiguration();
-        QXmlQuery*   query        = result->query();
+        var = toQVariant<VideoEncoderConfiguration>(videoEncoderConfiguration);
+    } break;
+    case device::MessageType::AudioEncoderConfiguration: {
+        AudioEncoderConfiguration* audioEncoderConfiguration =
+            new AudioEncoderConfiguration();
+        QXmlQuery*   query = result->query();
         QString      value, xml;
         QDomDocument doc;
         QDomNodeList itemNodeList;
@@ -1994,26 +1908,10 @@ MediaManagement::getAudioEncoderConfiguration() {
                 : false);
         audioEncoderConfiguration->setSessionTimeout(
             result->getValue("//tt:SessionTimeout").trimmed());
-    }
-    delete msg;
-    delete result;
-    return audioEncoderConfiguration;
-}
-
-AudioEncoderConfigurationOptions*
-MediaManagement::getAudioEncoderConfigurationOptions() {
-    AudioEncoderConfigurationOptions* audioEncoderConfigurationOptions = NULL;
-    Message*                          msg = newMessage();
-    QDomElement                       configurationToken =
-        newElement("wsdl:ConfigurationToken", "profile_audio_stream_1");
-    QDomElement profileToken = newElement("wsdl:ProfileToken", "profile_CIF");
-    QDomElement body = newElement("wsdl:GetAudioEncoderConfigurationOptions");
-    body.appendChild(configurationToken);
-    body.appendChild(profileToken);
-    msg->appendToBody(body);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        audioEncoderConfigurationOptions =
+        var = toQVariant<AudioEncoderConfiguration>(audioEncoderConfiguration);
+    } break;
+    case device::MessageType::AudioEncoderConfigurationOptions: {
+        AudioEncoderConfigurationOptions* audioEncoderConfigurationOptions =
             new AudioEncoderConfigurationOptions();
         QXmlQuery*      query = result->query();
         QXmlResultItems items, items1;
@@ -2057,34 +1955,11 @@ MediaManagement::getAudioEncoderConfigurationOptions() {
             audioEncoderConfigurationOptions->setSampleRateList(sampleRateList);
             item = items.next();
         }
-    }
-
-    delete msg;
-    delete result;
-    return audioEncoderConfigurationOptions;
-}
-
-VideoEncoderConfigurationOptions*
-MediaManagement::getVideoEncoderConfigurationOptions(
-    QString _configToken, QString _profileToken) {
-    VideoEncoderConfigurationOptions* videoEncoderConfigurationOptions = NULL;
-    Message*                          msg = newMessage();
-    //    QDomElement configurationToken =
-    //    newElement("wsdl:ConfigurationToken","profile_VideoSource_1");
-    //    QDomElement profileTokekn =
-    //    newElement("wsdl:ProfileToken","profile_CIF");
-    //    QDomElement body =
-    //    newElement("wsdl:GetVideoEncoderConfigurationOptions");
-    QDomElement configurationToken =
-        newElement("wsdl:ConfigurationToken", _configToken);
-    QDomElement profileTokekn = newElement("wsdl:ProfileToken", _profileToken);
-    QDomElement body = newElement("wsdl:GetVideoEncoderConfigurationOptions");
-    body.appendChild(configurationToken);
-    body.appendChild(profileTokekn);
-    msg->appendToBody(body);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        videoEncoderConfigurationOptions =
+        var = toQVariant<AudioEncoderConfigurationOptions>(
+            audioEncoderConfigurationOptions);
+    } break;
+    case device::MessageType::VideoEncoderConfigurationOptions: {
+        VideoEncoderConfigurationOptions* videoEncoderConfigurationOptions =
             new VideoEncoderConfigurationOptions();
         QXmlQuery*      query = result->query();
         QXmlResultItems items;
@@ -2203,58 +2078,11 @@ MediaManagement::getVideoEncoderConfigurationOptions(
                     value.trimmed()));
             item = items.next();
         }
-    }
-
-    delete msg;
-    delete result;
-    return videoEncoderConfigurationOptions;
-}
-
-void
-MediaManagement::setVideoEncoderConfiguration(
-    VideoEncoderConfiguration* videoConfigurations) {
-    Message* msg = newMessage();
-    msg->appendToBody(videoConfigurations->toxml());
-    MessageParser* result = sendMessage(msg);
-    videoConfigurations->setResult(false);
-    if (result != NULL) {
-        if (result->find("//tds:SetVideoEncoderConfigurationResponse") ||
-            result->find(
-                "//*[local-name() = 'SetVideoEncoderConfigurationResponse']"))
-            videoConfigurations->setResult(true);
-        else
-            videoConfigurations->setResult(false);
-        delete result;
-        delete msg;
-    }
-}
-
-StreamUri*
-MediaManagement::getStreamUri(const QString& token) {
-    StreamUri*  streamUri    = NULL;
-    Message*    msg          = newMessage();
-    QDomElement stream       = newElement("sch:Stream", "RTP-Unicast");
-    QDomElement transport    = newElement("sch:Transport");
-    QDomElement protocol     = newElement("sch:Protocol", "RTSP");
-    QDomElement tunnel       = newElement("sch:Tunnel");
-    QDomElement streamSetup  = newElement("wsdl:StreamSetup");
-    QDomElement getStreamUri = newElement("wsdl:GetStreamUri");
-    QDomElement profileToken = newElement("wsdl:ProfileToken", token);
-    getStreamUri.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
-    transport.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
-    stream.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
-
-
-    getStreamUri.appendChild(streamSetup);
-    getStreamUri.appendChild(profileToken);
-    streamSetup.appendChild(stream);
-    streamSetup.appendChild(transport);
-    transport.appendChild(protocol);
-    // transport.appendChild(tunnel);
-    msg->appendToBody(getStreamUri);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        streamUri = new StreamUri();
+        var = toQVariant<VideoEncoderConfigurationOptions>(
+            videoEncoderConfigurationOptions);
+    } break;
+    case device::MessageType::StreamUri: {
+        StreamUri* streamUri = new StreamUri();
         streamUri->setUri(result->getValue("//tt:Uri").trimmed());
         streamUri->setInvalidAfterConnect(
             result->getValue("//tt:InvalidAfterConnect").trimmed() == "true"
@@ -2265,27 +2093,10 @@ MediaManagement::getStreamUri(const QString& token) {
                 ? true
                 : false);
         streamUri->setTimeout(result->getValue("//tt:Timeout").trimmed());
-    }
-    delete msg;
-    delete result;
-    return streamUri;
-}
-
-ImageSetting*
-MediaManagement::getImageSetting(const QString& token) {
-    ImageSetting* imageSetting       = NULL;
-    Message*      msg                = newMessage();
-    QDomElement   getImagingSettings = newElement("GetImagingSettings");
-    getImagingSettings.setAttribute(
-        "xmlns", "http://www.onvif.org/ver20/imaging/wsdl");
-    QDomElement videoSourceToken = newElement("VideoSourceToken", token);
-    getImagingSettings.appendChild(videoSourceToken);
-
-    msg->appendToBody(getImagingSettings);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        imageSetting = new ImageSetting();
-
+        var = toQVariant<StreamUri>(streamUri);
+    } break;
+    case device::MessageType::ImageSetting: {
+        ImageSetting* imageSetting = new ImageSetting();
         imageSetting->setBrightness(
             result->getValue("//timg:ImagingSettings/tt:Brightness").toInt());
 
@@ -2316,26 +2127,10 @@ MediaManagement::getImageSetting(const QString& token) {
         imageSetting->setDefaultSpeed(
             result->getValue("//timg:ImagingSettings/tt:Focus/tt:DefaultSpeed")
                 .toInt());
-    }
-    delete result;
-    delete msg;
-    return imageSetting;
-}
-
-ImageSettingOptions*
-MediaManagement::getImageSettingOptions(const QString& token) {
-    ImageSettingOptions* imageSettingOptions       = NULL;
-    Message*             msg                       = newMessage();
-    QDomElement          getImagingSettingsOptions = newElement("GetOptions");
-    getImagingSettingsOptions.setAttribute(
-        "xmlns", "http://www.onvif.org/ver20/imaging/wsdl");
-    QDomElement videoSourceToken = newElement("VideoSourceToken", token);
-    getImagingSettingsOptions.appendChild(videoSourceToken);
-
-    msg->appendToBody(getImagingSettingsOptions);
-    MessageParser* result = sendMessage(msg);
-    if (result != NULL) {
-        imageSettingOptions = new ImageSettingOptions();
+        var = toQVariant<ImageSetting>(imageSetting);
+    } break;
+    case device::MessageType::ImageSettingOptions: {
+        ImageSettingOptions* imageSettingOptions = new ImageSettingOptions();
         imageSettingOptions->setBrightnessMin(
             result->getValue("//timg:ImagingOptions/tt:Brightness/tt:Min")
                 .toDouble());
@@ -2384,26 +2179,208 @@ MediaManagement::getImageSettingOptions(const QString& token) {
                 ->getValue(
                     "//timg:ImagingOptions/tt:Focus/tt:DefaultSpeed/tt:Max")
                 .toDouble());
+        var = toQVariant<ImageSettingOptions>(imageSettingOptions);
+    } break;
+    case device::MessageType::SetVideoEncoderConfiguration: {
+        bool r = false;
+        if (result->find("//tds:SetVideoEncoderConfigurationResponse") ||
+            result->find(
+                "//*[local-name() = 'SetVideoEncoderConfigurationResponse']"))
+            r = true;
+        var   = qVariantFromValue(r);
+    } break;
+    case device::MessageType::SetImageSettings: {
+        bool r = false;
+        if (result->find("//timg:SetImagingSettingsResponse") ||
+            result->find("//*[local-name() = 'SetImagingSettingsResponse']"))
+            r = true;
+        var   = qVariantFromValue(r);
+    } break;
+    default:
+        break;
     }
-    delete result;
-    delete msg;
-    return imageSettingOptions;
+
+    emit resultReceived(var, messageType);
+
+    result->deleteLater();
 }
 
 void
-MediaManagement::setImageSettings(ImageSetting* imageSettings) {
+MediaManagement::getData(
+    device::MessageType messageType, QVariantList parameters) {
     Message* msg = newMessage();
-    msg->appendToBody(imageSettings->toxml());
-    MessageParser* result = sendMessage(msg);
-    imageSettings->setResult(false);
-    if (result != NULL) {
-        if (result->find("//timg:SetImagingSettingsResponse") ||
-            result->find(
-                "//*[local-name() = 'SetImagingSettingsResponse']"))
-            imageSettings->setResult(true);
-        else
-            imageSettings->setResult(false);
-        delete result;
-        delete msg;
+
+    switch (messageType) {
+    case device::MessageType::VideoSourceConfigurations:
+
+        msg->appendToBody(newElement("wsdl:GetVideoSourceConfigurations"));
+
+        break;
+    case device::MessageType::VideoEncoderConfigurations:
+
+        msg->appendToBody(newElement("wsdl:GetVideoEncoderConfigurations"));
+
+        break;
+    case device::MessageType::Profiles:
+
+        msg->appendToBody(newElement("wsdl:GetProfiles"));
+
+        break;
+    case device::MessageType::Profile720p:
+
+        msg->appendToBody(
+            newElement("<wsdl:ProfileToken>profile_720P</wsdl:ProfileToken>"));
+
+        break;
+    case device::MessageType::ProfileD1:
+
+        msg->appendToBody(
+            newElement("<wsdl:ProfileToken>profile_D1</wsdl:ProfileToken>"));
+
+        break;
+    case device::MessageType::AudioSourceConfigurations:
+
+        msg->appendToBody(newElement("wsdl:GetAudioSourceConfigurations"));
+
+        break;
+    case device::MessageType::AudioEncoderConfigurations:
+
+        msg->appendToBody(newElement("wsdl:GetAudioEncoderConfigurations"));
+
+        break;
+    case device::MessageType::VideoSourceConfiguration: {
+        QDomElement token =
+            newElement("wsdl:ConfigurationToken", "profile_VideoSource_1");
+        QDomElement body = newElement("wsdl:GetVideoSourceConfiguration");
+        body.appendChild(token);
+        msg->appendToBody(body);
+    } break;
+    case device::MessageType::VideoEncoderConfiguration: {
+        QDomElement token =
+            newElement("wsdl:ConfigurationToken", "profile_video_stream_D1");
+        QDomElement body = newElement("wsdl:GetVideoEncoderConfiguration");
+        body.appendChild(token);
+        msg->appendToBody(body);
+    } break;
+    case device::MessageType::AudioEncoderConfiguration: {
+        QDomElement token =
+            newElement("wsdl:ConfigurationToken", "profile_audio_stream_1");
+        QDomElement body = newElement("wsdl:GetAudioEncoderConfiguration");
+        body.appendChild(token);
+        msg->appendToBody(body);
+    } break;
+    case device::MessageType::AudioEncoderConfigurationOptions: {
+        QDomElement configurationToken =
+            newElement("wsdl:ConfigurationToken", "profile_audio_stream_1");
+        QDomElement profileToken =
+            newElement("wsdl:ProfileToken", "profile_CIF");
+        QDomElement body =
+            newElement("wsdl:GetAudioEncoderConfigurationOptions");
+        body.appendChild(configurationToken);
+        body.appendChild(profileToken);
+        msg->appendToBody(body);
+    } break;
+    case device::MessageType::VideoEncoderConfigurationOptions: {
+        //    QDomElement configurationToken =
+        //    newElement("wsdl:ConfigurationToken","profile_VideoSource_1");
+        //    QDomElement profileTokekn =
+        //    newElement("wsdl:ProfileToken","profile_CIF");
+        //    QDomElement body =
+        //    newElement("wsdl:GetVideoEncoderConfigurationOptions");
+        QString configToken =
+            parameters.isEmpty() ? "" : parameters.at(0).toString();
+        QString profileToken =
+            parameters.count() <= 1 ? "" : parameters.at(1).toString();
+
+        QDomElement configurationToken =
+            newElement("wsdl:ConfigurationToken", configToken);
+        QDomElement profileTokekn =
+            newElement("wsdl:ProfileToken", profileToken);
+        QDomElement body =
+            newElement("wsdl:GetVideoEncoderConfigurationOptions");
+        body.appendChild(configurationToken);
+        body.appendChild(profileTokekn);
+        msg->appendToBody(body);
+    } break;
+    case device::MessageType::StreamUri: {
+        QString token = parameters.isEmpty() ? "" : parameters.at(0).toString();
+
+        QDomElement stream       = newElement("sch:Stream", "RTP-Unicast");
+        QDomElement transport    = newElement("sch:Transport");
+        QDomElement protocol     = newElement("sch:Protocol", "RTSP");
+        QDomElement tunnel       = newElement("sch:Tunnel");
+        QDomElement streamSetup  = newElement("wsdl:StreamSetup");
+        QDomElement getStreamUri = newElement("wsdl:GetStreamUri");
+        QDomElement profileToken = newElement("wsdl:ProfileToken", token);
+        getStreamUri.setAttribute(
+            "xmlns", "http://www.onvif.org/ver10/media/wsdl");
+        transport.setAttribute(
+            "xmlns", "http://www.onvif.org/ver10/media/wsdl");
+        stream.setAttribute("xmlns", "http://www.onvif.org/ver10/media/wsdl");
+
+
+        getStreamUri.appendChild(streamSetup);
+        getStreamUri.appendChild(profileToken);
+        streamSetup.appendChild(stream);
+        streamSetup.appendChild(transport);
+        transport.appendChild(protocol);
+        // transport.appendChild(tunnel);
+        msg->appendToBody(getStreamUri);
+    } break;
+    case device::MessageType::ImageSetting: {
+        QString token = parameters.isEmpty() ? "" : parameters.at(0).toString();
+
+        QDomElement getImagingSettings = newElement("GetImagingSettings");
+        getImagingSettings.setAttribute(
+            "xmlns", "http://www.onvif.org/ver20/imaging/wsdl");
+        QDomElement videoSourceToken = newElement("VideoSourceToken", token);
+        getImagingSettings.appendChild(videoSourceToken);
+
+        msg->appendToBody(getImagingSettings);
+    } break;
+    case device::MessageType::ImageSettingOptions: {
+        QString token = parameters.isEmpty() ? "" : parameters.at(0).toString();
+
+        QDomElement getImagingSettingsOptions = newElement("GetOptions");
+        getImagingSettingsOptions.setAttribute(
+            "xmlns", "http://www.onvif.org/ver20/imaging/wsdl");
+        QDomElement videoSourceToken = newElement("VideoSourceToken", token);
+        getImagingSettingsOptions.appendChild(videoSourceToken);
+
+        msg->appendToBody(getImagingSettingsOptions);
+    } break;
+    default:
+        msg->deleteLater();
+        return;
     }
+
+    sendMessage(msg, messageType);
+    msg->deleteLater();
+}
+
+void
+MediaManagement::setData(device::MessageType messageType, QVariant data) {
+    Message*    msg = newMessage();
+    QDomElement domElement;
+
+    switch (messageType) {
+    case device::MessageType::SetVideoEncoderConfiguration: {
+        VideoEncoderConfiguration* d =
+            toPtr<ONVIF::VideoEncoderConfiguration>(data);
+        domElement = d->toxml();
+        d->deleteLater();
+    } break;
+    case device::MessageType::SetImageSettings: {
+        ImageSetting* d = toPtr<ONVIF::ImageSetting>(data);
+        domElement      = d->toxml();
+        d->deleteLater();
+    } break;
+    default:
+        msg->deleteLater();
+        return;
+    }
+
+    msg->appendToBody(domElement);
+    sendMessage(msg, messageType);
+    msg->deleteLater();
 }

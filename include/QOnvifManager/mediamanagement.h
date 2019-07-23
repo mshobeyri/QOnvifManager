@@ -26,32 +26,19 @@ public:
         const QString& wsdlUrl,
         const QString& username,
         const QString& password);
-    VideoSourceConfigurations*        getVideoSourceConfigurations();
-    VideoEncoderConfigurations*       getVideoEncoderConfigurations();
-    Profiles*                         getProfiles();
-    Profile*                          getProfile720P();
-    Profile*                          getProfileD1();
-    AudioSourceConfigurations*        getAudioSourceConfigurations();
-    AudioEncoderConfigurations*       getAudioEncoderConfigurations();
-    VideoSourceConfiguration*         getVideoSourceConfiguration();
-    VideoEncoderConfiguration*        getVideoEncoderConfiguration();
-    AudioEncoderConfiguration*        getAudioEncoderConfiguration();
-    AudioEncoderConfigurationOptions* getAudioEncoderConfigurationOptions();
-    VideoEncoderConfigurationOptions* getVideoEncoderConfigurationOptions(
-        QString _configToken, QString _profileToken);
 
-    void
-    setVideoEncoderConfiguration(VideoEncoderConfiguration* videoConfiguration);
-    StreamUri* getStreamUri(const QString& token);
-    ImageSetting* getImageSetting(const QString& token);
-    ImageSettingOptions* getImageSettingOptions(const QString& token);
+    void getData(device::MessageType, QVariantList = QVariantList());
+    void setData(device::MessageType, QVariant);
 
-    void
-    setImageSettings(ImageSetting* imageSettings);
+signals:
+
+    void resultReceived(QVariant, device::MessageType);
 
 protected:
     Message* newMessage();
     QHash<QString, QString> namespaces(const QString& key);
+
+    void onMessageParserReceived(MessageParser*, device::MessageType);
 };
 }
 #endif // MEDIAMANAGEMENT_H

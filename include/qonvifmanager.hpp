@@ -37,89 +37,83 @@ public:
     ~QOnvifManager();
 
     bool refreshDevicesList();
-    bool refreshDeviceCapabilities(QString _deviceEndPointAddress);
-    bool refreshDeviceInformations(QString _deviceEndPointAddress);
 
-    bool refreshDeviceVideoConfigs(QString _deviceEndPointAddress);
-    bool refreshDeviceStreamUris(QString _deviceEndPointAddress);
-    bool refreshDeviceStreamUri(QString _deviceEndPointAddress);
-    bool refreshDeviceVideoConfigsOptions(QString _deviceEndPointAddress);
+    void getDeviceCapabilities(QString _deviceEndPointAddress);
+    void getDeviceInformation(QString _deviceEndPointAddress);
+    void getDeviceScopes(QString _deviceEndPointAddress);
+    void getDeviceVideoEncoderConfigurations(QString _deviceEndPointAddress);
+    void
+    getDeviceVideoEncoderConfigurationOptions(QString _deviceEndPointAddress);
+    void getDeviceStreamUris(QString _deviceEndPointAddress);
+    void getDeviceProfiles(QString _deviceEndPointAddress);
+    void getDeviceNetworkInterfaces(QString _deviceEndPointAddress);
+    void getDeviceNetworkProtocols(QString _deviceEndPointAddress);
+    void getDeviceNetworkDefaultGateway(QString _deviceEndPointAddress);
+    void getDeviceNetworkDiscoveryMode(QString _deviceEndPointAddress);
+    void getDeviceNetworkDNS(QString _deviceEndPointAddress);
+    void getDeviceNetworkHostname(QString _deviceEndPointAddress);
+    void getDeviceNetworkNTP(QString _deviceEndPointAddress);
+    void getDeviceUsers(QString _deviceEndPointAddress);
+    void getDeviceDateAndTime(QString _deviceEndPointAddress);
+    void getDevicePtzConfiguration(QString _deviceEndPointAddress);
+    void getDeviceImageSetting(QString _deviceEndPointAddress);
+    void getDeviceImageSettingOptions(QString _deviceEndPointAddress);
 
-    bool refreshDeviceProfiles(QString _deviceEndPointAddress);
-    bool refreshDeviceInterfaces(QString _deviceEndPointAddress);
-    bool refreshDeviceProtocols(QString _deviceEndPointAddress);
-    bool refreshDeviceDefaultGateway(QString _deviceEndPointAddress);
-    bool refreshDeviceDiscoveryMode(QString _deviceEndPointAddress);
-    bool refreshDeviceDNS(QString _deviceEndPointAddress);
-    bool refreshDeviceHostname(QString _deviceEndPointAddress);
-    bool refreshDeviceNTP(QString _deviceEndPointAddress);
-    bool refreshDeviceScopes(QString _deviceEndPointAddress);
 
-    bool refreshDeviceUsers(QString _deviceEndPointAddress);
-
-    bool deviceDateAndTime(
-        QString _deviceEndPointAddress, Data::DateTime& _datetime);
-
-    bool setDeviceDateAndTime(
+    void setDeviceDateAndTime(
         QString   _deviceEndPointAddress,
         QDateTime _dateTime,
         QString   _zone,
         bool      _daylightSaving,
         bool      _isLocal);
-    bool setDeviceImageSetting(
+    void setDeviceImageSetting(
         QString                          _deviceEndPointAddress,
         Data::MediaConfig::ImageSetting& _imageSetting);
 
     void setDefaulUsernameAndPassword(QString _username, QString _password);
-    bool setDeviceScopes(
+    void setDeviceScopes(
         QString _deviceEndPointAddress, QString _name, QString _location);
-    bool setDeviceVideoConfig(
+    void setDeviceVideoEncoderConfiguration(
         QString                                 _deviceEndPointAddress,
         Data::MediaConfig::Video::EncoderConfig _videoConfig);
 
-    bool setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users);
+    void setDeviceUsers(QString _deviceEndPointAddress, Data::Users _users);
 
-    bool setDeviceNetworkInterfaces(
+    void setDeviceNetworkInterfaces(
         QString _deviceEndPointAddress, Data::Network::Interfaces _interfaces);
 
-    bool setDeviceNetworkProtocols(
+    void setDeviceNetworkProtocols(
         QString _deviceEndPointAddress, Data::Network::Protocols _protocols);
 
-    bool setDeviceNetworkDefaultGateway(
+    void setDeviceNetworkDefaultGateway(
         QString                       _deviceEndPointAddress,
         Data::Network::DefaultGateway _defaultGateway);
 
-    bool setDeviceNetworkDiscoveryMode(
+    void setDeviceNetworkDiscoveryMode(
         QString                      _deviceEndPointAddress,
         Data::Network::DiscoveryMode _discoveryMode);
 
-    bool setDeviceNetworkDNS(
+    void setDeviceNetworkDNS(
         QString _deviceEndPointAddress, Data::Network::DNS _dns);
 
-    bool setDeviceNetworkHostname(
+    void setDeviceNetworkHostname(
         QString _deviceEndPointAddress, Data::Network::Hostname _hostname);
 
-    bool setDeviceNetworkNTP(
+    void setDeviceNetworkNTP(
         QString _deviceEndPointAddress, Data::Network::NTP _ntp);
 
-
-    bool refreshDevicePtzConfigs(QString _deviceEndPointAddress);
-
-    bool refreshDeviceImageSetting(QString _deviceEndPointAddress);
-    bool refreshDeviceImageSettingOptions(QString _deviceEndPointAddress);
-
-    bool resetFactoryDevice(QString _deviceEndPointAddress, bool isHard);
-    bool rebootDevice(QString _deviceEndPointAddress);
+    void resetFactoryDevice(QString _deviceEndPointAddress, bool isHard);
+    void rebootDevice(QString _deviceEndPointAddress);
 
     // ptz
 
-    bool continuousMove(
+    void continuousMove(
         QString     _deviceEndPointAddress,
         const float _x,
         const float _y,
         const float _z);
 
-    bool stopMovement(QString _deviceEndPointAddress);
+    void stopMovement(QString _deviceEndPointAddress);
 
     // public
     device::QOnvifDevice* device(QString _deviceEndPointAddress);
@@ -132,11 +126,46 @@ protected:
     bool cameraExist(const QString& endpoinAddress);
 
 public slots:
-    void onReciveData(QHash<QString, QString> _deviceHash);
+    void onReceiveData(QHash<QString, QString> _deviceHash);
 
 signals:
-    void newDeviceFinded(device::QOnvifDevice* _device);
+    void newDeviceFound(device::QOnvifDevice* _device);
     void deviceSearchingEnded();
+
+    void deviceInformationReceived(Data::Information, QString);
+    void deviceScopesReceived(Data::Scopes, QString);
+    void deviceDateAndTimeReceived(Data::DateTime, QString);
+    void deviceUsersReceived(Data::Users, QString);
+    void deviceCapabilitiesReceived(Data::Capabilities, QString);
+    void deviceNetworkInterfacesReceived(Data::Network::Interfaces, QString);
+    void deviceNetworkProtocolsReceived(Data::Network::Protocols, QString);
+    void deviceNetworkDefaultGatewayReceived(
+        Data::Network::DefaultGateway, QString);
+    void deviceNetworkDiscoveryModeReceived(
+        Data::Network::DiscoveryMode, QString);
+    void deviceNetworkDNSReceived(Data::Network::DNS, QString);
+    void deviceNetworkHostnameReceived(Data::Network::Hostname, QString);
+    void deviceNetworkNTPReceived(Data::Network::NTP, QString);
+
+    void deviceProfilesReceived(Data::Profiles, QString);
+    void deviceProfile720pReceived(Data::Profiles, QString);
+    void deviceProfileD1Received(Data::Profiles, QString);
+    void deviceVideoEncoderConfigurationsReceived(
+        Data::MediaConfig::Video::EncoderConfigs, QString);
+    void deviceVideoSourceConfigurationsReceived(
+        Data::MediaConfig::Video::SourceConfig, QString);
+    void deviceVideoEncoderConfigurationOptionReceived(
+        Data::MediaConfig::Video::EncoderConfigs::Option, QString);
+    void deviceStreamUrisReceived(Data::MediaConfig::Video::StreamUri, QString);
+    void deviceImageSettingReceived(Data::MediaConfig::ImageSetting, QString);
+    void deviceImageSettingOptionsReceived(
+        Data::MediaConfig::ImageSetting::Options, QString);
+
+    void devicePtzConfigurationReceived(Data::Ptz::Config, QString);
+    void devicePresetsReceived(QString);
+
+    void deviceGetResultReceived(Data, device::MessageType, QString);
+    void deviceSetResultReceived(bool, device::MessageType, QString);
 };
 
 #endif // QONVIFMANAGER_HPP

@@ -9,9 +9,8 @@ class ImageSetting : public QObject
     Q_OBJECT
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness)
     Q_PROPERTY(
-            int colorSaturation READ colorSaturation WRITE setColorSaturation)
+        int colorSaturation READ colorSaturation WRITE setColorSaturation)
     Q_PROPERTY(int contrast READ contrast WRITE setContrast)
-    Q_PROPERTY(int brightness READ brightness WRITE setBrightness)
 public:
     ImageSetting(QObject* parent = NULL);
     QDomElement toxml();
@@ -79,36 +78,32 @@ public:
         m_result = result;
     }
 
-    bool forcePersistence() const
-    {
+    bool forcePersistence() const {
         return m_forcePersistence;
     }
-    void setForcePersistence(bool forcePersistence)
-    {
+    void setForcePersistence(bool forcePersistence) {
         m_forcePersistence = forcePersistence;
     }
 
-    QString token() const
-    {
+    QString token() const {
         return m_token;
     }
-    void setToken(const QString &token)
-    {
+    void setToken(const QString& token) {
         m_token = token;
     }
 
 private:
-    int  m_brightness;
-    int  m_colorSaturation;
-    int  m_contrast;
-    int  m_sharpness;
-    bool m_autofocusManual;
-    int  m_defaultSpeed;
-    bool m_exposureManual;
-    int  m_exposureIris;
-    bool m_forcePersistence;
+    int     m_brightness;
+    int     m_colorSaturation;
+    int     m_contrast;
+    int     m_sharpness;
+    bool    m_autofocusManual;
+    int     m_defaultSpeed;
+    bool    m_exposureManual;
+    int     m_exposureIris;
+    bool    m_forcePersistence;
     QString m_token;
-    bool m_result;
+    bool    m_result;
 };
 }
 #endif // IMAGESETTING_H

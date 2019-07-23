@@ -2,12 +2,6 @@
 
 using namespace ONVIF;
 
-Configurations::Configurations(QObject *parent):QObject(parent)
-{
+Configurations::Configurations(QObject* parent) : QObject(parent) {}
 
-}
-
-Configurations::~Configurations()
-{
-
-}
+Configurations::~Configurations() {}

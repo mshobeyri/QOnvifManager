@@ -1,7 +1,7 @@
 #ifndef VIDEOENCODERCONFIGURATION_H
 #define VIDEOENCODERCONFIGURATION_H
-#include <QObject>
 #include <QDomElement>
+#include <QObject>
 
 namespace ONVIF {
 class VideoEncoderConfiguration : public QObject

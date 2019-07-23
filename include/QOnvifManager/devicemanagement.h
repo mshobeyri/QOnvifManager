@@ -26,39 +26,19 @@ public:
         const QString& wsdlUrl,
         const QString& username,
         const QString& password);
-    QHash<QString, QString> getDeviceInformation();
-    QHash<QString, QString> getDeviceScopes();
-    SystemDateAndTime*     getSystemDateAndTime();
-    Users*                 getUsers();
-    Capabilities*          getCapabilitiesPtz();
-    Capabilities*          getCapabilitiesImaging();
-    Capabilities*          getCapabilitiesMedia();
-    Capabilities*          getCapabilitiesDevice();
-    NetworkInterfaces*     getNetworkInterfaces();
-    NetworkProtocols*      getNetworkProtocols();
-    NetworkDefaultGateway* getNetworkDefaultGateway();
-    NetworkDiscoveryMode*  getNetworkDiscoverMode();
-    NetworkDNS*            getNetworkDNS();
-    NetworkHostname*       getNetworkHostname();
-    NetworkNTP*            getNetworkNTP();
 
-    void setSystemDateAndTime(SystemDateAndTime* systemDateAndTime);
-    void setDeviceScopes(SystemScopes* systemScopes);
-    void setSystemFactoryDefault(SystemFactoryDefault* systemFactoryDefault);
-    void systemReboot(SystemReboot* systemReboot);
-    void setUsers(Users* users);
-    void setNetworkInterfaces(NetworkInterfaces* networkInterfaces);
-    void setNetworkProtocols(NetworkProtocols* networkProtocols);
-    void setDefaultGateway(NetworkDefaultGateway* networkDefaultGateway);
-    void setDiscoveryMode(NetworkDiscoveryMode* networkDiscoveryMode);
-    void setDNS(NetworkDNS* networkDns);
-    void setHostname(NetworkHostname* networkHostname);
-    void setNTP(NetworkNTP* networkNtp);
+    void getData(device::MessageType);
+    void setData(device::MessageType, QVariant);
 
+signals:
+
+    void resultReceived(QVariant, device::MessageType);
 
 protected:
     Message* newMessage();
     QHash<QString, QString> namespaces(const QString& key);
+
+    void onMessageParserReceived(MessageParser*, device::MessageType);
 };
 }
 

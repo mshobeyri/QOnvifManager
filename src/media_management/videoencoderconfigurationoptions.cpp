@@ -95,7 +95,8 @@ VideoEncoderConfigurationOptions::frameRateRangeMaxH264() const {
 }
 
 void
-VideoEncoderConfigurationOptions::setFrameRateRangeMaxH264(int frameRateRangeMax) {
+VideoEncoderConfigurationOptions::setFrameRateRangeMaxH264(
+    int frameRateRangeMax) {
     m_frameRateRangeMaxH264 = frameRateRangeMax;
 }
 

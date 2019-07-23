@@ -1,12 +1,6 @@
 #include "profiles.h"
 using namespace ONVIF;
 
-Profiles::Profiles(QObject *parent) : QObject(parent)
-{
+Profiles::Profiles(QObject* parent) : QObject(parent) {}
 
-}
-
-Profiles::~Profiles()
-{
-
-}
+Profiles::~Profiles() {}

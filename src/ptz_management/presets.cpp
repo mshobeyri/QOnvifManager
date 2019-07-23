@@ -2,16 +2,6 @@
 
 using namespace ONVIF;
 
-Presets::Presets(QObject *parent):QObject(parent)
-{
+Presets::Presets(QObject* parent) : QObject(parent) {}
 
-}
-
-Presets::~Presets()
-{
-
-}
-
-
-
-
+Presets::~Presets() {}

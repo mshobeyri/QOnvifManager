@@ -43,8 +43,8 @@ ImageSetting::toxml() {
     defaultSpeed =
         newElement("DefaultSpeed", QString::number(this->defaultSpeed()));
 
-    forcePersistence =
-        newElement("ForcePersistence", this->forcePersistence() ? "true" : "false");
+    forcePersistence = newElement(
+        "ForcePersistence", this->forcePersistence() ? "true" : "false");
 
     exposure.appendChild(exposureMode);
     exposure.appendChild(exposureIris);
@@ -65,7 +65,3 @@ ImageSetting::toxml() {
 
     return setImagingSetting;
 }
-
-
-
-

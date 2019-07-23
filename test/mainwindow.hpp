@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
 private slots:
@@ -41,9 +41,9 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
-    QOnvifManager *ionvifManager;
-    QString currentDevice();
+    Ui::MainWindow* ui;
+    QOnvifManager*  ionvifManager;
+    QString         currentDevice();
 };
 
 #endif // MAINWINDOW_HPP

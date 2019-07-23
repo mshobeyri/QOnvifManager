@@ -50,12 +50,10 @@ public:
     bool result() const {
         return m_result;
     }
-    bool isLocal() const
-    {
+    bool isLocal() const {
         return m_isLocal;
     }
-    void setIsLocal(bool isLocal)
-    {
+    void setIsLocal(bool isLocal) {
         m_isLocal = isLocal;
     }
 

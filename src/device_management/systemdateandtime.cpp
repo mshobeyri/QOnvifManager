@@ -3,10 +3,11 @@
 #include <QString>
 using namespace ONVIF;
 
-SystemDateAndTime::SystemDateAndTime(QObject *parent) : QObject(parent) {
-}
+SystemDateAndTime::SystemDateAndTime(QObject* parent) : QObject(parent) {}
 
-void SystemDateAndTime::setUtcTime(int year, int month, int day, int hour, int minute, int second) {
+void
+SystemDateAndTime::setUtcTime(
+    int year, int month, int day, int hour, int minute, int second) {
     QDate date;
     date.setDate(year, month, day);
     QTime time;
@@ -14,7 +15,9 @@ void SystemDateAndTime::setUtcTime(int year, int month, int day, int hour, int m
     this->m_utcTime = QDateTime(date, time, Qt::UTC);
 }
 
-void SystemDateAndTime::setLocalTime(int year, int month, int day, int hour, int minute, int second) {
+void
+SystemDateAndTime::setLocalTime(
+    int year, int month, int day, int hour, int minute, int second) {
     QDate date;
     date.setDate(year, month, day);
     QTime time;
@@ -22,23 +25,31 @@ void SystemDateAndTime::setLocalTime(int year, int month, int day, int hour, int
     this->m_localTime = QDateTime(date, time);
 }
 
-QDomElement SystemDateAndTime::toxml(){
-    QDomElement setSystemDateAndTime,dateTimeType,daylightSavings,timeZone,tz,dateTime,time,hour,minute,second,date,year
-            ,month,day;
+QDomElement
+SystemDateAndTime::toxml() {
+    QDomElement setSystemDateAndTime, dateTimeType, daylightSavings, timeZone,
+        tz, dateTime, time, hour, minute, second, date, year, month, day;
     setSystemDateAndTime = newElement("wsdl:SetSystemDateAndTime");
-    dateTimeType = newElement("wsdl:DateTimeType","Manual");
-    daylightSavings = newElement("wsdl:DaylightSavings",this->daylightSavings() == true?"true":"false");
+    dateTimeType         = newElement("wsdl:DateTimeType", "Manual");
+    daylightSavings      = newElement(
+        "wsdl:DaylightSavings",
+        this->daylightSavings() == true ? "true" : "false");
     timeZone = newElement("wsdl:TimeZone");
-    tz = newElement("sch:TZ",this->tz());
-    time = newElement("sch:Time");
-    date = newElement("sch:Date");
+    tz       = newElement("sch:TZ", this->tz());
+    time     = newElement("sch:Time");
+    date     = newElement("sch:Date");
     dateTime = newElement("wsdl:UTCDateTime");
-    hour = newElement("sch:Hour",QString::number(this->utcTime().time().hour()));
-    minute = newElement("sch:Minute",QString::number(this->utcTime().time().minute()));
-    second = newElement("sch:Second",QString::number(this->utcTime().time().second()));
-    year = newElement("sch:Year",QString::number(this->utcTime().date().year()));
-    month = newElement("sch:Month",QString::number(this->utcTime().date().month()));
-    day = newElement("sch:Day",QString::number(this->utcTime().date().day()));
+    hour =
+        newElement("sch:Hour", QString::number(this->utcTime().time().hour()));
+    minute = newElement(
+        "sch:Minute", QString::number(this->utcTime().time().minute()));
+    second = newElement(
+        "sch:Second", QString::number(this->utcTime().time().second()));
+    year =
+        newElement("sch:Year", QString::number(this->utcTime().date().year()));
+    month = newElement(
+        "sch:Month", QString::number(this->utcTime().date().month()));
+    day = newElement("sch:Day", QString::number(this->utcTime().date().day()));
     setSystemDateAndTime.appendChild(dateTimeType);
     setSystemDateAndTime.appendChild(daylightSavings);
     setSystemDateAndTime.appendChild(timeZone);
@@ -54,7 +65,3 @@ QDomElement SystemDateAndTime::toxml(){
     date.appendChild(day);
     return setSystemDateAndTime;
 }
-
-
-
-

@@ -3,7 +3,7 @@
 
 using namespace ONVIF;
 
-ONVIF::HomePosition::HomePosition(QObject* parent) {}
+ONVIF::HomePosition::HomePosition(QObject* parent) : QObject(parent) {}
 
 ONVIF::HomePosition::~HomePosition() {}
 

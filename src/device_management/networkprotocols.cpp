@@ -11,12 +11,10 @@ NetworkProtocols::toxml() {
         name.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
         QDomElement enabled = newElement(
             "Enabled", m_networkProtocolsEnabled[i] ? "true" : "false");
-        enabled.setAttribute(
-                "xmlns", "http://www.onvif.org/ver10/schema");
+        enabled.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
         QDomElement port =
             newElement("Port", QString::number(m_networkProtocolsPort[i]));
-        port.setAttribute(
-                "xmlns", "http://www.onvif.org/ver10/schema");
+        port.setAttribute("xmlns", "http://www.onvif.org/ver10/schema");
 
         networkprotocol.appendChild(name);
         networkprotocol.appendChild(enabled);
